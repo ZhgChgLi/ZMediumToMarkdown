@@ -6,7 +6,7 @@ require 'Models/Paragraph'
 class PParser < Parser
     attr_accessor :nextParser
     def parse(paragraph)
-        if paragraph.type == 'P'
+        if paragraph.type == 'P' || paragraph.type == 'MIXTAPE_EMBED'
             "#{paragraph.text}"
         else
             if !nextParser.nil?

@@ -1,0 +1,268 @@
+have_func: checking for rb_enc_get() in ruby/encoding.h... -------------------- yes
+
+"clang -o conftest -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0/x86_64-darwin21 -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0/ruby/backward -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0 -I. -I/Users/zhgchgli/.rbenv/versions/2.6.5/include  -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -O3 -ggdb3 -Wall -Wextra -Wdeclaration-after-statement -Wdeprecated-declarations -Wdivision-by-zero -Wimplicit-function-declaration -Wimplicit-int -Wmisleading-indentation -Wpointer-arith -Wshorten-64-to-32 -Wwrite-strings -Wmissing-noreturn -Wno-constant-logical-operand -Wno-long-long -Wno-missing-field-initializers -Wno-overlength-strings -Wno-parentheses-equality -Wno-self-assign -Wno-tautological-compare -Wno-unused-parameter -Wno-unused-value -Wunused-variable -Wextra-tokens  -fno-common -pipe conftest.c  -L. -L/Users/zhgchgli/.rbenv/versions/2.6.5/lib -L. -L/Users/zhgchgli/.rbenv/versions/2.6.5/lib  -fstack-protector-strong -L/usr/local/lib     -lruby.2.6   "
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: int main(int argc, char **argv)
+4: {
+5:   return 0;
+6: }
+/* end */
+
+"clang -o conftest -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0/x86_64-darwin21 -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0/ruby/backward -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0 -I. -I/Users/zhgchgli/.rbenv/versions/2.6.5/include  -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -O3 -ggdb3 -Wall -Wextra -Wdeclaration-after-statement -Wdeprecated-declarations -Wdivision-by-zero -Wimplicit-function-declaration -Wimplicit-int -Wmisleading-indentation -Wpointer-arith -Wshorten-64-to-32 -Wwrite-strings -Wmissing-noreturn -Wno-constant-logical-operand -Wno-long-long -Wno-missing-field-initializers -Wno-overlength-strings -Wno-parentheses-equality -Wno-self-assign -Wno-tautological-compare -Wno-unused-parameter -Wno-unused-value -Wunused-variable -Wextra-tokens  -fno-common -pipe conftest.c  -L. -L/Users/zhgchgli/.rbenv/versions/2.6.5/lib -L. -L/Users/zhgchgli/.rbenv/versions/2.6.5/lib  -fstack-protector-strong -L/usr/local/lib     -lruby.2.6   "
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <ruby/encoding.h>
+ 4: 
+ 5: /*top*/
+ 6: extern int t(void);
+ 7: int main(int argc, char **argv)
+ 8: {
+ 9:   if (argc > 1000000) {
+10:     int (* volatile tp)(void)=(int (*)(void))&t;
+11:     printf("%d", (*tp)());
+12:   }
+13: 
+14:   return 0;
+15: }
+16: int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_enc_get; return !p; }
+/* end */
+
+--------------------
+
+have_func: checking for rb_sys_fail_str() in ruby.h... -------------------- yes
+
+"clang -o conftest -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0/x86_64-darwin21 -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0/ruby/backward -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0 -I. -I/Users/zhgchgli/.rbenv/versions/2.6.5/include  -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -O3 -ggdb3 -Wall -Wextra -Wdeclaration-after-statement -Wdeprecated-declarations -Wdivision-by-zero -Wimplicit-function-declaration -Wimplicit-int -Wmisleading-indentation -Wpointer-arith -Wshorten-64-to-32 -Wwrite-strings -Wmissing-noreturn -Wno-constant-logical-operand -Wno-long-long -Wno-missing-field-initializers -Wno-overlength-strings -Wno-parentheses-equality -Wno-self-assign -Wno-tautological-compare -Wno-unused-parameter -Wno-unused-value -Wunused-variable -Wextra-tokens  -fno-common -pipe conftest.c  -L. -L/Users/zhgchgli/.rbenv/versions/2.6.5/lib -L. -L/Users/zhgchgli/.rbenv/versions/2.6.5/lib  -fstack-protector-strong -L/usr/local/lib     -lruby.2.6   "
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <ruby.h>
+ 4: 
+ 5: /*top*/
+ 6: extern int t(void);
+ 7: int main(int argc, char **argv)
+ 8: {
+ 9:   if (argc > 1000000) {
+10:     int (* volatile tp)(void)=(int (*)(void))&t;
+11:     printf("%d", (*tp)());
+12:   }
+13: 
+14:   return 0;
+15: }
+16: int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_sys_fail_str; return !p; }
+/* end */
+
+--------------------
+
+have_func: checking for iconv() in iconv.h... -------------------- no
+
+"clang -o conftest -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0/x86_64-darwin21 -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0/ruby/backward -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0 -I. -I/Users/zhgchgli/.rbenv/versions/2.6.5/include  -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -O3 -ggdb3 -Wall -Wextra -Wdeclaration-after-statement -Wdeprecated-declarations -Wdivision-by-zero -Wimplicit-function-declaration -Wimplicit-int -Wmisleading-indentation -Wpointer-arith -Wshorten-64-to-32 -Wwrite-strings -Wmissing-noreturn -Wno-constant-logical-operand -Wno-long-long -Wno-missing-field-initializers -Wno-overlength-strings -Wno-parentheses-equality -Wno-self-assign -Wno-tautological-compare -Wno-unused-parameter -Wno-unused-value -Wunused-variable -Wextra-tokens  -fno-common -pipe conftest.c  -L. -L/Users/zhgchgli/.rbenv/versions/2.6.5/lib -L. -L/Users/zhgchgli/.rbenv/versions/2.6.5/lib  -fstack-protector-strong -L/usr/local/lib     -lruby.2.6   "
+Undefined symbols for architecture x86_64:
+  "_iconv", referenced from:
+      _t in conftest-690b72.o
+ld: symbol(s) not found for architecture x86_64
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <iconv.h>
+ 4: 
+ 5: /*top*/
+ 6: extern int t(void);
+ 7: int main(int argc, char **argv)
+ 8: {
+ 9:   if (argc > 1000000) {
+10:     int (* volatile tp)(void)=(int (*)(void))&t;
+11:     printf("%d", (*tp)());
+12:   }
+13: 
+14:   return 0;
+15: }
+16: int t(void) { void ((*volatile p)()); p = (void ((*)()))iconv; return !p; }
+/* end */
+
+"clang -o conftest -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0/x86_64-darwin21 -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0/ruby/backward -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0 -I. -I/Users/zhgchgli/.rbenv/versions/2.6.5/include  -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -O3 -ggdb3 -Wall -Wextra -Wdeclaration-after-statement -Wdeprecated-declarations -Wdivision-by-zero -Wimplicit-function-declaration -Wimplicit-int -Wmisleading-indentation -Wpointer-arith -Wshorten-64-to-32 -Wwrite-strings -Wmissing-noreturn -Wno-constant-logical-operand -Wno-long-long -Wno-missing-field-initializers -Wno-overlength-strings -Wno-parentheses-equality -Wno-self-assign -Wno-tautological-compare -Wno-unused-parameter -Wno-unused-value -Wunused-variable -Wextra-tokens  -fno-common -pipe conftest.c  -L. -L/Users/zhgchgli/.rbenv/versions/2.6.5/lib -L. -L/Users/zhgchgli/.rbenv/versions/2.6.5/lib  -fstack-protector-strong -L/usr/local/lib     -lruby.2.6   "
+conftest.c:16:13: error: conflicting types for 'iconv'
+extern void iconv();
+            ^
+/Applications/Xcode-13.2.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/iconv.h:75:39: note: previous declaration is here
+extern __LIBICONV_DLL_EXPORTED size_t iconv (iconv_t __cd, char* * __restrict __inbuf, size_t * __restrict __inbytesleft, char* * __restrict __outbuf, size_t * __restrict __outbytesleft);
+                                      ^
+conftest.c:17:21: error: too few arguments to function call, expected 5, have 0
+int t(void) { iconv(); return 0; }
+              ~~~~~ ^
+/Applications/Xcode-13.2.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/iconv.h:75:39: note: 'iconv' declared here
+extern __LIBICONV_DLL_EXPORTED size_t iconv (iconv_t __cd, char* * __restrict __inbuf, size_t * __restrict __inbytesleft, char* * __restrict __outbuf, size_t * __restrict __outbytesleft);
+                                      ^
+2 errors generated.
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <iconv.h>
+ 4: 
+ 5: /*top*/
+ 6: extern int t(void);
+ 7: int main(int argc, char **argv)
+ 8: {
+ 9:   if (argc > 1000000) {
+10:     int (* volatile tp)(void)=(int (*)(void))&t;
+11:     printf("%d", (*tp)());
+12:   }
+13: 
+14:   return 0;
+15: }
+16: extern void iconv();
+17: int t(void) { iconv(); return 0; }
+/* end */
+
+--------------------
+
+have_library: checking for iconv() in -liconv... -------------------- yes
+
+"clang -o conftest -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0/x86_64-darwin21 -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0/ruby/backward -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0 -I. -I/Users/zhgchgli/.rbenv/versions/2.6.5/include  -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -O3 -ggdb3 -Wall -Wextra -Wdeclaration-after-statement -Wdeprecated-declarations -Wdivision-by-zero -Wimplicit-function-declaration -Wimplicit-int -Wmisleading-indentation -Wpointer-arith -Wshorten-64-to-32 -Wwrite-strings -Wmissing-noreturn -Wno-constant-logical-operand -Wno-long-long -Wno-missing-field-initializers -Wno-overlength-strings -Wno-parentheses-equality -Wno-self-assign -Wno-tautological-compare -Wno-unused-parameter -Wno-unused-value -Wunused-variable -Wextra-tokens  -fno-common -pipe conftest.c  -L. -L/Users/zhgchgli/.rbenv/versions/2.6.5/lib -L. -L/Users/zhgchgli/.rbenv/versions/2.6.5/lib  -fstack-protector-strong -L/usr/local/lib     -lruby.2.6 -liconv   "
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <iconv.h>
+ 4: 
+ 5: /*top*/
+ 6: extern int t(void);
+ 7: int main(int argc, char **argv)
+ 8: {
+ 9:   if (argc > 1000000) {
+10:     int (* volatile tp)(void)=(int (*)(void))&t;
+11:     printf("%d", (*tp)());
+12:   }
+13: 
+14:   return 0;
+15: }
+16: int t(void) { void ((*volatile p)()); p = (void ((*)()))iconv; return !p; }
+/* end */
+
+--------------------
+
+check_signedness: checking signedness of size_t... -------------------- unsigned
+
+"clang -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0/x86_64-darwin21 -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0/ruby/backward -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0 -I. -I/Users/zhgchgli/.rbenv/versions/2.6.5/include  -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -O3 -ggdb3 -Wall -Wextra -Wdeclaration-after-statement -Wdeprecated-declarations -Wdivision-by-zero -Wimplicit-function-declaration -Wimplicit-int -Wmisleading-indentation -Wpointer-arith -Wshorten-64-to-32 -Wwrite-strings -Wmissing-noreturn -Wno-constant-logical-operand -Wno-long-long -Wno-missing-field-initializers -Wno-overlength-strings -Wno-parentheses-equality -Wno-self-assign -Wno-tautological-compare -Wno-unused-parameter -Wno-unused-value -Wunused-variable -Wextra-tokens  -fno-common -pipe   -c conftest.c"
+conftest.c:6:20: error: 'conftest_const' declared as an array with a negative size
+int conftest_const[((rbcv_typedef_)-1 < 0) ? 1 : -1];
+                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1 error generated.
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: typedef size_t rbcv_typedef_;
+4: 
+5: /*top*/
+6: int conftest_const[((rbcv_typedef_)-1 < 0) ? 1 : -1];
+/* end */
+
+"clang -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0/x86_64-darwin21 -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0/ruby/backward -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0 -I. -I/Users/zhgchgli/.rbenv/versions/2.6.5/include  -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -O3 -ggdb3 -Wall -Wextra -Wdeclaration-after-statement -Wdeprecated-declarations -Wdivision-by-zero -Wimplicit-function-declaration -Wimplicit-int -Wmisleading-indentation -Wpointer-arith -Wshorten-64-to-32 -Wwrite-strings -Wmissing-noreturn -Wno-constant-logical-operand -Wno-long-long -Wno-missing-field-initializers -Wno-overlength-strings -Wno-parentheses-equality -Wno-self-assign -Wno-tautological-compare -Wno-unused-parameter -Wno-unused-value -Wunused-variable -Wextra-tokens  -fno-common -pipe   -c conftest.c"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: typedef size_t rbcv_typedef_;
+4: 
+5: /*top*/
+6: int conftest_const[((rbcv_typedef_)-1 > 0) ? 1 : -1];
+/* end */
+
+--------------------
+
+checking for const of iconv() 2nd argument... -------------------- no
+
+clang -E -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0/x86_64-darwin21 -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0/ruby/backward -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0 -I. -I/Users/zhgchgli/.rbenv/versions/2.6.5/include  -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -O3 -ggdb3 -Wall -Wextra -Wdeclaration-after-statement -Wdeprecated-declarations -Wdivision-by-zero -Wimplicit-function-declaration -Wimplicit-int -Wmisleading-indentation -Wpointer-arith -Wshorten-64-to-32 -Wwrite-strings -Wmissing-noreturn -Wno-constant-logical-operand -Wno-long-long -Wno-missing-field-initializers -Wno-overlength-strings -Wno-parentheses-equality -Wno-self-assign -Wno-tautological-compare -Wno-unused-parameter -Wno-unused-value -Wunused-variable -Wextra-tokens  -fno-common -pipe  conftest.c  |
+iconv (iconv_t __cd, char* * restrict __inbuf, size_t * restrict __inbytesleft, char* * restrict __outbuf, size_t * restrict __outbytesleft);
+--------------------
+
+have_func: checking for iconvlist() in iconv.h... -------------------- yes
+
+"clang -o conftest -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0/x86_64-darwin21 -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0/ruby/backward -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0 -I. -I/Users/zhgchgli/.rbenv/versions/2.6.5/include  -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -O3 -ggdb3 -Wall -Wextra -Wdeclaration-after-statement -Wdeprecated-declarations -Wdivision-by-zero -Wimplicit-function-declaration -Wimplicit-int -Wmisleading-indentation -Wpointer-arith -Wshorten-64-to-32 -Wwrite-strings -Wmissing-noreturn -Wno-constant-logical-operand -Wno-long-long -Wno-missing-field-initializers -Wno-overlength-strings -Wno-parentheses-equality -Wno-self-assign -Wno-tautological-compare -Wno-unused-parameter -Wno-unused-value -Wunused-variable -Wextra-tokens  -fno-common -pipe conftest.c  -L. -L/Users/zhgchgli/.rbenv/versions/2.6.5/lib -L. -L/Users/zhgchgli/.rbenv/versions/2.6.5/lib  -fstack-protector-strong -L/usr/local/lib    -liconv  -lruby.2.6 -liconv   "
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <iconv.h>
+ 4: 
+ 5: /*top*/
+ 6: extern int t(void);
+ 7: int main(int argc, char **argv)
+ 8: {
+ 9:   if (argc > 1000000) {
+10:     int (* volatile tp)(void)=(int (*)(void))&t;
+11:     printf("%d", (*tp)());
+12:   }
+13: 
+14:   return 0;
+15: }
+16: int t(void) { void ((*volatile p)()); p = (void ((*)()))iconvlist; return !p; }
+/* end */
+
+--------------------
+
+have_func: checking for __iconv_free_list() in iconv.h... -------------------- no
+
+"clang -o conftest -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0/x86_64-darwin21 -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0/ruby/backward -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0 -I. -I/Users/zhgchgli/.rbenv/versions/2.6.5/include  -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -O3 -ggdb3 -Wall -Wextra -Wdeclaration-after-statement -Wdeprecated-declarations -Wdivision-by-zero -Wimplicit-function-declaration -Wimplicit-int -Wmisleading-indentation -Wpointer-arith -Wshorten-64-to-32 -Wwrite-strings -Wmissing-noreturn -Wno-constant-logical-operand -Wno-long-long -Wno-missing-field-initializers -Wno-overlength-strings -Wno-parentheses-equality -Wno-self-assign -Wno-tautological-compare -Wno-unused-parameter -Wno-unused-value -Wunused-variable -Wextra-tokens  -fno-common -pipe conftest.c  -L. -L/Users/zhgchgli/.rbenv/versions/2.6.5/lib -L. -L/Users/zhgchgli/.rbenv/versions/2.6.5/lib  -fstack-protector-strong -L/usr/local/lib    -liconv  -lruby.2.6 -liconv   "
+conftest.c:16:57: error: use of undeclared identifier '__iconv_free_list'
+int t(void) { void ((*volatile p)()); p = (void ((*)()))__iconv_free_list; return !p; }
+                                                        ^
+1 error generated.
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <iconv.h>
+ 4: 
+ 5: /*top*/
+ 6: extern int t(void);
+ 7: int main(int argc, char **argv)
+ 8: {
+ 9:   if (argc > 1000000) {
+10:     int (* volatile tp)(void)=(int (*)(void))&t;
+11:     printf("%d", (*tp)());
+12:   }
+13: 
+14:   return 0;
+15: }
+16: int t(void) { void ((*volatile p)()); p = (void ((*)()))__iconv_free_list; return !p; }
+/* end */
+
+"clang -o conftest -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0/x86_64-darwin21 -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0/ruby/backward -I/Users/zhgchgli/.rbenv/versions/2.6.5/include/ruby-2.6.0 -I. -I/Users/zhgchgli/.rbenv/versions/2.6.5/include  -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -O3 -ggdb3 -Wall -Wextra -Wdeclaration-after-statement -Wdeprecated-declarations -Wdivision-by-zero -Wimplicit-function-declaration -Wimplicit-int -Wmisleading-indentation -Wpointer-arith -Wshorten-64-to-32 -Wwrite-strings -Wmissing-noreturn -Wno-constant-logical-operand -Wno-long-long -Wno-missing-field-initializers -Wno-overlength-strings -Wno-parentheses-equality -Wno-self-assign -Wno-tautological-compare -Wno-unused-parameter -Wno-unused-value -Wunused-variable -Wextra-tokens  -fno-common -pipe conftest.c  -L. -L/Users/zhgchgli/.rbenv/versions/2.6.5/lib -L. -L/Users/zhgchgli/.rbenv/versions/2.6.5/lib  -fstack-protector-strong -L/usr/local/lib    -liconv  -lruby.2.6 -liconv   "
+Undefined symbols for architecture x86_64:
+  "___iconv_free_list", referenced from:
+      _t in conftest-1204f2.o
+ld: symbol(s) not found for architecture x86_64
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <iconv.h>
+ 4: 
+ 5: /*top*/
+ 6: extern int t(void);
+ 7: int main(int argc, char **argv)
+ 8: {
+ 9:   if (argc > 1000000) {
+10:     int (* volatile tp)(void)=(int (*)(void))&t;
+11:     printf("%d", (*tp)());
+12:   }
+13: 
+14:   return 0;
+15: }
+16: extern void __iconv_free_list();
+17: int t(void) { __iconv_free_list(); return 0; }
+/* end */
+
+--------------------
+

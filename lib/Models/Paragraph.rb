@@ -59,8 +59,5 @@ class Paragraph
         @markups = json['markups'].map do |thisMarkup|
             markup = Markup.new(thisMarkup)
         end
-
-        markupParser = MarkupParser.new(text, markups)
-        @text = markupParser.parse()
     end
 end

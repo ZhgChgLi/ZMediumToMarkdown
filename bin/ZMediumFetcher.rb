@@ -39,9 +39,8 @@ class ZMediumFetcher
     end
     
     def queryPosts()
-
         User.fetchUserPosts(User.convertToUserIDFromUsername("zhgchgli")).each do |postURL|
-            postURL = "https://medium.com/zrealm-ios-dev/ios-%E9%9A%B1%E7%A7%81%E8%88%87%E4%BE%BF%E5%88%A9%E7%9A%84%E5%89%8D%E4%B8%96%E4%BB%8A%E7%94%9F-9a05f632eba0"
+            postURL = "https://medium.com/@hcgggg_11814/title-medium-test-708003bf8714"
             postID = Post.getPostIDFromPostURLString(postURL)
             postPath = Post.getPostPathFromPostURLString(postURL)
             html = Request.html(Request.URL(postURL))
@@ -51,8 +50,11 @@ class ZMediumFetcher
             h1Parser = H1Parser.new(H2Parser.new(H3Parser.new(H4Parser.new(PParser.new(ULIParser.new(IframeParser.new(IMGParser.new(BQParser.new(PREParser.new(FallbackParser.new()))))))))))
             
             File.open("#{ZMediumFetcher.getOutputDirName()}/#{postPath}.md", "w+") do |file|
-                paragraphs.each do |paragraph|
-                    file.puts(h1Parser.parse(Paragraph.new(paragraph, postID, postContent)))
+                paragraphs.each do |sourcParagraph|
+                    paragraph = Paragraph.new(sourcParagraph, postID, postContent)
+                    markupParser = MarkupParser.new(paragraph.text, paragraph.markups)
+                    paragraph.text = markupParser.parse()
+                    file.puts(h1Parser.parse(paragraph))
                 end
             end
             break

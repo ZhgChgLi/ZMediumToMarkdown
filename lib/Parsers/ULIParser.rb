@@ -6,7 +6,7 @@ require 'Models/Paragraph'
 class ULIParser < Parser
     attr_accessor :nextParser
     def parse(paragraph)
-        if paragraph.type == 'ULI'
+        if paragraph.type == 'ULI' || paragraph.type == "OLI"
             "- #{paragraph.text}"
         else
             if !nextParser.nil?

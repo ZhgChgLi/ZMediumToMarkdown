@@ -22,8 +22,8 @@ class MarkupParser
     end
     
     class MarkupUTF16Char < UTF16Char
-        def initialize(utf8Char)
-            @utf16Char = utf8Char.encode('utf-16')
+        def initialize(utf16Char)
+            @utf16Char = utf16Char
         end
     end
 
@@ -32,8 +32,7 @@ class MarkupParser
         @markups = markups
 
         utf16Chars = []
-        utf16Chars.append(OriginUTF16Char.new(0, ''.encode('utf-16')))
-        index = 1
+        index = 0
         utf8Text.encode('utf-16').chars.each do |char|
             utf16Chars.append(OriginUTF16Char.new(index, char))
             index += 1
@@ -42,43 +41,49 @@ class MarkupParser
         @utf16Chars = utf16Chars
     end
 
+    def inserStringIntoResultChars(index, utf8String, resultChars)
+        utf8String.encode("utf-16").chars.each do |char|
+            resultChars.insert(index, MarkupUTF16Char.new(char))
+            index += 1
+        end
+
+        resultChars
+    end
+
     def parse()
         resultChars = utf16Chars.dup
-        length = resultChars.length - 1
+        length = resultChars.length
         
-        if markups.nil? || length == 0
+        if markups.nil? || markups.length == 0
             return utf8Text
         end
         
         markups.each do |markup|
+            
             start_index = resultChars.index { |char|
                 (char.is_a? OriginUTF16Char) && char.index == markup.start
-            }
-            end_index = resultChars.index { |char|
-                (char.is_a? OriginUTF16Char) && char.index == markup.end
-             }
-            
-            if end_index.nil?
-                puts end_index
-                puts length
-                puts markup.end
-            end
+            } + 1
 
+            end_index = resultChars.index { |char|
+                e = markup.end == length ? markup.end - 1 : markup.end
+                (char.is_a? OriginUTF16Char) && char.index == e
+            } + 3
+            
             if markup.type == "EM"
-                resultChars.insert(start_index,MarkupUTF16Char.new('_'))
-                resultChars.insert(end_index,MarkupUTF16Char.new('_'))
+                resultChars = inserStringIntoResultChars(start_index, '_', resultChars)
+                resultChars = inserStringIntoResultChars(end_index, '_', resultChars)
             elsif markup.type == "STRONG"
-                resultChars.insert(start_index,MarkupUTF16Char.new('**'))
-                resultChars.insert(end_index,MarkupUTF16Char.new('**'))
+                resultChars = inserStringIntoResultChars(start_index, '**', resultChars)
+                resultChars = inserStringIntoResultChars(end_index, '**', resultChars)
             elsif markup.type == "CODE"
-                resultChars.insert(start_index,MarkupUTF16Char.new('`'))
-                resultChars.insert(end_index,MarkupUTF16Char.new('`'))
+                resultChars = inserStringIntoResultChars(start_index, '`', resultChars)
+                resultChars = inserStringIntoResultChars(end_index, '`', resultChars)
             elsif markup.type == "A"
-                resultChars.insert(start_index,MarkupUTF16Char.new('['))
-                resultChars.insert(end_index,MarkupUTF16Char.new("](#{markup.href})"))
+                resultChars = inserStringIntoResultChars(start_index, '[', resultChars)
+                resultChars = inserStringIntoResultChars(end_index,"](#{markup.href})", resultChars)
             end
         end
 
-        resultChars.map { |char| char.utf16Char }.join('').encode('UTF-8')
+        return resultChars.map { |char| char.utf16Char }.join.encode('utf-8').gsub!("\xEF\xBB\xBF".force_encoding("UTF-8"), '')
     end
 end
