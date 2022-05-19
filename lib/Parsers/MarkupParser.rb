@@ -4,74 +4,81 @@ $lib = File.expand_path('../', File.dirname(__FILE__))
 require 'open-uri'
 
 class MarkupParser
-    attr_accessor :markups, :text, :chars
+    attr_accessor :markups, :utf8Text, :utf16Chars
 
-    class MarkupTextChar
-        attr_accessor :index, :char
-        def initialize(index, char)
+    class UTF16Char
+        attr_accessor :utf16Char
+        def initialize(utf16Char)
+            @utf16Char = utf16Char
+        end
+    end
+    
+    class OriginUTF16Char < UTF16Char
+        attr_accessor :index
+        def initialize(index, utf16Char)
             @index = index
-            @char = char
+            @utf16Char = utf16Char
+        end
+    end
+    
+    class MarkupUTF16Char < UTF16Char
+        def initialize(utf8Char)
+            @utf16Char = utf8Char.encode('utf-16')
         end
     end
 
-    def initialize(text, markups)
-        @text = text
+    def initialize(utf8Text, markups)
+        @utf8Text = utf8Text
         @markups = markups
 
-        chars = []
-        chars.append(MarkupTextChar.new(0, ''.encode('utf-16')))
+        utf16Chars = []
+        utf16Chars.append(OriginUTF16Char.new(0, ''.encode('utf-16')))
         index = 1
-        text.encode('utf-16').chars.each do |char|
-            chars.append(MarkupTextChar.new(index, char))
+        utf8Text.encode('utf-16').chars.each do |char|
+            utf16Chars.append(OriginUTF16Char.new(index, char))
             index += 1
         end
         
-
-        @chars = chars
+        @utf16Chars = utf16Chars
     end
 
     def parse()
-        length = chars.length
+        resultChars = utf16Chars.dup
+        length = resultChars.length - 1
+        
         if markups.nil? || length == 0
-            return text
+            return utf8Text
         end
-
+        
         markups.each do |markup|
-            start_index = chars.index { |char| 
-                char.index == markup.start
+            start_index = resultChars.index { |char|
+                (char.is_a? OriginUTF16Char) && char.index == markup.start
             }
-            end_index = chars.index { |char| 
-                char.index == markup.end
+            end_index = resultChars.index { |char|
+                (char.is_a? OriginUTF16Char) && char.index == markup.end
              }
-
-            # if end_index.nil?
-            #     puts text.encode('utf-16').length
-
-            #     chars.each do |c|
-            #         puts "#{c.index},#{c.char}"
-            #     end
-
-            #     puts text
-            #     puts end_index
-            #     puts markup.end
-            #     puts length
-            # end
+            
+            if end_index.nil?
+                puts end_index
+                puts length
+                puts markup.end
+            end
 
             if markup.type == "EM"
-                chars.insert(start_index,MarkupTextChar.new(nil, '_'.encode('utf-16')))
-                chars.insert(end_index,MarkupTextChar.new(nil, '_'.encode('utf-16')))
+                resultChars.insert(start_index,MarkupUTF16Char.new('_'))
+                resultChars.insert(end_index,MarkupUTF16Char.new('_'))
             elsif markup.type == "STRONG"
-                chars.insert(start_index,MarkupTextChar.new(nil, '**'.encode('utf-16')))
-                chars.insert(end_index,MarkupTextChar.new(nil, '**'.encode('utf-16')))
+                resultChars.insert(start_index,MarkupUTF16Char.new('**'))
+                resultChars.insert(end_index,MarkupUTF16Char.new('**'))
             elsif markup.type == "CODE"
-                chars.insert(start_index,MarkupTextChar.new(nil, '`'.encode('utf-16')))
-                chars.insert(end_index,MarkupTextChar.new(nil, '`'.encode('utf-16')))
+                resultChars.insert(start_index,MarkupUTF16Char.new('`'))
+                resultChars.insert(end_index,MarkupUTF16Char.new('`'))
             elsif markup.type == "A"
-                chars.insert(start_index,MarkupTextChar.new(nil, '['.encode('utf-16')))
-                chars.insert(end_index,MarkupTextChar.new(nil, "](#{markup.href})".encode('utf-16')))
+                resultChars.insert(start_index,MarkupUTF16Char.new('['))
+                resultChars.insert(end_index,MarkupUTF16Char.new("](#{markup.href})"))
             end
         end
 
-        chars.map { |char| char.char }.join('').encode('UTF-8')
+        resultChars.map { |char| char.utf16Char }.join('').encode('UTF-8')
     end
 end
