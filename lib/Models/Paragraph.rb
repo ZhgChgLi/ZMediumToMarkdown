@@ -1,5 +1,7 @@
 $lib = File.expand_path('../', File.dirname(__FILE__))
 
+require 'Parsers/MarkupParser'
+
 class Paragraph
     attr_accessor :postID, :name, :text, :type, :href, :metadata, :iframe, :markups
 
@@ -54,47 +56,11 @@ class Paragraph
             @iframe = Iframe.new(resource[json['iframe']['mediaResource']['__ref']])
         end
         
-        newText = @text.dup
-        textSettings = {}
         @markups = json['markups'].map do |thisMarkup|
             markup = Markup.new(thisMarkup)
-            if textSettings[markup.start].nil?
-                textSettings[markup.start] = []
-            end
-
-            if textSettings[markup.end].nil?
-                textSettings[markup.end] = []
-            end
-
-            if markup.type == "EM"
-                textSettings[markup.start].insert(0, "_")
-                textSettings[markup.end].insert(0,"_")
-            elsif markup.type == "STRONG"
-                textSettings[markup.start].insert(0,"**")
-                textSettings[markup.end].insert(0,"**")
-            elsif markup.type == "CODE"
-                textSettings[markup.start].insert(0,"`")
-                textSettings[markup.end].insert(0,"`")
-            elsif markup.type == "A"
-                textSettings[markup.start].insert(0,"[")
-                textSettings[markup.end].insert(0,"](#{markup.href})")
-            end
-        end
-        
-        if textSettings != {}
-            offset = 0
-            textSettings.sort_by {|k, v| k}.to_h.each do |position, values|
-                values.each do |value|
-                    puts newText
-                    puts position
-                    puts offset
-                    puts value
-                    newText.insert(position+offset, value)
-                    offset += value.length
-                end
-            end
         end
 
-        @text = newText
+        markupParser = MarkupParser.new(text, markups)
+        @text = markupParser.parse()
     end
 end
