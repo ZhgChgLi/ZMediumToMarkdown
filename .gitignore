@@ -11,6 +11,7 @@
 /tmp/
 /vendor/
 /Output/
+.DS_Store
 
 # Used by dotenv library to load environment variables.
 # .env

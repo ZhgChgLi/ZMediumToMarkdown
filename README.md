@@ -19,3 +19,13 @@ bundle exec ruby bin/ZMediumFetcher -u [USEERNAME]
 ```
 bundle exec ruby bin/ZMediumFetcher -p [MEDIUM POST URL]
 ```
+
+
+### ToDo
+- [ ] official release
+- [ ] complete readme
+- [ ] L10N Readme
+- [ ] Supoort replace post link to local link
+- [ ] Term of use check
+- [ ] Error handle
+- [ ] Github Action Templete (so you can backup your medium post to markdown on github repo automatically)
