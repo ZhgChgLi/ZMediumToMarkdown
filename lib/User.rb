@@ -22,11 +22,12 @@ class User
     userId
   end
 
-  def self.fetchUserPosts(userID)
+  def self.fetchUserPosts(userID, from)
     query = [
       {
         "operationName": "UserProfileQuery",
         "variables": {
+          "homepagePostsFrom": from,
           "includeDistributedResponses": true,
           "id": userID,
           "homepagePostsLimit": 10
@@ -37,7 +38,16 @@ class User
 
     body = Request.body(Request.URL("https://medium.com/_/graphql", "POST", query))
     json = JSON.parse(body)
+
+    nextInfo = json[0]['data']['userResult']['homepagePostsConnection']['pagingInfo']['next']
+    nextID = nil
+    if !nextInfo.nil?
+      nextID = nextInfo["from"]
+    end
     
-    json[0]['data']['userResult']['homepagePostsConnection']['posts'].map { |post| post["mediumUrl"] }
+    {
+      "nextID" => nextID,
+      "postURLs" => json[0]['data']['userResult']['homepagePostsConnection']['posts'].map { |post| post["mediumUrl"] }
+    }
   end
 end

@@ -1,0 +1,155 @@
+#!/usr/bin/env ruby
+# -*- coding: utf-8 -*-
+
+$lib = File.expand_path('../lib', File.dirname(__FILE__))
+$LOAD_PATH.unshift($lib)
+
+require "open-uri"
+require 'json'
+require 'optparse'
+
+require "Parsers/H1Parser"
+require "Parsers/H2Parser"
+require "Parsers/H3Parser"
+require "Parsers/H4Parser"
+require "Parsers/PParser"
+require "Parsers/ULIParser"
+require "Parsers/IframeParser"
+require "Parsers/IMGParser"
+require "Parsers/FallbackParser"
+require "Parsers/BQParser"
+require "Parsers/PREParser"
+require "Parsers/MarkupParser"
+require "Parsers/OLIParser"
+require "Parsers/MIXTAPEEMBEDParser"
+require "Parsers/PQParser"
+
+require "Request"
+require "Post"
+require "User"
+
+class ZMediumFetcher
+
+    def self.getOutputDirName()
+        "#{File.expand_path('../', File.dirname(__FILE__))}/Output"
+    end
+
+    def initialize
+        Dir.mkdir(ZMediumFetcher.getOutputDirName()) unless File.exists?(ZMediumFetcher.getOutputDirName())
+    end
+
+    def downloadPost(postURL, username)
+        postID = Post.getPostIDFromPostURLString(postURL)
+        postPath = Post.getPostPathFromPostURLString(postURL)
+        html = Request.html(Request.URL(postURL))
+        postContent = Post.parsePostContentFromHTML(html)
+        if postContent.nil?
+            raise "PostURL:#{postURL} Not found!"
+        end
+        paragraphs = Post.parsePostParagraphsFromPostContent(postContent, postID)
+
+        h1Parser = H1Parser.new()
+        h2Parser = H2Parser.new()
+            h1Parser.setNext(h2Parser)
+        h3Parser = H3Parser.new()
+            h2Parser.setNext(h3Parser)
+        h4Parser = H4Parser.new()
+            h3Parser.setNext(h4Parser)
+        ppParser = PParser.new()
+            h4Parser.setNext(ppParser)
+        uliParser = ULIParser.new()
+            ppParser.setNext(uliParser)
+        oliParser = OLIParser.new()
+            uliParser.setNext(oliParser)
+        mixtapeembedParser = MIXTAPEEMBEDParser.new()
+            oliParser.setNext(mixtapeembedParser)
+        pqParser = PQParser.new()
+            mixtapeembedParser.setNext(pqParser)
+        iframeParser = IframeParser.new()
+        iframeParser.username = username
+            pqParser.setNext(iframeParser)
+        imgParser = IMGParser.new()
+        imgParser.username = username
+            iframeParser.setNext(imgParser)
+        bqParser = BQParser.new()
+            imgParser.setNext(bqParser)
+        preParser = PREParser.new()
+            bqParser.setNext(preParser)
+        fallbackParser = FallbackParser.new()
+            preParser.setNext(fallbackParser)
+
+        puts "Downloading Post: #{postPath}"
+        dir = ZMediumFetcher.getOutputDirName()
+        if !username.nil?
+            dir = "#{dir}/#{username}"
+            Dir.mkdir("#{dir}") unless File.exists?("#{dir}")
+        end
+
+        File.open("#{dir}/#{postPath}.md", "w+") do |file|
+            oliIndex = 0
+            preParagraph = nil
+            paragraphs.each do |sourcParagraph|
+                paragraph = Paragraph.new(sourcParagraph, postID, postContent)
+
+                if OLIParser.isOLI(paragraph)
+                    oliIndex += 1
+                else
+                    oliIndex = 0
+                end
+                oliParser.oliIndex = oliIndex
+                
+                markupParser = MarkupParser.new(html, paragraph)
+                paragraph.text = markupParser.parse()
+                result = h1Parser.parse(paragraph)
+
+                if (OLIParser.isOLI(preParagraph) && !OLIParser.isOLI(paragraph)) ||
+                    (ULIParser.isULI(preParagraph) && !ULIParser.isULI(paragraph))
+                    file.puts("")
+                end
+                
+                file.puts(result)
+                preParagraph = paragraph
+            end
+        end
+        puts "Post Download Success: #{postPath}"
+    end
+    
+    def downloadPostsByUsername(username)
+        userID = User.convertToUserIDFromUsername(username)
+        if userID.nil?
+            raise "Username:#{username} not found!"
+        end
+
+        puts "Resolved Username:#{username} to UserID:#{userID}"
+
+        nextID = nil
+        pageCount = 1
+        postCount = 0
+        begin
+            puts "Resolved Page:#{pageCount}"
+            postPageInfo = User.fetchUserPosts(userID, nextID)
+            postPageInfo["postURLs"].each do |postURL|
+                downloadPost(postURL, username)
+                postCount += 1
+            end
+            nextID = postPageInfo["nextID"]
+            pageCount += 1
+        end while !nextID.nil?
+
+        puts "Username Posts Download Success, total posts:#{postCount}"
+    end
+end
+
+fetcher = ZMediumFetcher.new
+ARGV << '-h' if ARGV.empty?
+OptionParser.new do |opts|
+    opts.banner = "Usage: ZMediumFetcher [options]"
+    opts.on('-uUSERNAME', '--username=USERNAME', 'test') do |username|
+        fetcher.downloadPostsByUsername(username)
+    end
+
+    opts.on('-pPOST_URL', '--postURL=POST_URL', 'test') do |postURL|
+        fetcher.downloadPost(postURL, 'posts')
+    end
+end.parse!
+

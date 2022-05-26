@@ -1,19 +1,7 @@
 $lib = File.expand_path('../', File.dirname(__FILE__))
 
-require 'Parsers/MarkupParser'
-
 class Paragraph
-    attr_accessor :postID, :name, :text, :type, :href, :metadata, :iframe, :markups
-
-    class Markup
-        attr_accessor :type, :start, :end, :href
-        def initialize(json)
-            @type = json['type']
-            @start = json['start']
-            @end = json['end']
-            @href = json['href']
-        end
-    end
+    attr_accessor :postID, :name, :text, :type, :href, :metadata, :mixtapeMetadata, :iframe, :hasMarkup
 
     class Iframe
         attr_accessor :id, :title, :type, :src
@@ -37,6 +25,13 @@ class Paragraph
         end
     end
 
+    class MixtapeMetadata
+        attr_accessor :href
+        def initialize(json)
+            @href = json['href']
+        end
+    end
+
     def initialize(json, postID, resource)
         @name = json['name']
         @text = json['text']
@@ -50,14 +45,22 @@ class Paragraph
             @metadata = MetaData.new(resource[json['metadata']['__ref']])
         end
 
+        if json['mixtapeMetadata'].nil?
+            @mixtapeMetadata = nil
+        else
+            @mixtapeMetadata = MixtapeMetadata.new(json['mixtapeMetadata'])
+        end
+
         if json['iframe'].nil?
             @iframe = nil
         else
             @iframe = Iframe.new(resource[json['iframe']['mediaResource']['__ref']])
         end
         
-        @markups = json['markups'].map do |thisMarkup|
-            markup = Markup.new(thisMarkup)
+        if json['markups'].length > 0
+            @hasMarkup = true
+        else
+            @hasMarkup = false
         end
     end
 end

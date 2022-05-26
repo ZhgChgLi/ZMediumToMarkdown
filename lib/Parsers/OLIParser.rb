@@ -3,20 +3,20 @@ $lib = File.expand_path('../', File.dirname(__FILE__))
 require "Parsers/Parser"
 require 'Models/Paragraph'
 
-class ULIParser < Parser
-    attr_accessor :nextParser
+class OLIParser < Parser
+    attr_accessor :nextParser, :oliIndex
 
-    def self.isULI(paragraph)
+    def self.isOLI(paragraph)
         if paragraph.nil? 
             false
         else
-            paragraph.type == "ULI"
+            paragraph.type == "OLI"
         end
     end
 
     def parse(paragraph)
-        if ULIParser.isULI(paragraph)
-            "- #{paragraph.text}"
+        if OLIParser.isOLI(paragraph)
+            "#{oliIndex}. #{paragraph.text}"
         else
             if !nextParser.nil?
                 nextParser.parse(paragraph)
