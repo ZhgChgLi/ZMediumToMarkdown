@@ -1,7 +1,10 @@
 $lib = File.expand_path('../', File.dirname(__FILE__))
 
+require 'Parsers/PParser'
+require 'securerandom'
+
 class Paragraph
-    attr_accessor :postID, :name, :text, :type, :href, :metadata, :mixtapeMetadata, :iframe, :hasMarkup
+    attr_accessor :postID, :name, :text, :type, :href, :metadata, :mixtapeMetadata, :iframe, :hasMarkup, :oliIndex
 
     class Iframe
         attr_accessor :id, :title, :type, :src
@@ -32,6 +35,15 @@ class Paragraph
         end
     end
 
+    def self.makeBlankParagraph(postID)
+        json = {
+            "name" => "fakeBlankParagraph_#{SecureRandom.uuid}",
+            "text" => "",
+            "type" => PParser.getTypeString()
+        }
+        Paragraph.new(json, postID, nil)
+    end
+
     def initialize(json, postID, resource)
         @name = json['name']
         @text = json['text']
@@ -57,7 +69,7 @@ class Paragraph
             @iframe = Iframe.new(resource[json['iframe']['mediaResource']['__ref']])
         end
         
-        if json['markups'].length > 0
+        if !json['markups'].nil? && json['markups'].length > 0
             @hasMarkup = true
         else
             @hasMarkup = false

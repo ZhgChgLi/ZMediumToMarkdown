@@ -5,8 +5,13 @@ require 'Models/Paragraph'
 
 class PParser < Parser
     attr_accessor :nextParser
+
+    def self.getTypeString()
+        'P'
+    end
+
     def parse(paragraph)
-        if paragraph.type == 'P'
+        if paragraph.type == PParser.getTypeString()
             "\n#{paragraph.text}"
         else
             if !nextParser.nil?

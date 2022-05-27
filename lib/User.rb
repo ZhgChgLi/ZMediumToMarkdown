@@ -39,15 +39,22 @@ class User
     body = Request.body(Request.URL("https://medium.com/_/graphql", "POST", query))
     json = JSON.parse(body)
 
-    nextInfo = json[0]['data']['userResult']['homepagePostsConnection']['pagingInfo']['next']
+    nextInfo = json&.dig(0, "data", "userResult", "homepagePostsConnection", "pagingInfo", "next")
+    postsInfo = json&.dig(0, "data", "userResult", "homepagePostsConnection", "posts")
+
     nextID = nil
+    postURLs = []
     if !nextInfo.nil?
       nextID = nextInfo["from"]
     end
-    
+
+    if !postsInfo.nil?
+      postURLs = postsInfo.map { |post| post["mediumUrl"] }
+    end
+
     {
       "nextID" => nextID,
-      "postURLs" => json[0]['data']['userResult']['homepagePostsConnection']['posts'].map { |post| post["mediumUrl"] }
+      "postURLs" => postURLs
     }
   end
 end

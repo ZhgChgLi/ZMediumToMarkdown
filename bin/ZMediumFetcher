@@ -24,30 +24,57 @@ require "Parsers/OLIParser"
 require "Parsers/MIXTAPEEMBEDParser"
 require "Parsers/PQParser"
 
+require "PathPolicy"
 require "Request"
 require "Post"
 require "User"
 
 class ZMediumFetcher
 
-    def self.getOutputDirName()
-        "#{File.expand_path('../', File.dirname(__FILE__))}/Output"
+    attr_accessor :progress
+
+    class Progress
+        attr_accessor :username, :postPath, :currentPostIndex, :totalPostsLength, :currentPostParagraphIndex, :totalPostParagraphsLength, :message
+
+        def printLog()
+            info = ""
+            if !username.nil?
+                if !currentPostIndex.nil? && !totalPostsLength.nil?
+                    info += "[#{username}(#{currentPostIndex}/#{totalPostsLength})]"
+                else
+                    info += "[#{username}]"
+                end
+            end
+
+            if !postPath.nil?
+                if info != ""
+                    info += "-"
+                end
+                if !currentPostParagraphIndex.nil? && !totalPostParagraphsLength.nil?
+                    info += "[#{postPath[0..10]}...(#{currentPostParagraphIndex}/#{totalPostParagraphsLength})]"
+                else
+                    info += "[#{postPath[0..10]}...]"
+                end
+            end
+
+            if !message.nil?
+                if info != ""
+                    info += "-"
+                end
+                info += message
+            end
+
+            if info != "" 
+                puts info
+            end
+        end
     end
 
     def initialize
-        Dir.mkdir(ZMediumFetcher.getOutputDirName()) unless File.exists?(ZMediumFetcher.getOutputDirName())
+        @progress = Progress.new()
     end
 
-    def downloadPost(postURL, username)
-        postID = Post.getPostIDFromPostURLString(postURL)
-        postPath = Post.getPostPathFromPostURLString(postURL)
-        html = Request.html(Request.URL(postURL))
-        postContent = Post.parsePostContentFromHTML(html)
-        if postContent.nil?
-            raise "PostURL:#{postURL} Not found!"
-        end
-        paragraphs = Post.parsePostParagraphsFromPostContent(postContent, postID)
-
+    def buildParser(imagePathPolicy)
         h1Parser = H1Parser.new()
         h2Parser = H2Parser.new()
             h1Parser.setNext(h2Parser)
@@ -66,10 +93,10 @@ class ZMediumFetcher
         pqParser = PQParser.new()
             mixtapeembedParser.setNext(pqParser)
         iframeParser = IframeParser.new()
-        iframeParser.username = username
+        iframeParser.pathPolicy = imagePathPolicy
             pqParser.setNext(iframeParser)
         imgParser = IMGParser.new()
-        imgParser.username = username
+        imgParser.pathPolicy = imagePathPolicy
             iframeParser.setNext(imgParser)
         bqParser = BQParser.new()
             imgParser.setNext(bqParser)
@@ -78,65 +105,133 @@ class ZMediumFetcher
         fallbackParser = FallbackParser.new()
             preParser.setNext(fallbackParser)
 
-        puts "Downloading Post: #{postPath}"
-        dir = ZMediumFetcher.getOutputDirName()
-        if !username.nil?
-            dir = "#{dir}/#{username}"
-            Dir.mkdir("#{dir}") unless File.exists?("#{dir}")
+
+        h1Parser
+    end
+
+    def downloadPost(postURL, pathPolicy)
+        postID = Post.getPostIDFromPostURLString(postURL)
+        postPath = Post.getPostPathFromPostURLString(postURL)
+
+        progress.postPath = postPath
+        progress.message = "Downloading Post..."
+        progress.printLog()
+
+        postHtml = Request.html(Request.URL(postURL))
+
+        postContent = Post.parsePostContentFromHTML(postHtml)
+        if postContent.nil?
+            raise "Error: Content is empty! PostURL: #{postURL}"
         end
 
-        File.open("#{dir}/#{postPath}.md", "w+") do |file|
-            oliIndex = 0
-            preParagraph = nil
-            paragraphs.each do |sourcParagraph|
-                paragraph = Paragraph.new(sourcParagraph, postID, postContent)
+        sourceParagraphs = Post.parsePostParagraphsFromPostContent(postContent, postID)
+        if sourceParagraphs.nil?
+            raise "Error: Paragraph not found! PostURL: #{postURL}"
+        end 
+        
+        progress.message = "Formatting Data..."
+        progress.printLog()
 
-                if OLIParser.isOLI(paragraph)
-                    oliIndex += 1
-                else
-                    oliIndex = 0
-                end
-                oliParser.oliIndex = oliIndex
-                
-                markupParser = MarkupParser.new(html, paragraph)
+        paragraphs = []
+        oliIndex = 0
+        preParagraph = nil
+        sourceParagraphs.each do |sourcParagraph|
+            paragraph = Paragraph.new(sourcParagraph, postID, postContent)
+            if OLIParser.isOLI(paragraph)
+                oliIndex += 1
+                paragraph.oliIndex = oliIndex
+            else
+                oliIndex = 0
+            end
+
+            # if previous is OLI or ULI and current is not OLI or ULI
+            # than insert a blank paragraph to keep markdown foramt correct
+            if (OLIParser.isOLI(preParagraph) && !OLIParser.isOLI(paragraph)) ||
+                (ULIParser.isULI(preParagraph) && !ULIParser.isULI(paragraph))
+                paragraphs.append(Paragraph.makeBlankParagraph(postID))
+            end
+
+            paragraphs.append(paragraph)
+            preParagraph = paragraph
+        end
+
+        postPathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), "posts")
+
+        imagePathPolicy = PathPolicy.new(postPathPolicy.getAbsolutePath(nil), "images")
+        startParser = buildParser(imagePathPolicy)
+
+        progress.totalPostParagraphsLength = paragraphs.length
+        progress.currentPostParagraphIndex = 0
+        progress.message = "Converting Post..."
+        progress.printLog()
+
+        absolutePath = postPathPolicy.getAbsolutePath("#{postPath}.md")
+        Helper.createDirIfNotExist(postPathPolicy.getAbsolutePath(nil))
+        index = 0
+        File.open(absolutePath, "w+") do |file|
+            paragraphs.each do |paragraph|
+                markupParser = MarkupParser.new(postHtml, paragraph)
                 paragraph.text = markupParser.parse()
-                result = h1Parser.parse(paragraph)
-
-                if (OLIParser.isOLI(preParagraph) && !OLIParser.isOLI(paragraph)) ||
-                    (ULIParser.isULI(preParagraph) && !ULIParser.isULI(paragraph))
-                    file.puts("")
-                end
+                result = startParser.parse(paragraph)
                 
                 file.puts(result)
-                preParagraph = paragraph
+
+                index += 1
+                progress.currentPostParagraphIndex = index
+                progress.message = "Converting Post..."
+                progress.printLog()
             end
+
+            file.puts(Helper.createWatermark(postURL))
         end
-        puts "Post Download Success: #{postPath}"
+
+        progress.message = "Post Successfully Downloaded!"
+        progress.printLog()
+
+        progress.postPath = nil
     end
     
-    def downloadPostsByUsername(username)
+    def downloadPostsByUsername(username, pathPolicy)
+        progress.username = username
+        progress.message = "Fetching infromation..."
+        progress.printLog()
+
         userID = User.convertToUserIDFromUsername(username)
         if userID.nil?
-            raise "Username:#{username} not found!"
+            raise "Medium's Username:#{username} not found!"
         end
 
-        puts "Resolved Username:#{username} to UserID:#{userID}"
+        progress.message = "Fetching posts..."
+        progress.printLog()
 
+        postURLS = []
         nextID = nil
-        pageCount = 1
-        postCount = 0
         begin
-            puts "Resolved Page:#{pageCount}"
             postPageInfo = User.fetchUserPosts(userID, nextID)
             postPageInfo["postURLs"].each do |postURL|
-                downloadPost(postURL, username)
-                postCount += 1
+                postURLS.append(postURL)
             end
             nextID = postPageInfo["nextID"]
-            pageCount += 1
         end while !nextID.nil?
 
-        puts "Username Posts Download Success, total posts:#{postCount}"
+        progress.totalPostsLength = postURLS.length
+        progress.currentPostIndex = 0
+        progress.message = "Downloading posts..."
+        progress.printLog()
+
+        userPathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), "users/#{username}")
+        index = 0
+        postURLS.each do |postURL|
+            downloadPost(postURL, userPathPolicy)
+
+            index += 1
+            progress.currentPostIndex = index
+            progress.message = "Downloading posts..."
+            progress.printLog()
+        end
+
+        progress.message = "All posts has been downloaded!, Total posts: #{postURLS.length}"
+        progress.printLog()
     end
 end
 
@@ -145,11 +240,13 @@ ARGV << '-h' if ARGV.empty?
 OptionParser.new do |opts|
     opts.banner = "Usage: ZMediumFetcher [options]"
     opts.on('-uUSERNAME', '--username=USERNAME', 'test') do |username|
-        fetcher.downloadPostsByUsername(username)
+        pathPolicy = PathPolicy.new("#{File.expand_path('../', File.dirname(__FILE__))}", "Output")
+        fetcher.downloadPostsByUsername(username, pathPolicy)
     end
 
     opts.on('-pPOST_URL', '--postURL=POST_URL', 'test') do |postURL|
-        fetcher.downloadPost(postURL, 'posts')
+        pathPolicy = PathPolicy.new("#{File.expand_path('../', File.dirname(__FILE__))}", "Output")
+        fetcher.downloadPost(postURL, pathPolicy)
     end
 end.parse!
 

@@ -33,6 +33,11 @@ class Post
   end
 
   def self.parsePostParagraphsFromPostContent(content, postID)
-    content["Post:#{postID}"]["content({\"postMeteringOptions\":null})"]["bodyModel"]["paragraphs"].map { |paragraph| content[paragraph["__ref"]] }
+    result = content&.dig("Post:#{postID}", "content({\"postMeteringOptions\":null})", "bodyModel", "paragraphs")
+    if result.nil?
+      nil
+    else
+      result.map { |paragraph| content[paragraph["__ref"]] }
+    end
   end
 end

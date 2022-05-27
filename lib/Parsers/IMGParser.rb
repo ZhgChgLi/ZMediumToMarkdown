@@ -4,26 +4,26 @@ require "Parsers/Parser"
 require 'Models/Paragraph'
 require 'open-uri'
 
+require 'ImageDownloader'
+require 'PathPolicy'
+
 class IMGParser < Parser
-    attr_accessor :nextParser, :username
+    attr_accessor :nextParser, :pathPolicy
     def parse(paragraph)
         if paragraph.type == 'IMG'
-            dir = ZMediumFetcher.getOutputDirName()
-            if !username.nil?
-                dir = "#{dir}/#{username}"
-                Dir.mkdir("#{dir}") unless File.exists?("#{dir}")
-            end
-            localURL = "#{paragraph.postID}/#{paragraph.metadata.id}"
 
-            Dir.mkdir("#{dir}/#{paragraph.postID}") unless File.exists?("#{dir}/#{paragraph.postID}")
-            
+            fileName = paragraph.metadata.id #d*fsafwfe.jpg
+
             imageURL = "https://miro.medium.com/max/1400/#{paragraph.metadata.id}"
-            begin
-                imageResponse = open(imageURL)
-                File.write("#{dir}/#{localURL}", imageResponse.read, {mode: 'wb'})
-                "![#{paragraph.text}](./#{localURL} \"#{paragraph.text}\")"
-            rescue
-                "![#{paragraph.text}](./#{imageURL} \"#{paragraph.text}\")"
+
+            imagePathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), paragraph.postID)
+            absolutePath = imagePathPolicy.getAbsolutePath(fileName)
+            
+            if  ImageDownloader.download(absolutePath, imageURL)
+                relativePath = "#{pathPolicy.getRelativePath(nil)}/#{imagePathPolicy.getRelativePath(fileName)}"
+                "![#{paragraph.text}](#{relativePath} \"#{paragraph.text}\")"
+            else
+                "![#{paragraph.text}](#{imageURL} \"#{paragraph.text}\")"
             end
         else
             if !nextParser.nil?

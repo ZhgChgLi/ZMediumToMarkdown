@@ -7,8 +7,11 @@ require "Parsers/Parser"
 require 'Models/Paragraph'
 require 'nokogiri'
 
+require 'ImageDownloader'
+require 'PathPolicy'
+
 class IframeParser < Parser
-    attr_accessor :nextParser, :username
+    attr_accessor :nextParser, :pathPolicy
     def parse(paragraph)
         if paragraph.type == 'IFRAME'
             if !paragraph.iframe.src.nil? && paragraph.iframe.src != ""
@@ -22,24 +25,19 @@ class IframeParser < Parser
                 youtubeURL = URI(URI.decode(url)).query
                 params = URI::decode_www_form(youtubeURL).to_h
                 if !params["image"].nil? && !params["url"].nil?
-                    filePath = URI(params["image"]).path.split("/").last
-                    dir = ZMediumFetcher.getOutputDirName()
-                    if !username.nil?
-                        dir = "#{dir}/#{username}"
-                        Dir.mkdir("#{dir}") unless File.exists?("#{dir}")
-                    end
-                    localURL = "#{paragraph.postID}/#{paragraph.name}_#{filePath}"
-        
-                    Dir.mkdir("#{dir}/#{paragraph.postID}") unless File.exists?("#{dir}/#{paragraph.postID}")
 
-                    begin
-                        imageResponse = open(params["image"])
-                        File.write("#{dir}/#{localURL}", imageResponse.read, {mode: 'wb'})
-                        result = "[![YouTube](./#{localURL} \"YouTube\")](#{params["url"]})"
-                    rescue
-                        result = "[YouTube](#{params["url"]})"
-                    end
+                    fileName = "#{paragraph.name}_#{URI(params["image"]).path.split("/").last}" #21de_default.jpg
+
+                    imageURL = params["image"]
+                    imagePathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), paragraph.postID)
+                    absolutePath = imagePathPolicy.getAbsolutePath(fileName)
                     
+                    if  ImageDownloader.download(absolutePath, imageURL)
+                        relativePath = "#{pathPolicy.getRelativePath(nil)}/#{imagePathPolicy.getRelativePath(fileName)}"
+                        result = "\n[![YouTube](#{relativePath} \"YouTube\")](#{params["url"]})"
+                    else
+                        result = "\n[YouTube](#{params["url"]})"
+                    end
                 end
             else
                 html = Request.html(Request.URL(url))
