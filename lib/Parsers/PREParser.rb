@@ -5,9 +5,22 @@ require 'Models/Paragraph'
 
 class PREParser < Parser
     attr_accessor :nextParser
+
+    def self.isPRE(paragraph)
+        if paragraph.nil? 
+            false
+        else
+            paragraph.type == "PRE"
+        end
+    end
+
     def parse(paragraph)
-        if paragraph.type == 'PRE'
-            "> #{paragraph.text}"
+        if PREParser.isPRE(paragraph)
+            result = ""
+            paragraph.text.each_line do |p|
+                result += "> #{p}"
+            end
+            result
         else
             if !nextParser.nil?
                 nextParser.parse(paragraph)

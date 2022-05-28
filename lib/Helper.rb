@@ -1,5 +1,7 @@
 $lib = File.expand_path('../lib', File.dirname(__FILE__))
 
+require 'Post'
+
 class Helper
     def self.createDirIfNotExist(dirPath)
         dirs = dirPath.split("/")
@@ -9,6 +11,28 @@ class Helper
             currentDir = "#{currentDir}/#{dir}"
             Dir.mkdir(currentDir) unless File.exists?(currentDir)
         end while dirs.length > 0
+    end
+
+    def self.makeWarningText(message)
+        puts "####################################################\n"
+        puts "#WARNING:\n"
+        puts "##{message}\n"
+        puts "#--------------------------------------------------#\n"
+        puts "#Please feel free to open an Issue or submit a fix/contribution via Pull Request on:\n"
+        puts "#https://github.com/ZhgChgLi/ZMediumToMarkdown\n"
+        puts "####################################################\n"
+    end
+
+    def self.createPostInfo(postInfo)
+        result = "---\n"
+        result += "title: #{postInfo.title}\n"
+        result += "author: #{postInfo.creator}\n"
+        result += "date: #{postInfo.firstPublishedAt}\n"
+        result += "tags: [#{postInfo.tags.join(",")}]\n"
+        result += "---\n"
+        result += "\r\n"
+
+        result
     end
 
     def self.createWatermark(postURL)

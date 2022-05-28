@@ -4,8 +4,14 @@ require "Request"
 require 'uri'
 require 'nokogiri'
 require 'json'
+require 'date'
 
 class Post
+
+  class PostInfo
+    attr_accessor :title, :tags, :creator, :firstPublishedAt
+  end
+
   def self.getPostIDFromPostURLString(postURLString)
     uri = URI.parse(postURLString)
     postID = uri.path.split('/').last.split('-').last
@@ -39,5 +45,23 @@ class Post
     else
       result.map { |paragraph| content[paragraph["__ref"]] }
     end
+  end
+
+  def self.parsePostInfoFromPostContent(content, postID)
+    postInfo = PostInfo.new()
+    postInfo.title = content&.dig("Post:#{postID}", "title")
+    postInfo.tags = content&.dig("Post:#{postID}", "tags").map{ |tag| tag["__ref"].gsub! 'Tag:', '' }
+    
+    creatorRef = content&.dig("Post:#{postID}", "creator", "__ref")
+    if !creatorRef.nil?
+      postInfo.creator = content&.dig(creatorRef, "name")
+    end
+
+    firstPublishedAt = content&.dig("Post:#{postID}", "firstPublishedAt")
+    if !firstPublishedAt.nil?
+      postInfo.firstPublishedAt = DateTime.strptime(firstPublishedAt.to_s,'%Q')
+    end
+    
+    postInfo
   end
 end
