@@ -1142,5 +1142,7 @@ Platform Team 專案負責人、Pair programming、在 iOS 端使用 Swift 實�
 
 
 +-----------------------------------------------------------------------------------+
+
 | **[View original post on Medium](https://medium.com/pinkoi-engineering/%E5%AF%A6%E6%88%B0%E7%B4%80%E9%8C%84-4-%E5%80%8B%E5%A0%B4%E6%99%AF-7-%E5%80%8B-design-patterns-78507a8de6a5) - Converted by [ZhgChgLi](https://blog.zhgchg.li)/[ZMediumToMarkdown](https://github.com/ZhgChgLi/ZMediumToMarkdown)** |
+
 +-----------------------------------------------------------------------------------+
