@@ -1,8 +1,6 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    highline (2.0.3)
-    iconv (1.0.8)
     net-http (0.1.1)
       net-protocol
       uri
@@ -10,10 +8,6 @@ GEM
       timeout
     nokogiri (1.13.6-x86_64-darwin)
       racc (~> 1.4)
-    options (2.3.2)
-    progress_bar (1.3.3)
-      highline (>= 1.6, < 3)
-      options (~> 2.3.0)
     racc (1.6.0)
     reverse_markdown (2.1.1)
       nokogiri
@@ -24,11 +18,9 @@ PLATFORMS
   x86_64-darwin-21
 
 DEPENDENCIES
-  iconv
   net-http (~> 0.1.0)
   nokogiri (~> 1.13.1)
-  progress_bar
-  reverse_markdown
+  reverse_markdown (~> 2.1.1)
 
 BUNDLED WITH
    2.3.13

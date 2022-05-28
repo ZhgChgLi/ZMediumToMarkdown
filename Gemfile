@@ -1,6 +1,4 @@
 source 'https://rubygems.org'
 gem 'net-http', '~> 0.1.0'
 gem 'nokogiri', '~> 1.13.1'
-gem 'iconv'
-gem 'reverse_markdown'
-gem 'progress_bar'
+gem 'reverse_markdown', '~> 2.1.1'
