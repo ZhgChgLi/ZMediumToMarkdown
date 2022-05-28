@@ -8,7 +8,7 @@ You can also use [Github Action](https://github.com/features/actions) as the aut
 ## Features
 - [X] Support download post and convert to markdown format
 - [X] Support download all posts and convert to markdown format from any user without login access.
-- [X] Support command Line Interface
+- [X] Support command line interface
 - [X] Download all of post's images to local and convert to local path
 - [X] Convert [Gist](https://gist.github.com/) source code to markdown code block
 - [X] Convert youtube link which embed in post to preview image
