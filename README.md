@@ -15,7 +15,7 @@ You can also use [Github Action](https://github.com/features/actions) as the aut
 
 
 ## Setup
-1. make sure you have Ruby in your environment
+1. make sure you have Ruby in your environment (I use ruby `2.6.5p114`)
 2. git clone or download this project
 3. type `cd ./ZMediumToMarkdown` go into project
 4. type `bundle install` in terminal to install project dependencies
