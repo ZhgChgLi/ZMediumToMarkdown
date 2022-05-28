@@ -1,3 +1,10 @@
+---
+title: Design Patterns 的實戰應用紀錄
+author: ZhgChgLi
+date: 2022-04-07T14:49:17+00:00
+tags: [ios-app-development,design-patterns,socketio,websocket,finite-state-machine]
+---
+
 ### Design Patterns 的實戰應用紀錄
 
 封裝 Socket.IO Client Library 需求時遇到的問題場景及解決方法應用到的 Design Patterns
@@ -44,8 +51,8 @@ Web & iOS & Android 三平台均會支援此 Feature；要引入 webSocket 雙�
 
 簡而言之：
 > Socket 是 TCP/UDP 傳輸層的抽象封裝介面，而 WebSocket 是應用層的傳輸協議。  
-Socket 與 WebSocket 的關係就像狗跟熱狗的關係一樣， **沒有關係** 。
-
+> Socket 與 WebSocket 的關係就像狗跟熱狗的關係一樣， **沒有關係** 。
+> 
 ![](images/78507a8de6a5/1*MC_nQC382khMeWggLejWOA.jpeg "")
 
 Socket.IO 是 Engine.IO 的一層抽象操作封裝，Engine.IO 則是對 WebSocket 的使用封裝，每層只負責對上對下之間的交流，不允許貫穿操作(e.g. Socket.IO 直接操作 WebSocket 連線)。
@@ -837,12 +844,12 @@ do {
 - e.g:
 
 > if !connection.isOccupie() && connection.state == .connected then
-... connection.disconnected()
-else if !connection.isOccupie() && state == .released then
-... connection.release()
-else if connection.isOccupie() && state == .disconnected then
-... connection.reconnecting()
-end
+> ... connection.disconnected()
+> else if !connection.isOccupie() && state == .released then
+> ... connection.release()
+> else if connection.isOccupie() && state == .disconnected then
+> ... connection.reconnecting()
+> end
 #### How?
 - [Chain Of Resposibility](https://refactoring.guru/design-patterns/chain-of-responsibility)：行為型 Pattern，顧名思義是一條鏈，每個節點都有相應的操作，輸入資料後節點可決定是否要操作還是丟給下一個節點處理，另一個現實應用是 [iOS Responder Chain](https://swiftrocks.com/understanding-the-ios-responder-chain)。
 
@@ -1000,13 +1007,13 @@ disconnectedHandler.handle(context: ConnectionKeeperHandlerContext(connection: c
 - e.g.:
 
 > ❌
-let connection = Connection()
-connection.send(event) // unexpected method call, should call .connect() first
-✅
-let connection = Connection()
-connection.connect()
-connection.send(event)
-// but...who knows???
+> let connection = Connection()
+> connection.send(event) // unexpected method call, should call .connect() first
+> ✅
+> let connection = Connection()
+> connection.connect()
+> connection.send(event)
+> // but...who knows???
 #### How?
 - [Builder Pattern](https://refactoring.guru/design-patterns/builder)：創建型 Pattern，能夠分步驟構建對象及複用構建方法。
 

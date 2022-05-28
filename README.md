@@ -60,4 +60,6 @@ This repository is for research purposes only, the use of this code is your resp
 ## Made In Taiwan 🇹🇼🇹🇼🇹🇼
 - [ZhgChgLi's Medium (CH)](https://blog.zhgchg.li/)
 
+If this is helpful, please help to star the repo or recommend it to your friends.
+
 Please feel free to open an Issue or submit a fix/contribution via Pull Request. :)
