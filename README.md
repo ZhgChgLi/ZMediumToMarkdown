@@ -1,4 +1,7 @@
 # ZMediumToMarkdown
+
+![Harry's Idea Draw](https://user-images.githubusercontent.com/33706588/170814437-98c067f1-bee1-47ad-941a-d943352a9cec.jpg)
+
 ZMediumToMarkdown lets you download Medium post and convert it to markdown format easily.
 
 This project can help you to make an auto-sync or auto-backup service from Medium, like auto-sync Medium posts to Jekyll or other static markdown blog engines or auto-backup Medium posts to the Github page.
@@ -8,14 +11,14 @@ You can also use [Github Action](https://github.com/features/actions) as the aut
 ## Features
 - [X] Support download post and convert to markdown format
 - [X] Support download all posts and convert to markdown format from any user without login access.
-- [X] Support command Line Interface
+- [X] Support command line interface
 - [X] Download all of post's images to local and convert to local path
 - [X] Convert [Gist](https://gist.github.com/) source code to markdown code block
 - [X] Convert youtube link which embed in post to preview image
 
 
 ## Setup
-1. make sure you have Ruby in your environment
+1. make sure you have Ruby in your environment (I use ruby `2.6.5p114`)
 2. git clone or download this project
 3. type `cd ./ZMediumToMarkdown` go into project
 4. type `bundle install` in terminal to install project dependencies
