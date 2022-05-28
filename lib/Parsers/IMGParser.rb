@@ -2,7 +2,6 @@ $lib = File.expand_path('../', File.dirname(__FILE__))
 
 require "Parsers/Parser"
 require 'Models/Paragraph'
-require 'open-uri'
 
 require 'ImageDownloader'
 require 'PathPolicy'

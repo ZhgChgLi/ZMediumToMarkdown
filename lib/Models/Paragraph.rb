@@ -4,7 +4,7 @@ require 'Parsers/PParser'
 require 'securerandom'
 
 class Paragraph
-    attr_accessor :postID, :name, :text, :type, :href, :metadata, :mixtapeMetadata, :iframe, :hasMarkup, :oliIndex
+    attr_accessor :postID, :name, :text, :type, :href, :metadata, :mixtapeMetadata, :iframe, :hasMarkup, :oliIndex, :markupLinks
 
     class Iframe
         attr_accessor :id, :title, :type, :src
@@ -70,6 +70,10 @@ class Paragraph
         end
         
         if !json['markups'].nil? && json['markups'].length > 0
+            links = json['markups'].select{ |markup| markup["type"] == "A" }
+            if !links.nil? && links.length > 0
+                @markupLinks = links.map{ |link| link["href"] }
+            end
             @hasMarkup = true
         else
             @hasMarkup = false

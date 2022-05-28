@@ -23,15 +23,36 @@ require "Parsers/MarkupParser"
 require "Parsers/OLIParser"
 require "Parsers/MIXTAPEEMBEDParser"
 require "Parsers/PQParser"
+require "Parsers/LinkParser"
 
 require "PathPolicy"
 require "Request"
 require "Post"
 require "User"
 
+class Main
+    def initialize
+        fetcher = ZMediumFetcher.new
+        ARGV << '-h' if ARGV.empty?
+        OptionParser.new do |opts|
+            opts.banner = "Usage: ZMediumFetcher [options]"
+        
+            opts.on('-uUSERNAME', '--username=USERNAME', 'test') do |username|
+                pathPolicy = PathPolicy.new("#{File.expand_path('../', File.dirname(__FILE__))}", "Output")
+                fetcher.downloadPostsByUsername(username, pathPolicy)
+            end
+        
+            opts.on('-pPOST_URL', '--postURL=POST_URL', 'test') do |postURL|
+                pathPolicy = PathPolicy.new("#{File.expand_path('../', File.dirname(__FILE__))}", "Output")
+                fetcher.downloadPost(postURL, pathPolicy)
+            end
+        end.parse!
+    end
+end
+
 class ZMediumFetcher
 
-    attr_accessor :progress
+    attr_accessor :progress, :linkParser
 
     class Progress
         attr_accessor :username, :postPath, :currentPostIndex, :totalPostsLength, :currentPostParagraphIndex, :totalPostParagraphsLength, :message
@@ -72,6 +93,7 @@ class ZMediumFetcher
 
     def initialize
         @progress = Progress.new()
+        @linkParser = LinkParser.new(nil)
     end
 
     def buildParser(imagePathPolicy)
@@ -173,6 +195,10 @@ class ZMediumFetcher
                 markupParser = MarkupParser.new(postHtml, paragraph)
                 paragraph.text = markupParser.parse()
                 result = startParser.parse(paragraph)
+
+                if !linkParser.nil?
+                    result = linkParser.parse(result, paragraph.markupLinks)
+                end
                 
                 file.puts(result)
 
@@ -214,6 +240,8 @@ class ZMediumFetcher
             nextID = postPageInfo["nextID"]
         end while !nextID.nil?
 
+        @linkParser = LinkParser.new(postURLS)
+
         progress.totalPostsLength = postURLS.length
         progress.currentPostIndex = 0
         progress.message = "Downloading posts..."
@@ -235,18 +263,12 @@ class ZMediumFetcher
     end
 end
 
-fetcher = ZMediumFetcher.new
-ARGV << '-h' if ARGV.empty?
-OptionParser.new do |opts|
-    opts.banner = "Usage: ZMediumFetcher [options]"
-    opts.on('-uUSERNAME', '--username=USERNAME', 'test') do |username|
-        pathPolicy = PathPolicy.new("#{File.expand_path('../', File.dirname(__FILE__))}", "Output")
-        fetcher.downloadPostsByUsername(username, pathPolicy)
-    end
-
-    opts.on('-pPOST_URL', '--postURL=POST_URL', 'test') do |postURL|
-        pathPolicy = PathPolicy.new("#{File.expand_path('../', File.dirname(__FILE__))}", "Output")
-        fetcher.downloadPost(postURL, pathPolicy)
-    end
-end.parse!
-
+begin 
+    puts "https://github.com/ZhgChgLi/ZMediumToMarkdown"
+    puts "You have read and agree with the Disclaimer."
+    Main.new()
+    puts "https://github.com/ZhgChgLi/ZMediumToMarkdown"
+    puts "If this repo is helpful, please help to star this repo or recommend it to your friends. Thanks."
+rescue => e
+    puts "Error: #{e.class} #{e.message}"
+end

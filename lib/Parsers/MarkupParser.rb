@@ -13,15 +13,14 @@ class MarkupParser
     end
 
     def parse()
+        result = paragraph.text
         if paragraph.hasMarkup
             p = body.at_css("##{paragraph.name}")
-            if p.nil?
-                paragraph.text
-            else
-                ReverseMarkdown.convert p.inner_html
+            if !p.nil?
+                result = ReverseMarkdown.convert p.inner_html
             end
-        else
-            paragraph.text
         end
+
+        result
     end
 end
