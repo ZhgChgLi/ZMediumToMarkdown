@@ -1,7 +1,7 @@
 ---
 title: Design Patterns 的實戰應用紀錄
 author: ZhgChgLi
-date: 2022-04-07T14:49:17+00:00
+date: 2022-04-07T22:49:17.715Z
 tags: [ios-app-development,design-patterns,socketio,websocket,finite-state-machine]
 ---
 
@@ -50,9 +50,12 @@ Web & iOS & Android 三平台均會支援此 Feature；要引入 webSocket 雙�
 
 
 簡而言之：
-> Socket 是 TCP/UDP 傳輸層的抽象封裝介面，而 WebSocket 是應用層的傳輸協議。  
-> Socket 與 WebSocket 的關係就像狗跟熱狗的關係一樣， **沒有關係** 。
-> 
+```
+Socket 是 TCP/UDP 傳輸層的抽象封裝介面，而 WebSocket 是應用層的傳輸協議。  
+Socket 與 WebSocket 的關係就像狗跟熱狗的關係一樣， **沒有關係** 。
+
+
+```
 ![](images/78507a8de6a5/1*MC_nQC382khMeWggLejWOA.jpeg "")
 
 Socket.IO 是 Engine.IO 的一層抽象操作封裝，Engine.IO 則是對 WebSocket 的使用封裝，每層只負責對上對下之間的交流，不允許貫穿操作(e.g. Socket.IO 直接操作 WebSocket 連線)。
@@ -71,8 +74,10 @@ Platform Team 這層的主要職責是橋接 Socket.IO 與 Pinkoi Server Side �
 
 
 >  **_建議有要採用 Socket.IO 前先實驗看看你想要的機制是否支援。_**  
-_Socket.IO Swift Client 是基於_ [**_Starscream_**](https://github.com/daltoniam/Starscream) _WebSocket Library 的封裝，必要時可降級使用_ _Starscream。_
-> 背景資訊補充到此結束，接下來進入正題。
+> _Socket.IO Swift Client 是基於_ [**_Starscream_**](https://github.com/daltoniam/Starscream) _WebSocket Library 的封裝，必要時可降級使用_ _Starscream。_
+```
+背景資訊補充到此結束，接下來進入正題。
+```
 ### Design Patterns
 
 設計模式說穿了就只是軟體設計當中常見問題的解決方案，不一定要用設計模式才能開發、設計模式不一定能適用所有場景、也沒人說不能自行歸納出新的設計模式。
@@ -234,7 +239,9 @@ print(ConnectionManager.shared.requestConnectionHandler(url: URL(string: "wss://
 
 如背景技術細節所述，Socket.IO Swift Client 的 `Send Event` 並不支援離線發送 (但 Web/Android 版的 Library 卻可以)，因此 iOS 端需要自行實現此功能。
 
-> 神奇的是 Socket.IO Swift Client - onEvent 是支援離線訂閱的。
+```
+神奇的是 Socket.IO Swift Client - onEvent 是支援離線訂閱的。
+```
 #### Why?
 - 跨平台功能統一
 - 程式碼容易理解
@@ -843,18 +850,20 @@ do {
 - 未封裝的話只能將三個判斷及操作直接寫在方法中 (難以測試其中邏輯)
 - e.g:
 
-> if !connection.isOccupie() && connection.state == .connected then
-> ... connection.disconnected()
-> else if !connection.isOccupie() && state == .released then
-> ... connection.release()
-> else if connection.isOccupie() && state == .disconnected then
-> ... connection.reconnecting()
-> end
+```
+if !connection.isOccupie() && connection.state == .connected then
+... connection.disconnected()
+else if !connection.isOccupie() && state == .released then
+... connection.release()
+else if connection.isOccupie() && state == .disconnected then
+... connection.reconnecting()
+end
+```
 #### How?
 - [Chain Of Resposibility](https://refactoring.guru/design-patterns/chain-of-responsibility)：行為型 Pattern，顧名思義是一條鏈，每個節點都有相應的操作，輸入資料後節點可決定是否要操作還是丟給下一個節點處理，另一個現實應用是 [iOS Responder Chain](https://swiftrocks.com/understanding-the-ios-responder-chain)。
 
 > _照定義 Chain of responsibility Pattern 是不允許某個節點已經接下處理資料，但處理完又丟給下一個節點繼續處理，_ **_要做就做完，不然不要做_** _。  
-如果是上述場景比較適合的應該是_ [_Interceptor Pattern_](https://stackoverflow.com/questions/7951306/chain-of-responsibility-vs-interceptor)_。_
+> 如果是上述場景比較適合的應該是_ [_Interceptor Pattern_](https://stackoverflow.com/questions/7951306/chain-of-responsibility-vs-interceptor)_。_
 ![](images/78507a8de6a5/1*e8jHpykN1m3Y66Ukf-5OJA.png "")
 -  **Chain of responsibility：** `ConnectionKeeperHandler` 為鍊的節點抽象，特別抽出 `canExcute` 方法避免發生上述 這個節點接下來處理了，但做完又想呼叫後面的節點繼續執行的狀況、`handle` 為鍊的節點串連、`excute` 為要處理的話會怎麼處理的邏輯。  
 `ConnectionKeeperHandlerContext` 用來存放會用到的資料，`isOccupie` 代表 Connection 有無人在使用。
@@ -1006,14 +1015,16 @@ disconnectedHandler.handle(context: ConnectionKeeperHandlerContext(connection: c
 - 未封裝的話，外部可以不照預期操作類別
 - e.g.:
 
-> ❌
-> let connection = Connection()
-> connection.send(event) // unexpected method call, should call .connect() first
-> ✅
-> let connection = Connection()
-> connection.connect()
-> connection.send(event)
-> // but...who knows???
+```
+❌
+let connection = Connection()
+connection.send(event) // unexpected method call, should call .connect() first
+✅
+let connection = Connection()
+connection.connect()
+connection.send(event)
+// but...who knows???
+```
 #### How?
 - [Builder Pattern](https://refactoring.guru/design-patterns/builder)：創建型 Pattern，能夠分步驟構建對象及複用構建方法。
 
