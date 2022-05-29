@@ -54,6 +54,35 @@ This repository is for research purposes only, the use of this code is your resp
 - By using any of the files available in this repository, you understand that you are AGREEING TO USE AT YOUR OWN RISK.
 - ALL files available here are for EDUCATION and/or RESEARCH purposes ONLY.
 
+## Container 
+This function is mainly to use the container to run the program.
+
+- Fist you must have Docker tool.
+- Second cd to folder and type below command.
+```
+$ docker build -t medium_to_markdown . --no-cache
+
+$ docker run --name [your_container_name] -v [host_project_path]:/home/ZMediumFetcher -id medium_to_markdown
+
+$ docker exec -it [your_container_name] /bin/bash
+
+$ bundle update --bundler
+```
+
+- Third Downloading single post
+```
+bundle exec ruby bin/ZMediumFetcher -p [MEDIUM POST URL]
+```
+![image](https://user-images.githubusercontent.com/33706588/170810799-7da207ff-0642-4beb-9b3a-6af11d6e918d.png)
+
+- Four Downloading single post
+```
+bundle exec ruby bin/ZMediumFetcher -p [MEDIUM POST URL]
+```
+![image](https://user-images.githubusercontent.com/33706588/170810799-7da207ff-0642-4beb-9b3a-6af11d6e918d.png)
+
+
+- Five check your physical host [host_project_path]/output folder you will see the medium article already transfer type to markdown.
 
 ## Acknowledgement
 - [Ruby](https://www.ruby-lang.org/zh_tw/)
