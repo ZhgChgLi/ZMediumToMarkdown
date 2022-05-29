@@ -15,8 +15,9 @@ You can also use [Github Action](https://github.com/features/actions) as the aut
 - [X] Download all of post's images to local and convert to local path
 - [X] Convert [Gist](https://gist.github.com/) source code to markdown code block
 - [X] Convert youtube link which embed in post to preview image
+- [X] Adjust post's last modification date from Medium to the local downloaded markdown file
+- [X] Auto skip when post has been downloaded and last modification date from Medium doesn't changed (convenient for auto-sync or auto-backup service)
 - [X] Highly optimized markdown format for Medium
-
 
 ## Setup
 ### If you are familiar with ruby:

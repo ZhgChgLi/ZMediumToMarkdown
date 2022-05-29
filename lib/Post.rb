@@ -9,7 +9,7 @@ require 'date'
 class Post
 
   class PostInfo
-    attr_accessor :title, :tags, :creator, :firstPublishedAt
+    attr_accessor :title, :tags, :creator, :firstPublishedAt, :latestPublishedAt
   end
 
   def self.getPostIDFromPostURLString(postURLString)
@@ -59,9 +59,14 @@ class Post
 
     firstPublishedAt = content&.dig("Post:#{postID}", "firstPublishedAt")
     if !firstPublishedAt.nil?
-      postInfo.firstPublishedAt = DateTime.strptime(firstPublishedAt.to_s,'%Q')
+      postInfo.firstPublishedAt = Time.at(0, firstPublishedAt, :millisecond) 
     end
-    
+
+    latestPublishedAt = content&.dig("Post:#{postID}", "latestPublishedAt")
+    if !latestPublishedAt.nil?
+      postInfo.latestPublishedAt = Time.at(0, latestPublishedAt, :millisecond)
+    end
+
     postInfo
   end
 end

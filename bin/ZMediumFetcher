@@ -7,6 +7,7 @@ $LOAD_PATH.unshift($lib)
 require "open-uri"
 require 'json'
 require 'optparse'
+require 'fileutils'
 
 require "Parsers/H1Parser"
 require "Parsers/H2Parser"
@@ -236,36 +237,45 @@ class ZMediumFetcher
         progress.printLog()
 
         absolutePath = postPathPolicy.getAbsolutePath("#{postPath}.md")
-        Helper.createDirIfNotExist(postPathPolicy.getAbsolutePath(nil))
-        index = 0
-        File.open(absolutePath, "w+") do |file|
-            # write postInfo into top
-
-            file.puts(Helper.createPostInfo(postInfo))
-            
-            paragraphs.each do |paragraph|
-                markupParser = MarkupParser.new(postHtml, paragraph)
-                paragraph.text = markupParser.parse()
-                result = startParser.parse(paragraph)
-
-                if !linkParser.nil?
-                    result = linkParser.parse(result, paragraph.markupLinks)
-                end
+        
+        # if markdown file is exists and last modification time is >= latestPublishedAt(last update post time on medium)
+        if File.file?(absolutePath) && File.mtime(absolutePath) >= postInfo.latestPublishedAt
+            # Already downloaded and nothing has changed!, Skip!
+            progress.currentPostParagraphIndex = paragraphs.length
+            progress.message = "Skip, Post already downloaded and nothing has changed!"
+            progress.printLog()
+        else
+            Helper.createDirIfNotExist(postPathPolicy.getAbsolutePath(nil))
+            File.open(absolutePath, "w+") do |file|
+                # write postInfo into top
+                file.puts(Helper.createPostInfo(postInfo))
                 
-                file.puts(result)
-
-                index += 1
-                progress.currentPostParagraphIndex = index
-                progress.message = "Converting Post..."
-                progress.printLog()
+                index = 0
+                paragraphs.each do |paragraph|
+                    markupParser = MarkupParser.new(postHtml, paragraph)
+                    paragraph.text = markupParser.parse()
+                    result = startParser.parse(paragraph)
+    
+                    if !linkParser.nil?
+                        result = linkParser.parse(result, paragraph.markupLinks)
+                    end
+                    
+                    file.puts(result)
+    
+                    index += 1
+                    progress.currentPostParagraphIndex = index
+                    progress.message = "Converting Post..."
+                    progress.printLog()
+                end
+    
+                file.puts(Helper.createWatermark(postURL))
             end
+            FileUtils.touch absolutePath, :mtime => postInfo.latestPublishedAt
 
-            file.puts(Helper.createWatermark(postURL))
+            progress.message = "Post Successfully Downloaded!"
+            progress.printLog()
         end
-
-        progress.message = "Post Successfully Downloaded!"
-        progress.printLog()
-
+        
         progress.postPath = nil
     end
     
@@ -316,12 +326,13 @@ class ZMediumFetcher
 end
 
 begin 
-    puts "https://github.com/ZhgChgLi/ZMediumToMarkdown"
+    puts "#https://github.com/ZhgChgLi/ZMediumToMarkdown"
     puts "You have read and agree with the Disclaimer."
     Main.new()
-    puts "https://github.com/ZhgChgLi/ZMediumToMarkdown"
-    puts "Thanks for using this tool."
-    puts "If this is helpful, please help to star the repo or recommend it to your friends."
+    puts "Execute Successfully!!!"
+    puts "#https://github.com/ZhgChgLi/ZMediumToMarkdown"
+    puts "#Thanks for using this tool."
+    puts "#If this is helpful, please help to star the repo or recommend it to your friends."
 rescue => e
     puts "#Error: #{e.class} #{e.message}\n"
     puts e.backtrace

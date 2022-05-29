@@ -1,5 +1,6 @@
 $lib = File.expand_path('../lib', File.dirname(__FILE__))
 
+require 'date'
 require 'Post'
 
 class Helper
@@ -27,7 +28,7 @@ class Helper
         result = "---\n"
         result += "title: #{postInfo.title}\n"
         result += "author: #{postInfo.creator}\n"
-        result += "date: #{postInfo.firstPublishedAt}\n"
+        result += "date: #{postInfo.firstPublishedAt.strftime('%Y-%m-%dT%H:%M:%S.%LZ')}\n"
         result += "tags: [#{postInfo.tags.join(",")}]\n"
         result += "---\n"
         result += "\r\n"
