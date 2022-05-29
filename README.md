@@ -19,12 +19,29 @@ You can also use [Github Action](https://github.com/features/actions) as the aut
 
 
 ## Setup
-1. make sure you have Ruby in your environment (I use ruby `2.6.5p114`)
-2. git clone or download this project
-3. type `cd ./ZMediumToMarkdown` go into project
-4. type `bundle install` in terminal to install project dependencies
+### If you are familiar with ruby:
+1. make sure you have Ruby in your environment (I use `2.6.5p114`)
+2. make sure you have Bundle in your environment (I use `2.3.13`)
+3. git clone or download this project
+4. type `cd ./ZMediumToMarkdown` go into project
+5. type `bundle install` in terminal to install project dependencies
+6. use `bundle exec ruby [USAGE Command]` in the furture (USAGE Command write down below)
+
+### If you are **NOT** familiar with ruby:
+1. MacOS comes with a System Ruby pre-installed, but we are **NOT** Recommend to use that, using rvm/rbenv's Ruby instead.
+2. install [rbenv](https://github.com/rbenv/rbenv) or [rvm](https://rvm.io/) to manage Ruby environment
+3. install Ruby through rbenv/rym (you can install ruby version `2.6.X`)
+4. change the systme ruby to rbenv/rvm's Ruby
+5. type `which ruby` in terminal to make sure current Ruby is **NOT** `/usr/bin/ruby`
+6. type `gem install bundler` install RubyGem dependency manager (you can install Bundle version `2.3.x`)
+7. git clone or download this project
+8. type `cd ./ZMediumToMarkdown` go into project
+9. type `bundle install` in terminal to install project dependencies
+10. use `bundle exec ruby [USAGE Command]` in the furture (USAGE Command write down below)
 
 ## Usage
+Execute File: `./bin/ZMediumFetcher`
+
 ### Downloading all posts from any user
 ```
 bundle exec ruby bin/ZMediumFetcher -u [USEERNAME]

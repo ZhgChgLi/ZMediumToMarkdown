@@ -16,10 +16,11 @@ class PREParser < Parser
 
     def parse(paragraph)
         if PREParser.isPRE(paragraph)
-            result = ""
+            result = "```\n"
             paragraph.text.each_line do |p|
-                result += "> #{p}"
+                result += p
             end
+            result += "\n```"
             result
         else
             if !nextParser.nil?

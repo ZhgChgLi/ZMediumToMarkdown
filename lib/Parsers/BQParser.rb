@@ -7,7 +7,11 @@ class BQParser < Parser
     attr_accessor :nextParser
     def parse(paragraph)
         if paragraph.type == 'BQ'
-            "> #{paragraph.text}"
+            result = ""
+            paragraph.text.each_line do |p|
+                result += "> #{p}"
+            end
+            result
         else
             if !nextParser.nil?
                 nextParser.parse(paragraph)
