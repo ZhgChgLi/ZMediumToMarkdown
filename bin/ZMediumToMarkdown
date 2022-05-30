@@ -1,0 +1,59 @@
+#!/usr/bin/env ruby
+# -*- coding: utf-8 -*-
+
+$lib = File.expand_path('../lib', File.dirname(__FILE__))
+$LOAD_PATH.unshift($lib)
+
+require "ZMediumFetcher"
+require "Helper"
+require "optparse"
+
+class Main
+    def initialize
+        fetcher = ZMediumFetcher.new
+        ARGV << '-h' if ARGV.empty?
+        OptionParser.new do |opts|
+            opts.banner = "Usage: ZMediumFetcher [options]"
+        
+            opts.on('-uUSERNAME', '--username=USERNAME', 'test') do |username|
+                Helper.checkNewVersion()
+
+                pathPolicy = PathPolicy.new("#{File.expand_path('../', File.dirname(__FILE__))}", "Output")
+                fetcher.downloadPostsByUsername(username, pathPolicy)
+            end
+        
+            opts.on('-pPOST_URL', '--postURL=POST_URL', 'test') do |postURL|
+                Helper.checkNewVersion()
+
+                pathPolicy = PathPolicy.new("#{File.expand_path('../', File.dirname(__FILE__))}", "Output")
+                fetcher.downloadPost(postURL, pathPolicy)
+            end
+
+            opts.on('-n', '--new', 'Update to latest version') do |postURL|
+                if Helper.compareVersion(Helper.getRemoteVersionFromGithub(), Helper.getLocalVersionFromGemspec())
+                    Helper.downloadLatestVersion()
+                else
+                    puts "You're using the latest version :)"
+                end
+            end
+            
+        end.parse!
+
+        Helper.logLatestRunVersion()
+    end
+end
+
+begin 
+    puts "#https://github.com/ZhgChgLi/ZMediumToMarkdown"
+    puts "You have read and agree with the Disclaimer."
+    Main.new()
+    puts "Execute Successfully!!!"
+    puts "#https://github.com/ZhgChgLi/ZMediumToMarkdown"
+    puts "#Thanks for using this tool."
+    puts "#If this is helpful, please help to star the repo or recommend it to your friends."
+rescue => e
+    puts "#Error: #{e.class} #{e.message}\n"
+    puts e.backtrace
+    puts "#Please feel free to open an Issue or submit a fix/contribution via Pull Request on:\n"
+    puts "#https://github.com/ZhgChgLi/ZMediumToMarkdown\n"
+end

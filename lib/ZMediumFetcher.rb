@@ -1,13 +1,8 @@
-#!/usr/bin/env ruby
-# -*- coding: utf-8 -*-
+
 
 $lib = File.expand_path('../lib', File.dirname(__FILE__))
-$LOAD_PATH.unshift($lib)
 
-require "open-uri"
-require 'json'
-require 'optparse'
-require 'fileutils'
+require "fileutils"
 
 require "Parsers/H1Parser"
 require "Parsers/H2Parser"
@@ -31,26 +26,6 @@ require "PathPolicy"
 require "Request"
 require "Post"
 require "User"
-
-class Main
-    def initialize
-        fetcher = ZMediumFetcher.new
-        ARGV << '-h' if ARGV.empty?
-        OptionParser.new do |opts|
-            opts.banner = "Usage: ZMediumFetcher [options]"
-        
-            opts.on('-uUSERNAME', '--username=USERNAME', 'test') do |username|
-                pathPolicy = PathPolicy.new("#{File.expand_path('../', File.dirname(__FILE__))}", "Output")
-                fetcher.downloadPostsByUsername(username, pathPolicy)
-            end
-        
-            opts.on('-pPOST_URL', '--postURL=POST_URL', 'test') do |postURL|
-                pathPolicy = PathPolicy.new("#{File.expand_path('../', File.dirname(__FILE__))}", "Output")
-                fetcher.downloadPost(postURL, pathPolicy)
-            end
-        end.parse!
-    end
-end
 
 class ZMediumFetcher
 
@@ -237,9 +212,12 @@ class ZMediumFetcher
         progress.printLog()
 
         absolutePath = postPathPolicy.getAbsolutePath("#{postPath}.md")
+
+        # if user latest use's version is < latest local version than force download (don't skip, make sure bug fixed can be influenced)
+        forceDownload = Helper.compareVersion(Helper.getLocalVersionFromGemspec(), Helper.getLocalVersionFromFile())
         
         # if markdown file is exists and last modification time is >= latestPublishedAt(last update post time on medium)
-        if File.file?(absolutePath) && File.mtime(absolutePath) >= postInfo.latestPublishedAt
+        if forceDownload == false && File.file?(absolutePath) && File.mtime(absolutePath) >= postInfo.latestPublishedAt
             # Already downloaded and nothing has changed!, Skip!
             progress.currentPostParagraphIndex = paragraphs.length
             progress.message = "Skip, Post already downloaded and nothing has changed!"
@@ -323,19 +301,4 @@ class ZMediumFetcher
         progress.message = "All posts has been downloaded!, Total posts: #{postURLS.length}"
         progress.printLog()
     end
-end
-
-begin 
-    puts "#https://github.com/ZhgChgLi/ZMediumToMarkdown"
-    puts "You have read and agree with the Disclaimer."
-    Main.new()
-    puts "Execute Successfully!!!"
-    puts "#https://github.com/ZhgChgLi/ZMediumToMarkdown"
-    puts "#Thanks for using this tool."
-    puts "#If this is helpful, please help to star the repo or recommend it to your friends."
-rescue => e
-    puts "#Error: #{e.class} #{e.message}\n"
-    puts e.backtrace
-    puts "#Please feel free to open an Issue or submit a fix/contribution via Pull Request on:\n"
-    puts "#https://github.com/ZhgChgLi/ZMediumToMarkdown\n"
 end

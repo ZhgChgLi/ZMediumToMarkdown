@@ -19,6 +19,10 @@ You can also use [Github Action](https://github.com/features/actions) as the aut
 - [X] Auto skip when post has been downloaded and last modification date from Medium doesn't changed (convenient for auto-sync or auto-backup service, to save server's bandwidth and execution time)
 - [X] Highly optimized markdown format for Medium
 
+## Example
+- [Original post on Medium](https://medium.com/pinkoi-engineering/%E5%AF%A6%E6%88%B0%E7%B4%80%E9%8C%84-4-%E5%80%8B%E5%A0%B4%E6%99%AF-7-%E5%80%8B-design-patterns-78507a8de6a5)
+- [Downloaded & Converted Output Result](example/實戰紀錄-4-個場景-7-個-design-patterns-78507a8de6a5.md)
+
 ## Setup
 ### If you are familiar with ruby:
 1. make sure you have Ruby in your environment (I use `2.6.5p114`)
@@ -41,19 +45,24 @@ You can also use [Github Action](https://github.com/features/actions) as the aut
 10. use `bundle exec ruby [USAGE Command]` in the furture (USAGE Command write down below)
 
 ## Usage
-Execute File: `./bin/ZMediumFetcher`
+Execute File: `./bin/ZMediumToMarkdown`
 
 ### Downloading all posts from any user
 ```
-bundle exec ruby bin/ZMediumFetcher -u [USEERNAME]
+bundle exec ruby bin/ZMediumToMarkdown -u [USEERNAME]
 ```
 ![image](https://user-images.githubusercontent.com/33706588/170810772-ec7cd618-d208-4fca-9fe5-9ae6ee745951.png)
 
 ### Downloading single post
 ```
-bundle exec ruby bin/ZMediumFetcher -p [MEDIUM POST URL]
+bundle exec ruby bin/ZMediumToMarkdown -p [MEDIUM POST URL]
 ```
 ![image](https://user-images.githubusercontent.com/33706588/170810799-7da207ff-0642-4beb-9b3a-6af11d6e918d.png)
+
+### Update to latest version
+```
+bundle exec ruby bin/ZMediumToMarkdown -n
+```
 
 ## Output
 ### Where can I find the results of the downloaded post?
@@ -61,9 +70,6 @@ The default path of the downloaded post will be in the `./Output` directory.
 - Downloading all posts from user：`./Ouput/users/[USERNAME]/posts/[POST_PATH_NAME]`
 - Downloading single post：`./Ouput/posts/[POST_PATH_NAME]`
 - Post's images：`[POST_PATH_NAME]/images/[POST_ID]/[IMAGE_PATH_NAME]`
-### Example
-- [Original post on Medium](https://medium.com/pinkoi-engineering/%E5%AF%A6%E6%88%B0%E7%B4%80%E9%8C%84-4-%E5%80%8B%E5%A0%B4%E6%99%AF-7-%E5%80%8B-design-patterns-78507a8de6a5)
-- [Downloaded & Converted Output Result](example/實戰紀錄-4-個場景-7-個-design-patterns-78507a8de6a5.md)
 
 ## Disclaimer
 This repository is for research purposes only, the use of this code is your responsibility.

@@ -11,7 +11,10 @@
 /tmp/
 /vendor/
 /Output/
+/bin/.DS_Store
 .DS_Store
+.latestRunVersion
+latest.zip
 
 # Used by dotenv library to load environment variables.
 # .env
