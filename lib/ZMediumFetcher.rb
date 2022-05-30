@@ -212,12 +212,9 @@ class ZMediumFetcher
         progress.printLog()
 
         absolutePath = postPathPolicy.getAbsolutePath("#{postPath}.md")
-
-        # if user latest use's version is < latest local version than force download (don't skip, make sure bug fixed can be influenced)
-        forceDownload = Helper.compareVersion(Helper.getLocalVersionFromGemspec(), Helper.getLocalVersionFromFile())
         
         # if markdown file is exists and last modification time is >= latestPublishedAt(last update post time on medium)
-        if forceDownload == false && File.file?(absolutePath) && File.mtime(absolutePath) >= postInfo.latestPublishedAt
+        if File.file?(absolutePath) && File.mtime(absolutePath) >= postInfo.latestPublishedAt
             # Already downloaded and nothing has changed!, Skip!
             progress.currentPostParagraphIndex = paragraphs.length
             progress.message = "Skip, Post already downloaded and nothing has changed!"

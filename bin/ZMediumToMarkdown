@@ -15,18 +15,18 @@ class Main
         OptionParser.new do |opts|
             opts.banner = "Usage: ZMediumFetcher [options]"
         
-            opts.on('-uUSERNAME', '--username=USERNAME', 'test') do |username|
-                Helper.checkNewVersion()
-
+            opts.on('-uUSERNAME', '--username=USERNAME', 'Downloading all posts from user') do |username|
                 pathPolicy = PathPolicy.new("#{File.expand_path('../', File.dirname(__FILE__))}", "Output")
                 fetcher.downloadPostsByUsername(username, pathPolicy)
+
+                Helper.printNewVersionMessageIfExists()
             end
         
-            opts.on('-pPOST_URL', '--postURL=POST_URL', 'test') do |postURL|
-                Helper.checkNewVersion()
-
+            opts.on('-pPOST_URL', '--postURL=POST_URL', 'Downloading single post') do |postURL|
                 pathPolicy = PathPolicy.new("#{File.expand_path('../', File.dirname(__FILE__))}", "Output")
                 fetcher.downloadPost(postURL, pathPolicy)
+
+                Helper.printNewVersionMessageIfExists()
             end
 
             opts.on('-n', '--new', 'Update to latest version') do |postURL|

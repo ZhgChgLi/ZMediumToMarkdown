@@ -96,7 +96,7 @@ class Helper
         result
     end
 
-    def self.checkNewVersion() 
+    def self.printNewVersionMessageIfExists() 
         if Helper.compareVersion(Helper.getRemoteVersionFromGithub(), Helper.getLocalVersionFromGemspec())
             puts "##########################################################"
             puts "#####           New Version Available!!!             #####"
@@ -109,27 +109,6 @@ class Helper
         rootPath = File.expand_path('../', File.dirname(__FILE__))
         gemspecContent = File.read("#{rootPath}/ZMediumToMarkdown.gemspec")
         result = gemspecContent[/(gem\.version){1}\s+(\=)\s+(\'){1}(\d+(\.){1}\d+(\.){1}\d+){1}(\'){1}/, 4]
-
-        if !result.nil?
-            versions = result.split(".")
-            Version.new(versions[0],versions[1],versions[2])
-        else
-            nil
-        end
-    end
-
-    def self.logLatestRunVersion()
-        version = Helper.getLocalVersionFromGemspec()
-        rootPath = File.expand_path('../', File.dirname(__FILE__))
-
-        File.open("#{rootPath}/.latestRunVersion" , 'w+') do |file|
-            file.puts(version.to_string())
-        end
-    end
-
-    def self.getLocalVersionFromFile()
-        rootPath = File.expand_path('../', File.dirname(__FILE__))
-        result = File.read("#{rootPath}/.latestRunVersion")
 
         if !result.nil?
             versions = result.split(".")
