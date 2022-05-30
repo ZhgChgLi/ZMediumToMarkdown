@@ -86,7 +86,7 @@ This function is mainly to use the container to run the program.
 ```
 $ docker build -t medium_to_markdown . --no-cache
 
-$ docker run --name [your_container_name] -v [host_project_path]:/home/ZMediumFetcher -id medium_to_markdown
+$ docker run --name [your_container_name] -v [host_project_path]:/home/ZMediumToMarkdown -id medium_to_markdown
 
 $ docker exec -it [your_container_name] /bin/bash
 
