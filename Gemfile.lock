@@ -12,11 +12,11 @@ GEM
     reverse_markdown (2.1.1)
       nokogiri
     rubyzip (2.3.2)
-    timeout (0.2.0)
+    timeout (0.3.0)
     uri (0.11.0)
 
 PLATFORMS
-  ruby
+  x86_64-darwin-21
 
 DEPENDENCIES
   net-http (~> 0.1.0)

@@ -24,15 +24,22 @@ You can also use [Github Action](https://github.com/features/actions) as the aut
 - [Downloaded & Converted Output Result](example/實戰紀錄-4-個場景-7-個-design-patterns-78507a8de6a5.md)
 
 ## Setup
-### If you are familiar with ruby:
+
+### Using Gem
+#### If you are familiar with ruby:
 1. make sure you have Ruby in your environment (I use `2.6.5p114`)
 2. make sure you have Bundle in your environment (I use `2.3.13`)
-3. git clone or download this project
-4. type `cd ./ZMediumToMarkdown` go into project
-5. type `bundle install` in terminal to install project dependencies
-6. use `bundle exec ruby [USAGE Command]` in the furture (USAGE Command write down below)
+3. type `gem install ZMediumToMarkdown` in terminal
 
-### If you are **NOT** familiar with ruby:
+#### If you are **NOT** familiar with ruby:
+1. MacOS comes with a System Ruby pre-installed, but we are **NOT** Recommend to use that, using rvm/rbenv's Ruby instead.
+2. install [rbenv](https://github.com/rbenv/rbenv) or [rvm](https://rvm.io/) to manage Ruby environment
+3. install Ruby through rbenv/rym (you can install ruby version `2.6.X`)
+4. change the systme ruby to rbenv/rvm's Ruby
+5. type `which ruby` in terminal to make sure current Ruby is **NOT** `/usr/bin/ruby`
+6. type `gem install ZMediumToMarkdown` in terminal
+
+### Manually 
 1. MacOS comes with a System Ruby pre-installed, but we are **NOT** Recommend to use that, using rvm/rbenv's Ruby instead.
 2. install [rbenv](https://github.com/rbenv/rbenv) or [rvm](https://rvm.io/) to manage Ruby environment
 3. install Ruby through rbenv/rym (you can install ruby version `2.6.X`)
@@ -45,23 +52,33 @@ You can also use [Github Action](https://github.com/features/actions) as the aut
 10. use `bundle exec ruby [USAGE Command]` in the furture (USAGE Command write down below)
 
 ## Usage
-Execute File: `./bin/ZMediumToMarkdown`
+Execute File: `ZMediumToMarkdown`
 
 ### Downloading all posts from any user
 ```
-bundle exec ruby bin/ZMediumToMarkdown -u [USEERNAME]
+ZMediumToMarkdown -u [USEERNAME]
 ```
 ![image](https://user-images.githubusercontent.com/33706588/170810772-ec7cd618-d208-4fca-9fe5-9ae6ee745951.png)
 
 ### Downloading single post
 ```
-bundle exec ruby bin/ZMediumToMarkdown -p [MEDIUM POST URL]
+ZMediumToMarkdown -p [MEDIUM POST URL]
 ```
 ![image](https://user-images.githubusercontent.com/33706588/170810799-7da207ff-0642-4beb-9b3a-6af11d6e918d.png)
 
 ### Update to latest version
 ```
-bundle exec ruby bin/ZMediumToMarkdown -n
+ZMediumToMarkdown -n
+```
+
+### Remove all downloaded posts data
+```
+ZMediumToMarkdown -c
+```
+
+### Print current ZMediumToMarkdown Version & Output Path
+```
+ZMediumToMarkdown -v
 ```
 
 ## Output

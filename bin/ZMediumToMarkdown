@@ -13,7 +13,7 @@ class Main
         fetcher = ZMediumFetcher.new
         ARGV << '-h' if ARGV.empty?
 
-        filePath = File.expand_path File.dirname(__FILE__)
+        filePath = ENV['PWD'] || ::Dir.pwd
         outputFilePath = PathPolicy.new(filePath, "Output")
 
         OptionParser.new do |opts|
@@ -32,7 +32,7 @@ class Main
             end
 
             opts.on('-n', '--new', 'Update to latest version') do
-                if Helper.compareVersion(Helper.getRemoteVersionFromGithub(), Helper.getLocalVersionFromGemspec())
+                if Helper.getRemoteVersionFromGithub() > Helper.getLocalVersion()
                     Helper.downloadLatestVersion()
                 else
                     puts "You're using the latest version :)"
@@ -41,7 +41,15 @@ class Main
 
             opts.on('-c', '--clean', 'Remove all downloaded posts data') do
                 FileUtils.rm_rf(Dir[outputFilePath.getAbsolutePath(nil)])
+                puts "All downloaded posts data has been removed."
 
+                Helper.printNewVersionMessageIfExists()
+            end
+
+            opts.on('-v', '--version', 'Print current ZMediumToMarkdown Version & Output Path') do
+                puts "Version:#{Helper.getLocalVersion().to_s}"
+                puts "Output Path:#{outputFilePath.getAbsolutePath(nil)}"
+                
                 Helper.printNewVersionMessageIfExists()
             end
             
