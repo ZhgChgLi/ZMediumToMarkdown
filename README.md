@@ -6,8 +6,6 @@ ZMediumToMarkdown lets you download Medium post and convert it to markdown forma
 
 This project can help you to make an auto-sync or auto-backup service from Medium, like auto-sync Medium posts to Jekyll or other static markdown blog engines or auto-backup Medium posts to the Github page.
 
-You can also use [Github Action](https://github.com/features/actions) as the auto service.
-
 ## Features
 - [X] Support download post and convert to markdown format
 - [X] Support download all posts and convert to markdown format from any user without login access.
@@ -94,6 +92,23 @@ This repository is for research purposes only, the use of this code is your resp
 - Code authors take NO responsibility and/or liability for how you choose to use any of the source code available here.
 - By using any of the files available in this repository, you understand that you are AGREEING TO USE AT YOUR OWN RISK.
 - ALL files available here are for EDUCATION and/or RESEARCH purposes ONLY.
+
+## Using Github Action as your [free](https://docs.github.com/en/actions/learn-github-actions/usage-limits-billing-and-administration) auto sync/backup service
+```yml
+name: ZMediumToMarkdown
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "15 */6 * * *"
+jobs:
+  ZMediumToMarkdown:
+    runs-on: ubuntu-latest
+    steps:
+    - name: ZMediumToMarkdown Automatic Bot
+      uses: ZhgChgLi/ZMediumToMarkdown@main
+      with:
+        command: '[USAGE Command]' # e.g. -p https://medium.com/zrealm-ios-dev/converting-medium-posts-to-markdown-ddd88a84e177
+```
 
 ## Using Container 
 This function is mainly to use the container to run the program.
