@@ -11,20 +11,6 @@ require 'zip'
 
 class Helper
 
-    class Version
-        attr_accessor :major, :minor, :patch
-
-        def initialize(major, minor, patch)
-            @major = major.to_i
-            @minor = minor.to_i
-            @patch = patch.to_i
-        end
-
-        def to_string()
-            "#{major.to_s}.#{minor.to_s}.#{patch.to_s}"
-        end
-    end
-
     def self.createDirIfNotExist(dirPath)
         dirs = dirPath.split("/")
         currentDir = ""
@@ -46,42 +32,48 @@ class Helper
     end
 
     def self.downloadLatestVersion()
-        apiPath = 'https://api.github.com/repos/ZhgChgLi/ZMediumToMarkdown/releases'
-        versions = JSON.parse(Request.URL(apiPath).body).sort { |a,b| b["id"] <=> a["id"] }
-
-        version = nil
-        index = 0
-        while version == nil do
-            thisVersion = versions[index]
-            if thisVersion["prerelease"] == false
-                version = thisVersion
-                next
-            end
-            index += 1
-        end
+        rootPath = File.expand_path('../', File.dirname(__FILE__))
         
-        zipFilePath = version["zipball_url"]
-        puts "Downloading latest version from github..."
-        open('latest.zip', 'wb') do |fo|
-            fo.print open(zipFilePath).read
-        end
+        if File.file?("#{rootPath}/ZMediumToMarkdown.gemspec")
+            apiPath = 'https://api.github.com/repos/ZhgChgLi/ZMediumToMarkdown/releases'
+            versions = JSON.parse(Request.URL(apiPath).body).sort { |a,b| b["id"] <=> a["id"] }
 
-        puts "Unzip..."
-        Zip::File.open("latest.zip") do |zipfile|
-            zipfile.each do |file|
-                fileNames = file.name.split("/")
-                fileNames.shift
-                filePath = fileNames.join("/")
-                if filePath != ''
-                    puts "Unzinp...#{filePath}"
-                    zipfile.extract(file, filePath) { true }
+            version = nil
+            index = 0
+            while version == nil do
+                thisVersion = versions[index]
+                if thisVersion["prerelease"] == false
+                    version = thisVersion
+                    next
+                end
+                index += 1
+            end
+            
+            zipFilePath = version["zipball_url"]
+            puts "Downloading latest version from github..."
+            open('latest.zip', 'wb') do |fo|
+                fo.print open(zipFilePath).read
+            end
+
+            puts "Unzip..."
+            Zip::File.open("latest.zip") do |zipfile|
+                zipfile.each do |file|
+                    fileNames = file.name.split("/")
+                    fileNames.shift
+                    filePath = fileNames.join("/")
+                    if filePath != ''
+                        puts "Unzinp...#{filePath}"
+                        zipfile.extract(file, filePath) { true }
+                    end
                 end
             end
-        end
-        File.delete("latest.zip")
+            File.delete("latest.zip")
 
-        tagName = version["tag_name"]
-        puts "Update to version #{tagName} successfully!"
+            tagName = version["tag_name"]
+            puts "Update to version #{tagName} successfully!"
+        else
+            system("gem update ZMediumToMarkdown")
+        end
     end
 
     def self.createPostInfo(postInfo)
@@ -97,22 +89,27 @@ class Helper
     end
 
     def self.printNewVersionMessageIfExists() 
-        if Helper.compareVersion(Helper.getRemoteVersionFromGithub(), Helper.getLocalVersionFromGemspec())
+        if Helper.getRemoteVersionFromGithub() > Helper.getLocalVersion()
             puts "##########################################################"
             puts "#####           New Version Available!!!             #####"
-            puts "##### Please type `bin/ZMediumToMarkdown -n` to update!!##"
+            puts "##### Please type `ZMediumToMarkdown -n` to update!! #####"
             puts "##########################################################"
         end
     end
 
-    def self.getLocalVersionFromGemspec()
+    def self.getLocalVersion()
         rootPath = File.expand_path('../', File.dirname(__FILE__))
-        gemspecContent = File.read("#{rootPath}/ZMediumToMarkdown.gemspec")
-        result = gemspecContent[/(gem\.version){1}\s+(\=)\s+(\'){1}(\d+(\.){1}\d+(\.){1}\d+){1}(\'){1}/, 4]
+        
+        result = nil
+        if File.file?("#{rootPath}/ZMediumToMarkdown.gemspec")
+            gemspecContent = File.read("#{rootPath}/ZMediumToMarkdown.gemspec")
+            result = gemspecContent[/(gem\.version){1}\s+(\=)\s+(\'){1}(\d+(\.){1}\d+(\.){1}\d+){1}(\'){1}/, 4]
+        else
+            result = Gem.loaded_specs["ZMediumToMarkdown"].version.version
+        end
 
         if !result.nil?
-            versions = result.split(".")
-            Version.new(versions[0],versions[1],versions[2])
+            Gem::Version.new(result)
         else
             nil
         end
@@ -134,8 +131,7 @@ class Helper
         end
 
         if !tagName.nil?
-            versions = (tagName.downcase.gsub! 'v','') .split(".")
-            Version.new(versions[0],versions[1],versions[2])
+            Gem::Version.new(tagName.downcase.gsub! 'v','')
         else
             nil
         end
