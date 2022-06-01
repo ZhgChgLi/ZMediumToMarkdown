@@ -15,6 +15,7 @@ This project can help you to make an auto-sync or auto-backup service from Mediu
 - [X] Convert youtube link which embed in post to preview image
 - [X] Adjust post's last modification date from Medium to the local downloaded markdown file
 - [X] Auto skip when post has been downloaded and last modification date from Medium doesn't changed (convenient for auto-sync or auto-backup service, to save server's bandwidth and execution time)
+- [X] [Support using Github Action as auto sync/backup service](https://github.com/ZhgChgLi/ZMediumToMarkdown/tree/main#using-github-action-as-your-free-auto-syncbackup-service)
 - [X] Highly optimized markdown format for Medium
 
 ## Example
