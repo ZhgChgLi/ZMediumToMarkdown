@@ -15,7 +15,9 @@ runs:
     - uses: actions/checkout@v3
     - uses: ruby/setup-ruby@v1
     - run: gem install ZMediumToMarkdown
+      shell: bash
     - run: ZMediumToMarkdown ${{ inputs.command }}
+      shell: bash
     - uses: stefanzweifel/git-auto-commit-action@v4
       with:
         commit_message: "Update fetched posts."
