@@ -99,7 +99,7 @@ name: ZMediumToMarkdown
 on:
   workflow_dispatch:
   schedule:
-    - cron: "15 */6 * * *"
+    - cron: "10 1 15 * *" # At 01:10 on day-of-month 15.
 jobs:
   ZMediumToMarkdown:
     runs-on: ubuntu-latest
@@ -109,23 +109,7 @@ jobs:
       with:
         command: '[USAGE Command]' # e.g. -p https://medium.com/zrealm-ios-dev/converting-medium-posts-to-markdown-ddd88a84e177
 ```
-
-## Using Container 
-This function is mainly to use the container to run the program.
-
-1. make sure you have Docker tool.
-2. cd to folder and type below command.
-```
-$ docker build -t medium_to_markdown . --no-cache
-
-$ docker run --name [your_container_name] -v [host_project_path]:/home/ZMediumToMarkdown -id medium_to_markdown
-
-$ docker exec -it [your_container_name] /bin/bash
-
-$ bundle update --bundler
-```
-3. use Usage Command up above & check your physical host [host_project_path]/output folder you will see the medium article already transfer type to markdown.
-
+[exmaple repo](https://github.com/ZhgChgLi/ZMediumToMarkdown-github-action)
 
 ## Acknowledgement
 - [Ruby](https://www.ruby-lang.org/zh_tw/)
