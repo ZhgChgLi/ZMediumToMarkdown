@@ -1,4 +1,5 @@
 name: 'ZMediumToMarkdown Automatic Bot'
+author: 'ZhgChgLi'
 description: 'Sync or backup Medium posts to github repo automatically.'
 inputs:
   command:
