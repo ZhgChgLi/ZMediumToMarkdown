@@ -6,10 +6,6 @@ inputs:
     description: '[ZMediumToMarkdown Command]'
     required: true
     default: '-p https://medium.com/zrealm-ios-dev/converting-medium-posts-to-markdown-ddd88a84e177'
-outputs:
-  random-number:
-    description: "Random number"
-    value: ${{ steps.random-number-generator.outputs.random-number }}
 runs:
   using: "composite"
   steps:
