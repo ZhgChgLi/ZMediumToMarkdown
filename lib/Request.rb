@@ -23,12 +23,17 @@ class Request
         end
 
         response = https.request(request)
+        
         # 3XX Redirect
         if response.code.to_i >= 300 && response.code.to_i <= 399 && !response['location'].nil? && response['location'] != ''
             if retryCount >= 10
                 raise "Error: Retry limit reached. path: #{url}"
             else
-                response = self.URL(response['location'], method, data)
+                location = response['location']
+                if !location.match? /^(http)/
+                    location = "#{uri.scheme}://#{uri.host}#{location}"
+                end
+                response = self.URL(location, method, data)
             end
         end
         response
