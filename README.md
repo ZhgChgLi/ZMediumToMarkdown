@@ -18,9 +18,10 @@ This project can help you to make an auto-sync or auto-backup service from Mediu
 - [X] [Support using Github Action as auto sync/backup service](https://github.com/ZhgChgLi/ZMediumToMarkdown/tree/main#using-github-action-as-your-free-auto-syncbackup-service)
 - [X] Highly optimized markdown format for Medium
 
-## Example
+## Result
 - [Original post on Medium](https://medium.com/pinkoi-engineering/%E5%AF%A6%E6%88%B0%E7%B4%80%E9%8C%84-4-%E5%80%8B%E5%A0%B4%E6%99%AF-7-%E5%80%8B-design-patterns-78507a8de6a5)
 - [Downloaded & Converted Output Result](example/實戰紀錄-4-個場景-7-個-design-patterns-78507a8de6a5.md)
+![Harry's Idea Draw](https://user-images.githubusercontent.com/33706588/171560402-40b23bec-a836-4468-9f07-68350ce82d4a.jpg)
 
 ## Setup
 
@@ -43,7 +44,35 @@ This project can help you to make an auto-sync or auto-backup service from Mediu
 5. type `which ruby` in terminal to make sure current Ruby is **NOT** `/usr/bin/ruby`
 6. type `gem install ZMediumToMarkdown` in terminal
 
-### Manually 
+#### Usage
+Command: `ZMediumToMarkdown`
+
+**Downloading all posts from any user**
+```
+ZMediumToMarkdown -u [USEERNAME]
+```
+
+**Downloading single post**
+```
+ZMediumToMarkdown -p [MEDIUM POST URL]
+```
+
+**Update to latest version**
+```
+ZMediumToMarkdown -n
+```
+
+**Remove all downloaded posts data**
+```
+ZMediumToMarkdown -c
+```
+
+**Print current ZMediumToMarkdown Version & Output Path**
+```
+ZMediumToMarkdown -v
+```
+
+#### Manually 
 1. MacOS comes with a System Ruby pre-installed, but we are **NOT** Recommend to use that, using rvm/rbenv's Ruby instead.
 2. install [rbenv](https://github.com/rbenv/rbenv) or [rvm](https://rvm.io/) to manage Ruby environment
 3. install Ruby through rbenv/rym (you can install ruby version `2.6.X`)
@@ -55,34 +84,32 @@ This project can help you to make an auto-sync or auto-backup service from Mediu
 9. type `bundle install` in terminal to install project dependencies
 10. use `bundle exec ruby [USAGE Command]` in the furture (USAGE Command write down below)
 
-## Usage
-Execute File: `ZMediumToMarkdown`
+#### Usage
+Execute File: `bin/ZMediumToMarkdown`
 
-### Downloading all posts from any user
+**Downloading all posts from any user**
 ```
-ZMediumToMarkdown -u [USEERNAME]
-```
-![image](https://user-images.githubusercontent.com/33706588/170810772-ec7cd618-d208-4fca-9fe5-9ae6ee745951.png)
-
-### Downloading single post
-```
-ZMediumToMarkdown -p [MEDIUM POST URL]
-```
-![image](https://user-images.githubusercontent.com/33706588/170810799-7da207ff-0642-4beb-9b3a-6af11d6e918d.png)
-
-### Update to latest version
-```
-ZMediumToMarkdown -n
+bundle exec ruby bin/ZMediumToMarkdown -u [USEERNAME]
 ```
 
-### Remove all downloaded posts data
+**Downloading single post**
 ```
-ZMediumToMarkdown -c
+bundle exec ruby bin/ZMediumToMarkdown -p [MEDIUM POST URL]
 ```
 
-### Print current ZMediumToMarkdown Version & Output Path
+**Update to latest version**
 ```
-ZMediumToMarkdown -v
+bundle exec ruby bin/ZMediumToMarkdown -n
+```
+
+**Remove all downloaded posts data**
+```
+bundle exec ruby bin/ZMediumToMarkdown -c
+```
+
+**Print current ZMediumToMarkdown Version & Output Path**
+```
+bundle exec ruby bin/ZMediumToMarkdown -v
 ```
 
 ## Output
