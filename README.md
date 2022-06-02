@@ -24,6 +24,11 @@ This project can help you to make an auto-sync or auto-backup service from Mediu
 
 ## Setup
 
+### I'M NOT GEEK, PLEASE SHOW ME HOW TO USE WITHOUT CODING
+- Please follow this post, step by step to creat your auto backup service without any coding:
+
+[How to use Github Action as your free & no code Medium Posts backup service](https://github.com/ZhgChgLi/ZMediumToMarkdown/wiki/How-to-use-Github-Action-as-your-free-&-no-code-Medium-Posts-backup-service)
+
 ### Using Gem
 #### If you are familiar with ruby:
 1. make sure you have Ruby in your environment (I use `2.6.5p114`)
