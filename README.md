@@ -113,7 +113,7 @@ jobs:
     - name: ZMediumToMarkdown Automatic Bot
       uses: ZhgChgLi/ZMediumToMarkdown@main
       with:
-        command: '[USAGE Command]' # e.g. -p https://medium.com/zrealm-ios-dev/converting-medium-posts-to-markdown-ddd88a84e177
+        command: '[USAGE Command]' # e.g. -u zhgchgli
 ```
 [exmaple repo](https://github.com/ZhgChgLi/ZMediumToMarkdown-github-action)
 
