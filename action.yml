@@ -1,0 +1,28 @@
+name: 'ZMediumToMarkdown Automatic Bot'
+author: 'ZhgChgLi'
+description: 'Sync or backup Medium posts to github repo automatically.'
+branding:
+  icon: 'download-cloud'
+  color: 'gray-dark'
+inputs:
+  command:
+    description: '[ZMediumToMarkdown Command]'
+    required: true
+    default: '-p https://medium.com/zrealm-ios-dev/converting-medium-posts-to-markdown-ddd88a84e177'
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v3
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.6.5
+    - run: gem install ZMediumToMarkdown
+      shell: bash
+    - run: ZMediumToMarkdown ${{ inputs.command }}
+      shell: bash
+    - uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: "Update fetched posts."
+        commit_user_name: "ZMediumToMarkdown"
+        commit_user_email: "zhgchgli@gmail.com"
+        commit_author: ZMediumToMarkdown <zhgchgli@gmail.com>
