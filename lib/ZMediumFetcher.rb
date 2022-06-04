@@ -127,7 +127,7 @@ class ZMediumFetcher
         
         postInfo = Post.parsePostInfoFromPostContent(postContent, postID)
 
-        sourceParagraphs = Post.parsePostParagraphsFromPostContent(postContent, postID)
+        sourceParagraphs = Post.fetchPostParagraphs(postID)
         if sourceParagraphs.nil?
             raise "Error: Paragraph not found! PostURL: #{postURL}"
         end 
@@ -140,7 +140,7 @@ class ZMediumFetcher
         previousParagraph = nil
         preTypeParagraphs = []
         sourceParagraphs.each do |sourcParagraph|
-            paragraph = Paragraph.new(sourcParagraph, postID, postContent)
+            paragraph = Paragraph.new(sourcParagraph, postID)
             if OLIParser.isOLI(paragraph)
                 oliIndex += 1
                 paragraph.oliIndex = oliIndex
@@ -148,10 +148,11 @@ class ZMediumFetcher
                 oliIndex = 0
             end
 
-            # if previous is OLI or ULI and current is not OLI or ULI
+            # if previous is OLI or ULI or BQ and current is not OLI or ULI or BQ
             # than insert a blank paragraph to keep markdown foramt correct
             if (OLIParser.isOLI(previousParagraph) && !OLIParser.isOLI(paragraph)) ||
-                (ULIParser.isULI(previousParagraph) && !ULIParser.isULI(paragraph))
+                (ULIParser.isULI(previousParagraph) && !ULIParser.isULI(paragraph))||
+                (BQParser.isBQ(previousParagraph) && !BQParser.isBQ(paragraph))
                 paragraphs.append(Paragraph.makeBlankParagraph(postID))
             end
 
@@ -178,7 +179,7 @@ class ZMediumFetcher
                                 groupByText += "\n"
                             end
 
-                            markupParser = MarkupParser.new(postHtml, preTypeParagraph)
+                            markupParser = MarkupParser.new(preTypeParagraph)
                             groupByText += markupParser.parse()
                         end
                         
@@ -227,7 +228,7 @@ class ZMediumFetcher
                 
                 index = 0
                 paragraphs.each do |paragraph|
-                    markupParser = MarkupParser.new(postHtml, paragraph)
+                    markupParser = MarkupParser.new(paragraph)
                     paragraph.text = markupParser.parse()
                     result = startParser.parse(paragraph)
     

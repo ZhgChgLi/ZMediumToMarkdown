@@ -4,7 +4,7 @@ require 'Parsers/PParser'
 require 'securerandom'
 
 class Paragraph
-    attr_accessor :postID, :name, :text, :type, :href, :metadata, :mixtapeMetadata, :iframe, :hasMarkup, :oliIndex, :markupLinks
+    attr_accessor :postID, :name, :orgText, :text, :type, :href, :metadata, :mixtapeMetadata, :iframe, :oliIndex, :markups, :markupLinks
 
     class Iframe
         attr_accessor :id, :title, :type, :src
@@ -17,6 +17,19 @@ class Paragraph
 
         def parse()
 
+        end
+    end
+
+    class Markup
+        attr_accessor :type, :start, :end, :href, :anchorType, :userId, :linkMetadata
+        def initialize(json)
+            @type = json['type']
+            @start = json['start']
+            @end = json['end']
+            @href = json['href']
+            @anchorType = json['anchorType']
+            @userId = json['userId']
+            @linkMetadata = json['linkMetadata']
         end
     end
 
@@ -41,12 +54,13 @@ class Paragraph
             "text" => "",
             "type" => PParser.getTypeString()
         }
-        Paragraph.new(json, postID, nil)
+        Paragraph.new(json, postID)
     end
 
-    def initialize(json, postID, resource)
+    def initialize(json, postID)
         @name = json['name']
         @text = json['text']
+        @orgText = json['text']
         @type = json['type']
         @href = json['href']
         @postID = postID
@@ -54,7 +68,7 @@ class Paragraph
         if json['metadata'].nil?
             @metadata = nil
         else
-            @metadata = MetaData.new(resource[json['metadata']['__ref']])
+            @metadata = MetaData.new(json['metadata'])
         end
 
         if json['mixtapeMetadata'].nil?
@@ -66,17 +80,22 @@ class Paragraph
         if json['iframe'].nil?
             @iframe = nil
         else
-            @iframe = Iframe.new(resource[json['iframe']['mediaResource']['__ref']])
+            @iframe = Iframe.new(json['iframe']['mediaResource'])
         end
         
         if !json['markups'].nil? && json['markups'].length > 0
+            markups = []
+            json['markups'].each do |markup|
+                markups.append(Markup.new(markup))
+            end
+            @markups = markups
+
             links = json['markups'].select{ |markup| markup["type"] == "A" }
             if !links.nil? && links.length > 0
                 @markupLinks = links.map{ |link| link["href"] }
             end
-            @hasMarkup = true
         else
-            @hasMarkup = false
+            @markups = nil
         end
     end
 end

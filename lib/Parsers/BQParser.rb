@@ -5,12 +5,18 @@ require 'Models/Paragraph'
 
 class BQParser < Parser
     attr_accessor :nextParser
+
+    def self.isBQ(paragraph)
+        if paragraph.nil? 
+            false
+        else
+            paragraph.type == "BQ"
+        end
+    end
+
     def parse(paragraph)
-        if paragraph.type == 'BQ'
-            result = ""
-            paragraph.text.each_line do |p|
-                result += "> #{p}"
-            end
+        if BQParser.isBQ(paragraph)
+            result = "> #{paragraph.text}"
             result
         else
             if !nextParser.nil?

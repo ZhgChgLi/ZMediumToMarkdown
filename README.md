@@ -9,6 +9,7 @@ This project can help you to make an auto-sync or auto-backup service from Mediu
 ## Features
 - [X] Support download post and convert to markdown format
 - [X] Support download all posts and convert to markdown format from any user without login access.
+- [X] Support download paid content
 - [X] Support command line interface
 - [X] Download all of post's images to local and convert to local path
 - [X] Convert [Gist](https://gist.github.com/) source code to markdown code block
@@ -17,6 +18,8 @@ This project can help you to make an auto-sync or auto-backup service from Mediu
 - [X] Auto skip when post has been downloaded and last modification date from Medium doesn't changed (convenient for auto-sync or auto-backup service, to save server's bandwidth and execution time)
 - [X] [Support using Github Action as auto sync/backup service](https://github.com/ZhgChgLi/ZMediumToMarkdown/tree/main#using-github-action-as-your-free-auto-syncbackup-service)
 - [X] Highly optimized markdown format for Medium
+- [X] Native Markdown Style Render Engine
+(Feel free to contribute if you any optimize idea! `MarkupStyleRender.rb`)
 
 ## Result
 - [Original post on Medium](https://medium.com/pinkoi-engineering/%E5%AF%A6%E6%88%B0%E7%B4%80%E9%8C%84-4-%E5%80%8B%E5%A0%B4%E6%99%AF-7-%E5%80%8B-design-patterns-78507a8de6a5)

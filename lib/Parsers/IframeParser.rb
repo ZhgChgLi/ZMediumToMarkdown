@@ -24,6 +24,7 @@ class IframeParser < Parser
                 # is youtube
                 youtubeURL = URI(URI.decode(url)).query
                 params = URI::decode_www_form(youtubeURL).to_h
+                
                 if !params["image"].nil? && !params["url"].nil?
 
                     fileName = "#{paragraph.name}_#{URI(params["image"]).path.split("/").last}" #21de_default.jpg
@@ -31,12 +32,12 @@ class IframeParser < Parser
                     imageURL = params["image"]
                     imagePathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), paragraph.postID)
                     absolutePath = imagePathPolicy.getAbsolutePath(fileName)
-                    
+                    title = paragraph.iframe.title
                     if  ImageDownloader.download(absolutePath, imageURL)
                         relativePath = "#{pathPolicy.getRelativePath(nil)}/#{imagePathPolicy.getRelativePath(fileName)}"
-                        result = "\n[![YouTube](#{relativePath} \"YouTube\")](#{params["url"]})"
+                        result = "\n[![#{title}](#{relativePath} \"#{title}\")](#{params["url"]})"
                     else
-                        result = "\n[YouTube](#{params["url"]})"
+                        result = "\n[#{title}](#{params["url"]})"
                     end
                 end
             else

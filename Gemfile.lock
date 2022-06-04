@@ -9,8 +9,6 @@ GEM
     nokogiri (1.13.6-x86_64-darwin)
       racc (~> 1.4)
     racc (1.6.0)
-    reverse_markdown (2.1.1)
-      nokogiri
     rubyzip (2.3.2)
     timeout (0.3.0)
     uri (0.11.0)
@@ -21,7 +19,6 @@ PLATFORMS
 DEPENDENCIES
   net-http (~> 0.1.0)
   nokogiri (~> 1.13.1)
-  reverse_markdown (~> 2.1.1)
   rubyzip (~> 2.3.2)
 
 BUNDLED WITH
