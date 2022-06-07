@@ -55,7 +55,7 @@ class IframeParser < Parser
                     gistHTML.search('a').each do |a|
                         if a.text == 'view raw'
                             gistRAW = Request.body(Request.URL(a['href']))
-                            result = "```#{lang}\n#{gistRAW}\n```"
+                            result = "```#{lang.downcase}\n#{gistRAW}\n```"
                         end
                     end
                 end

@@ -26,6 +26,7 @@ require "PathPolicy"
 require "Request"
 require "Post"
 require "User"
+require 'date'
 
 class ZMediumFetcher
 
@@ -204,7 +205,7 @@ class ZMediumFetcher
 
         postPathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), "posts")
 
-        imagePathPolicy = PathPolicy.new(postPathPolicy.getAbsolutePath(nil), "images")
+        imagePathPolicy = PathPolicy.new(postPathPolicy.getAbsolutePath(nil), "assets")
         startParser = buildParser(imagePathPolicy)
 
         progress.totalPostParagraphsLength = paragraphs.length
@@ -212,7 +213,9 @@ class ZMediumFetcher
         progress.message = "Converting Post..."
         progress.printLog()
 
-        absolutePath = postPathPolicy.getAbsolutePath("#{postPath}.md")
+        postWithDatePath = "#{postInfo.firstPublishedAt.strftime("%Y-%m-%d")}-#{postPath}"
+
+        absolutePath = postPathPolicy.getAbsolutePath("#{postWithDatePath}.md")
         
         # if markdown file is exists and last modification time is >= latestPublishedAt(last update post time on medium)
         if File.file?(absolutePath) && File.mtime(absolutePath) >= postInfo.latestPublishedAt

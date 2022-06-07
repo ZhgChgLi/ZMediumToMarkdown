@@ -77,10 +77,15 @@ class Helper
     end
 
     def self.createPostInfo(postInfo)
+
+        title = postInfo.title.gsub("[","")
+        title = title.gsub("]","")
+
         result = "---\n"
-        result += "title: #{postInfo.title}\n"
+        result += "title: #{title}\n"
         result += "author: #{postInfo.creator}\n"
         result += "date: #{postInfo.firstPublishedAt.strftime('%Y-%m-%dT%H:%M:%S.%LZ')}\n"
+        result += "categories: #{postInfo.collectionName}\n"
         result += "tags: [#{postInfo.tags.join(",")}]\n"
         result += "---\n"
         result += "\r\n"

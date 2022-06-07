@@ -9,7 +9,7 @@ require 'date'
 class Post
 
   class PostInfo
-    attr_accessor :title, :tags, :creator, :firstPublishedAt, :latestPublishedAt
+    attr_accessor :title, :tags, :creator, :firstPublishedAt, :latestPublishedAt, :collectionName
   end
 
   def self.getPostIDFromPostURLString(postURLString)
@@ -67,6 +67,13 @@ class Post
     if !creatorRef.nil?
       postInfo.creator = content&.dig(creatorRef, "name")
     end
+
+    colletionRef = content&.dig("Post:#{postID}", "collection", "__ref")
+    if !colletionRef.nil?
+      postInfo.collectionName = content&.dig(colletionRef, "name")
+    end
+
+   
 
     firstPublishedAt = content&.dig("Post:#{postID}", "firstPublishedAt")
     if !firstPublishedAt.nil?

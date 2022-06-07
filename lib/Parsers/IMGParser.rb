@@ -18,11 +18,16 @@ class IMGParser < Parser
             imagePathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), paragraph.postID)
             absolutePath = imagePathPolicy.getAbsolutePath(fileName)
             
+            comment = ""
+            if paragraph.text != ""
+                comment = " \"#{paragraph.text}\""
+            end
+
             if  ImageDownloader.download(absolutePath, imageURL)
                 relativePath = "#{pathPolicy.getRelativePath(nil)}/#{imagePathPolicy.getRelativePath(fileName)}"
-                "![#{paragraph.text}](#{relativePath} \"#{paragraph.text}\")"
+                "![#{paragraph.text}](/#{relativePath}#{comment})"
             else
-                "![#{paragraph.text}](#{imageURL} \"#{paragraph.text}\")"
+                "![#{paragraph.text}](#{imageURL}#{comment})"
             end
         else
             if !nextParser.nil?
