@@ -23,7 +23,7 @@ class LinkParser
 
                         postPath = link.split("/").last
                         if !usersPostURLs.find { |usersPostURL| usersPostURL.split("/").last.split("-").last == postPath.split("-").last }.nil?
-                            markdownString = markdownString.sub! link, "../#{postPath}"
+                            markdownString = markdownString.sub! link, "#{postPath}"
                         end
                     end
                 end

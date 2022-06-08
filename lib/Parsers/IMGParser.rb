@@ -25,9 +25,9 @@ class IMGParser < Parser
 
             if  ImageDownloader.download(absolutePath, imageURL)
                 relativePath = "#{pathPolicy.getRelativePath(nil)}/#{imagePathPolicy.getRelativePath(fileName)}"
-                "![#{paragraph.text}](/#{relativePath}#{comment})"
+                "\r\n![#{paragraph.text}](#{relativePath}#{comment})\r\n"
             else
-                "![#{paragraph.text}](#{imageURL}#{comment})"
+                "\r\n![#{paragraph.text}](#{imageURL}#{comment})\r\n"
             end
         else
             if !nextParser.nil?

@@ -35,9 +35,9 @@ class IframeParser < Parser
                     title = paragraph.iframe.title
                     if  ImageDownloader.download(absolutePath, imageURL)
                         relativePath = "#{pathPolicy.getRelativePath(nil)}/#{imagePathPolicy.getRelativePath(fileName)}"
-                        result = "\n[![#{title}](#{relativePath} \"#{title}\")](#{params["url"]})"
+                        result = "\r\n[![#{title}](#{relativePath} \"#{title}\")](#{params["url"]})\r\n"
                     else
-                        result = "\n[#{title}](#{params["url"]})"
+                        result = "\r\n[#{title}](#{params["url"]})\r\n"
                     end
                 end
             else
