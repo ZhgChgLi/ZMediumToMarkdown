@@ -10,8 +10,16 @@ class CodeBlockParser < Parser
         'CODE_BLOCK'
     end
 
+    def self.isCodeBlock(paragraph)
+        if paragraph.nil? 
+            false
+        else
+            paragraph.type == CodeBlockParser.getTypeString()
+        end
+    end
+
     def parse(paragraph)
-        if paragraph.type == CodeBlockParser.getTypeString()
+        if CodeBlockParser.isCodeBlock(paragraph)
             "```\n#{paragraph.text}\n```"
         else
             if !nextParser.nil?

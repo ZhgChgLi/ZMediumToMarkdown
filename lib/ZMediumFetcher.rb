@@ -231,8 +231,11 @@ class ZMediumFetcher
                 
                 index = 0
                 paragraphs.each do |paragraph|
-                    markupParser = MarkupParser.new(paragraph)
-                    paragraph.text = markupParser.parse()
+                    if !(CodeBlockParser.isCodeBlock(paragraph) || PREParser.isPRE(paragraph))
+                        markupParser = MarkupParser.new(paragraph)
+                        paragraph.text = markupParser.parse()
+                    end
+
                     result = startParser.parse(paragraph)
     
                     if !linkParser.nil?
