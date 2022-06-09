@@ -21,9 +21,9 @@ class LinkParser
                         # if have provide user's post urls
                         # find & replace medium url to local post url if matched
 
-                        postPath = link.split("/").last
+                        postPath = link.split("/").last.split("-").last
                         if !usersPostURLs.find { |usersPostURL| usersPostURL.split("/").last.split("-").last == postPath.split("-").last }.nil?
-                            markdownString = markdownString.sub! link, "#{postPath}"
+                            markdownString = markdownString.sub! link, "../#{postPath}"
                         end
                     end
                 end
