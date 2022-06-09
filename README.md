@@ -20,7 +20,7 @@ This project can help you to make an auto-sync or auto-backup service from Mediu
 - [X] Highly optimized markdown format for Medium
 - [X] Native Markdown Style Render Engine
 (Feel free to contribute if you any optimize idea! `MarkupStyleRender.rb`)
-- [X] jekyllrb friendly
+- [X] jekyllrb/hugo friendly
 
 ## Result
 - [Original post on Medium](https://medium.com/pinkoi-engineering/%E5%AF%A6%E6%88%B0%E7%B4%80%E9%8C%84-4-%E5%80%8B%E5%A0%B4%E6%99%AF-7-%E5%80%8B-design-patterns-78507a8de6a5)
