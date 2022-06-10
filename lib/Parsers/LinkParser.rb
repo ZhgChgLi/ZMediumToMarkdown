@@ -3,10 +3,11 @@ $lib = File.expand_path('../', File.dirname(__FILE__))
 require 'Models/Paragraph'
 
 class LinkParser
-    attr_accessor :usersPostURLs
+    attr_accessor :usersPostURLs, :isForJekyll
 
-    def initialize(usersPostURLs)
+    def initialize(usersPostURLs, isForJekyll)
         @usersPostURLs = usersPostURLs
+        @isForJekyll = isForJekyll
     end
 
     def parse(markdownString, markupLinks)
@@ -21,9 +22,18 @@ class LinkParser
                         # if have provide user's post urls
                         # find & replace medium url to local post url if matched
 
-                        postPath = link.split("/").last.split("-").last
+                        if isForJekyll
+                            postPath = link.split("/").last.split("-").last
+                        else
+                            postPath = link.split("/").last
+                        end
+                        
                         if !usersPostURLs.find { |usersPostURL| usersPostURL.split("/").last.split("-").last == postPath.split("-").last }.nil?
-                            markdownString = markdownString.sub! link, "../#{postPath}"
+                            if isForJekyll
+                                markdownString = markdownString.sub! link, "../#{postPath}"
+                            else
+                                markdownString = markdownString.sub! link, "#{postPath}"
+                            end
                         end
                     end
                 end

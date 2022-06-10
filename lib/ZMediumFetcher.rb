@@ -30,7 +30,7 @@ require 'date'
 
 class ZMediumFetcher
 
-    attr_accessor :progress, :linkParser
+    attr_accessor :progress, :linkParser, :isForJekyll
 
     class Progress
         attr_accessor :username, :postPath, :currentPostIndex, :totalPostsLength, :currentPostParagraphIndex, :totalPostParagraphsLength, :message
@@ -71,7 +71,8 @@ class ZMediumFetcher
 
     def initialize
         @progress = Progress.new()
-        @linkParser = LinkParser.new(nil)
+        @linkParser = LinkParser.new(nil, false)
+        @isForJekyll = false
     end
 
     def buildParser(imagePathPolicy)
@@ -92,10 +93,10 @@ class ZMediumFetcher
             oliParser.setNext(mixtapeembedParser)
         pqParser = PQParser.new()
             mixtapeembedParser.setNext(pqParser)
-        iframeParser = IframeParser.new()
+        iframeParser = IframeParser.new(isForJekyll)
         iframeParser.pathPolicy = imagePathPolicy
             pqParser.setNext(iframeParser)
-        imgParser = IMGParser.new()
+        imgParser = IMGParser.new(isForJekyll)
         imgParser.pathPolicy = imagePathPolicy
             iframeParser.setNext(imgParser)
         bqParser = BQParser.new()
@@ -113,7 +114,12 @@ class ZMediumFetcher
 
     def downloadPost(postURL, pathPolicy)
         postID = Post.getPostIDFromPostURLString(postURL)
-        postPath = postID#Post.getPostPathFromPostURLString(postURL)
+
+        if isForJekyll
+            postPath = postID # use only post id is more friendly for url seo
+        else
+            postPath = Post.getPostPathFromPostURLString(postURL)
+        end
 
         progress.postPath = postPath
         progress.message = "Downloading Post..."
@@ -203,9 +209,14 @@ class ZMediumFetcher
             previousParagraph = paragraph
         end
 
-        postPathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), "posts")
-
-        imagePathPolicy = PathPolicy.new(postPathPolicy.getAbsolutePath(nil), "assets")
+        if isForJekyll
+            postPathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), "_posts")
+            imagePathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), "assets")
+        else
+            postPathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), "posts")
+            imagePathPolicy = PathPolicy.new(postPathPolicy.getAbsolutePath(nil), "assets")
+        end
+        
         startParser = buildParser(imagePathPolicy)
 
         progress.totalPostParagraphsLength = paragraphs.length
@@ -289,7 +300,7 @@ class ZMediumFetcher
             nextID = postPageInfo["nextID"]
         end while !nextID.nil?
 
-        @linkParser = LinkParser.new(postURLS)
+        @linkParser = LinkParser.new(postURLS, isForJekyll)
 
         progress.totalPostsLength = postURLS.length
         progress.currentPostIndex = 0
