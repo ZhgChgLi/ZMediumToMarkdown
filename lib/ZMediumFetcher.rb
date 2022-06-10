@@ -253,10 +253,6 @@ class ZMediumFetcher
                     if !linkParser.nil?
                         result = linkParser.parse(result, paragraph.markupLinks)
                     end
-
-                    if paragraph.orgText == "延伸閱讀" or result.include? "Like Z Realm" or paragraph.orgText == "有任何問題及指教歡迎與我聯絡。"
-                        break
-                    end
                     
                     file.puts(result)
     
