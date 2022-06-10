@@ -78,6 +78,18 @@ ZMediumToMarkdown -c
 ZMediumToMarkdown -v
 ```
 
+#### For Jeklly Dir Friendly
+
+**Downloading all posts from user with Jekyll friendly**
+```
+ZMediumToMarkdown -j [USEERNAME]
+```
+
+**Downloading single post with Jekyll friendly**
+```
+ZMediumToMarkdown -k [MEDIUM POST URL]
+```
+
 #### Manually 
 1. MacOS comes with a System Ruby pre-installed, but we are **NOT** Recommend to use that, using rvm/rbenv's Ruby instead.
 2. install [rbenv](https://github.com/rbenv/rbenv) or [rvm](https://rvm.io/) to manage Ruby environment

@@ -14,18 +14,35 @@ class Main
         ARGV << '-h' if ARGV.empty?
 
         filePath = ENV['PWD'] || ::Dir.pwd
-        outputFilePath = PathPolicy.new(filePath, "Output")
 
         OptionParser.new do |opts|
             opts.banner = "Usage: ZMediumFetcher [options]"
         
             opts.on('-uUSERNAME', '--username=USERNAME', 'Downloading all posts from user') do |username|
+                outputFilePath = PathPolicy.new(filePath, "/")
                 fetcher.downloadPostsByUsername(username, outputFilePath)
 
                 Helper.printNewVersionMessageIfExists()
             end
         
             opts.on('-pPOST_URL', '--postURL=POST_URL', 'Downloading single post') do |postURL|
+                outputFilePath = PathPolicy.new(filePath, "/")
+                fetcher.downloadPost(postURL, outputFilePath)
+
+                Helper.printNewVersionMessageIfExists()
+            end
+
+            opts.on('-jUSERNAME', '--jekyllUsername=USERNAME', 'Downloading all posts from user with Jekyll friendly') do |username|
+                outputFilePath = PathPolicy.new(filePath, "Output")
+                fetcher.isForJekyll = true
+                fetcher.downloadPostsByUsername(username, outputFilePath)
+
+                Helper.printNewVersionMessageIfExists()
+            end
+        
+            opts.on('-kpPOST_URL', '--jekyllPostURL=POST_URL', 'Downloading single post with Jekyll friendly') do |postURL|
+                outputFilePath = PathPolicy.new(filePath, "Output")
+                fetcher.isForJekyll = true
                 fetcher.downloadPost(postURL, outputFilePath)
 
                 Helper.printNewVersionMessageIfExists()

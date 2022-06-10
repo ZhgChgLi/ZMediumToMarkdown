@@ -11,7 +11,12 @@ require 'ImageDownloader'
 require 'PathPolicy'
 
 class IframeParser < Parser
-    attr_accessor :nextParser, :pathPolicy
+    attr_accessor :nextParser, :pathPolicy, :isForJekyll
+
+    def initialize(isForJekyll)
+        @isForJekyll = isForJekyll
+    end
+
     def parse(paragraph)
         if paragraph.type == 'IFRAME'
             if !paragraph.iframe.src.nil? && paragraph.iframe.src != ""
@@ -35,7 +40,11 @@ class IframeParser < Parser
                     title = paragraph.iframe.title
                     if  ImageDownloader.download(absolutePath, imageURL)
                         relativePath = "#{pathPolicy.getRelativePath(nil)}/#{imagePathPolicy.getRelativePath(fileName)}"
-                        result = "\r\n[![#{title}](#{relativePath} \"#{title}\")](#{params["url"]})\r\n"
+                        if isForJekyll
+                            result = "\r\n[![#{title}](/#{relativePath} \"#{title}\")](#{params["url"]})\r\n"
+                        else
+                            result = "\r\n[![#{title}](#{relativePath} \"#{title}\")](#{params["url"]})\r\n"
+                        end
                     else
                         result = "\r\n[#{title}](#{params["url"]})\r\n"
                     end

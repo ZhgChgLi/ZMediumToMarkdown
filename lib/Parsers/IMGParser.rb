@@ -7,7 +7,12 @@ require 'ImageDownloader'
 require 'PathPolicy'
 
 class IMGParser < Parser
-    attr_accessor :nextParser, :pathPolicy
+    attr_accessor :nextParser, :pathPolicy, :isForJekyll
+    
+    def initialize(isForJekyll)
+        @isForJekyll = isForJekyll
+    end
+
     def parse(paragraph)
         if paragraph.type == 'IMG'
 
@@ -25,7 +30,11 @@ class IMGParser < Parser
 
             if  ImageDownloader.download(absolutePath, imageURL)
                 relativePath = "#{pathPolicy.getRelativePath(nil)}/#{imagePathPolicy.getRelativePath(fileName)}"
-                "\r\n![#{paragraph.text}](#{relativePath}#{comment})\r\n"
+                if isForJekyll
+                    "\r\n![#{paragraph.text}](/#{relativePath}#{comment})\r\n"
+                else
+                    "\r\n![#{paragraph.text}](#{relativePath}#{comment})\r\n"
+                end
             else
                 "\r\n![#{paragraph.text}](#{imageURL}#{comment})\r\n"
             end

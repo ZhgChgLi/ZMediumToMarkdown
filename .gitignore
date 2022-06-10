@@ -11,6 +11,9 @@
 /tmp/
 /vendor/
 /Output/
+/_posts/
+/assets/
+/posts/
 /bin/.DS_Store
 .DS_Store
 .latestRunVersion
