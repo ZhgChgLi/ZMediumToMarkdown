@@ -303,10 +303,15 @@ class ZMediumFetcher
         progress.message = "Downloading posts..."
         progress.printLog()
 
-        userPathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), "users/#{username}")
+        if isForJekyll
+            downloadPathPolicy = pathPolicy
+        else
+            downloadPathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), "users/#{username}")
+        end
+       
         index = 0
         postURLS.each do |postURL|
-            downloadPost(postURL, userPathPolicy)
+            downloadPost(postURL, downloadPathPolicy)
 
             index += 1
             progress.currentPostIndex = index
