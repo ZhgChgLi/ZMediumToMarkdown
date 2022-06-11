@@ -60,11 +60,14 @@ class IframeParser < Parser
                     gist.gsub! '\"', '"'
                     gist.gsub! '<\/', '</'
                     gistHTML = Nokogiri::HTML(gist)
-                    lang = gistHTML.search('table').first['data-tagsearch-lang']
+                    lang = gistHTML.search('table').first['data-tagsearch-lang'].downcase
+                    if isForJekyll and lang == "objective-c"
+                        lang = "objectivec"
+                    end
                     gistHTML.search('a').each do |a|
                         if a.text == 'view raw'
                             gistRAW = Request.body(Request.URL(a['href']))
-                            result = "```#{lang.downcase}\n#{gistRAW}\n```"
+                            result = "```#{lang}\n#{gistRAW}\n```"
                         end
                     end
                 end
