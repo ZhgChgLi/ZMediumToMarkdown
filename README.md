@@ -171,6 +171,8 @@ jobs:
 ## Made In Taiwan 🇹🇼🇹🇼🇹🇼
 - [ZhgChgLi's Medium (CH)](https://blog.zhgchg.li/)
 
+[![Buy Me A Coffe](doc/images/buy.png)](https://www.buymeacoffee.com/zhgchgli)
+
 If this is helpful, please help to star the repo or recommend it to your friends.
 
 Please feel free to open an Issue or submit a fix/contribution via Pull Request. :)
