@@ -7,10 +7,12 @@ class PQParser < Parser
     attr_accessor :nextParser
     def parse(paragraph)
         if paragraph.type == 'PQ'
-            result = ""
+            result = "\r\n\r\n"
             paragraph.text.each_line do |p|
                 result += "> #{p}"
             end
+            result += "\r\n\r\n"
+
             result
         else
             if !nextParser.nil?

@@ -40,7 +40,7 @@ class Main
                 Helper.printNewVersionMessageIfExists()
             end
         
-            opts.on('-kpPOST_URL', '--jekyllPostURL=POST_URL', 'Downloading single post with Jekyll friendly') do |postURL|
+            opts.on('-kPOST_URL', '--jekyllPostURL=POST_URL', 'Downloading single post with Jekyll friendly') do |postURL|
                 outputFilePath = PathPolicy.new(filePath, "/")
                 fetcher.isForJekyll = true
                 fetcher.downloadPost(postURL, outputFilePath)

@@ -23,21 +23,28 @@ class IMGParser < Parser
             imagePathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), paragraph.postID)
             absolutePath = imagePathPolicy.getAbsolutePath(fileName)
             
+            result = ""
             comment = ""
-            if paragraph.text != ""
-                comment = " \"#{paragraph.text}\""
+            if paragraph.orgText != ""
+                comment = " \"#{paragraph.orgText}\""
             end
 
             if  ImageDownloader.download(absolutePath, imageURL)
                 relativePath = "#{pathPolicy.getRelativePath(nil)}/#{imagePathPolicy.getRelativePath(fileName)}"
                 if isForJekyll
-                    "\r\n![#{paragraph.text}](/#{relativePath}#{comment})\r\n"
+                    result = "\r\n![#{paragraph.text}](/#{relativePath}#{comment})\r\n"
                 else
-                    "\r\n![#{paragraph.text}](#{relativePath}#{comment})\r\n"
+                    result = "\r\n![#{paragraph.text}](#{relativePath}#{comment})\r\n"
                 end
             else
-                "\r\n![#{paragraph.text}](#{imageURL}#{comment})\r\n"
+                result = "\r\n![#{paragraph.text}](#{imageURL}#{comment})\r\n"
             end
+
+            if paragraph.text != ""
+                result += "#{paragraph.text}\r\n"
+            end
+
+            result
         else
             if !nextParser.nil?
                 nextParser.parse(paragraph)
