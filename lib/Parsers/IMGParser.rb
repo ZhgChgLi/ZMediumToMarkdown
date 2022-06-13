@@ -25,19 +25,19 @@ class IMGParser < Parser
             
             result = ""
             alt = ""
-            if paragraph.orgText != "" 
-                alt = " \"#{paragraph.orgText}\""
+            if paragraph.orgTextWithEscape != "" 
+                alt = " \"#{paragraph.orgTextWithEscape}\""
             end
 
             if  ImageDownloader.download(absolutePath, imageURL)
                 relativePath = "#{pathPolicy.getRelativePath(nil)}/#{imagePathPolicy.getRelativePath(fileName)}"
                 if isForJekyll
-                    result = "\r\n![#{paragraph.orgText}](/#{relativePath}#{alt})\r\n"
+                    result = "\r\n![#{paragraph.orgTextWithEscape}](/#{relativePath}#{alt})\r\n"
                 else
-                    result = "\r\n![#{paragraph.orgText}](#{relativePath}#{alt})\r\n"
+                    result = "\r\n![#{paragraph.orgTextWithEscape}](#{relativePath}#{alt})\r\n"
                 end
             else
-                result = "\r\n![#{paragraph.orgText}](#{imageURL}#{alt})\r\n"
+                result = "\r\n![#{paragraph.orgTextWithEscape}](#{imageURL}#{alt})\r\n"
             end
 
             if paragraph.text != ""

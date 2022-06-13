@@ -11,6 +11,20 @@ require 'zip'
 
 class Helper
 
+    def self.escapeMarkdown(text)
+        text.gsub(/(\*|_|`|\||\\|\{|\}\[|\]|\(|\)|#|\+|\-|\.|\!)/){ |x| "\\#{x}" }
+    end
+
+    def self.escapeHTML(text)
+        if text == "<"
+            "&lt;"
+        elsif text == ">"
+            "&gt;"
+        else
+            text
+        end
+    end
+
     def self.createDirIfNotExist(dirPath)
         dirs = dirPath.split("/")
         currentDir = ""

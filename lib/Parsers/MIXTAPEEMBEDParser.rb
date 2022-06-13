@@ -8,9 +8,9 @@ class MIXTAPEEMBEDParser < Parser
     def parse(paragraph)
         if paragraph.type == 'MIXTAPE_EMBED'
             if !paragraph.mixtapeMetadata.nil? && !paragraph.mixtapeMetadata.href.nil?
-                "\n[#{paragraph.orgText}](#{paragraph.mixtapeMetadata.href})"
+                "\n[#{paragraph.orgTextWithEscape}](#{paragraph.mixtapeMetadata.href})"
             else
-                "\n#{paragraph.orgText}"
+                "\n#{paragraph.text}"
             end
         else
             if !nextParser.nil?

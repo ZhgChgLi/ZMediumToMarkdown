@@ -2,9 +2,10 @@
 $lib = File.expand_path('../', File.dirname(__FILE__))
 
 require 'Models/Paragraph'
+require 'Helper'
 
 class MarkupStyleRender 
-    attr_accessor :paragraph, :chars, :encodeType
+    attr_accessor :paragraph, :chars, :encodeType, :isForJekyll
 
     class TextChar
         attr_accessor :chars, :type
@@ -26,8 +27,9 @@ class MarkupStyleRender
     end
 
 
-    def initialize(paragraph)
+    def initialize(paragraph, isForJekyll)
         @paragraph = paragraph
+        @isForJekyll = isForJekyll
 
         chars = {}
         index = 0
@@ -189,7 +191,17 @@ class MarkupStyleRender
                 end
 
                 if char.chars.join() != "\n"
-                    response.append(TextChar.new(char.chars, 'Text'))
+                    if !stack.select { |tag| tag.startChars.chars.join() == "`" }.nil?
+                        # is in code block
+                        response.append(char)
+                    else
+                        resultChar = Helper.escapeMarkdown(char.chars.join())
+                        if isForJekyll 
+                            resultChar = Helper.escapeHTML(resultChar)
+                        end
+    
+                        response.append(TextChar.new(resultChar.chars, "Text"))
+                    end
                 end
 
                 endTags = tags.select { |tag| tag.endIndex == index }
@@ -220,6 +232,20 @@ class MarkupStyleRender
                 response.push(tag.endChars)
             end
             
+            response = optimize(response)
+            result = response.map{ |response| response.chars }.join()
+
+        else
+            response = []
+            chars.each do |index, char|
+                resultChar = escapeMarkdown(char)
+                if isForJekyll 
+                    resultChar = escapeHTML(char)
+                end
+
+                response.append(resultChar)
+            end
+
             response = optimize(response)
             result = response.map{ |response| response.chars }.join()
         end

@@ -1,10 +1,11 @@
 $lib = File.expand_path('../', File.dirname(__FILE__))
 
+require 'Helper'
 require 'Parsers/PParser'
 require 'securerandom'
 
 class Paragraph
-    attr_accessor :postID, :name, :orgText, :text, :type, :href, :metadata, :mixtapeMetadata, :iframe, :oliIndex, :markups, :markupLinks
+    attr_accessor :postID, :name, :orgText, :orgTextWithEscape, :text, :type, :href, :metadata, :mixtapeMetadata, :iframe, :oliIndex, :markups, :markupLinks
 
     class Iframe
         attr_accessor :id, :title, :type, :src
@@ -64,6 +65,9 @@ class Paragraph
         @type = json['type']
         @href = json['href']
         @postID = postID
+
+        orgTextWithEscape = Helper.escapeMarkdown(json['text'])
+        @orgTextWithEscape = orgTextWithEscape
 
         if json['metadata'].nil?
             @metadata = nil
