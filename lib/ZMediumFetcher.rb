@@ -210,10 +210,10 @@ class ZMediumFetcher
         end
 
         if isForJekyll
-            postPathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), "_posts")
+            postPathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), "_posts/zmediumtomarkdown")
             imagePathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), "assets")
         else
-            postPathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), "posts")
+            postPathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), "zmediumtomarkdown")
             imagePathPolicy = PathPolicy.new(postPathPolicy.getAbsolutePath(nil), "assets")
         end
         
