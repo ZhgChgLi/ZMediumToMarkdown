@@ -186,8 +186,7 @@ class ZMediumFetcher
                                 groupByText += "\n"
                             end
 
-                            markupParser = MarkupParser.new(preTypeParagraph, isForJekyll)
-                            groupByText += markupParser.parse()
+                            groupByText += preTypeParagraph.orgText
                         end
                         
                         lastPreTypeParagraph.text = "#{groupByText}"

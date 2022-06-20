@@ -8,11 +8,19 @@ require "Request"
 require 'json'
 require 'open-uri'
 require 'zip'
+require 'nokogiri'
 
 class Helper
 
     def self.escapeMarkdown(text)
-        text.gsub(/(\*|_|`|\||\\|\{|\}\[|\]|\(|\)|#|\+|\-|\.|\!)/){ |x| "\\#{x}" }
+        text.gsub(/(\*|_|`|\||\\|\{|\}|\[|\]|\(|\)|#|\+|\-|\.|\!)/){ |x| "\\#{x}" }
+    end
+
+    def self.fetchOGImage(url)
+        html = Request.html(Request.URL(url))
+        content = html.search("meta[property='og:image']").attribute('content')
+        
+        content
     end
 
     def self.escapeHTML(text)

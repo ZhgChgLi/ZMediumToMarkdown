@@ -70,6 +70,11 @@ class IframeParser < Parser
                             result = "```#{lang}\n#{gistRAW}\n```"
                         end
                     end
+                else
+                    ogImageURL = Helper.fetchOGImage(url)
+                    if !ogImageURL.nil?
+                        result = "\r\n[![#{paragraph.iframe.title}](#{ogImageURL} \"#{paragraph.iframe.title}\")](#{url})\r\n"
+                    end
                 end
             end
 
