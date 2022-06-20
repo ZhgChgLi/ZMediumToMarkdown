@@ -16,14 +16,13 @@ class MarkupStyleRender
     end
 
     class TagChar < TextChar
-        attr_accessor :sort, :startIndex, :endIndex, :startChars, :endChars, :isCodeBlock
-        def initialize(sort, startIndex, endIndex, startChars, endChars, isCodeBlock = false)
+        attr_accessor :sort, :startIndex, :endIndex, :startChars, :endChars
+        def initialize(sort, startIndex, endIndex, startChars, endChars)
             @sort = sort
             @startIndex = startIndex
             @endIndex = endIndex - 1
             @startChars = TextChar.new(startChars.chars, 'TagStart')
             @endChars = TextChar.new(endChars.chars, 'TagEnd')
-            @isCodeBlock = isCodeBlock
         end
     end
 
@@ -127,6 +126,37 @@ class MarkupStyleRender
             end
         end
 
+        # remove style in codeblock e.g. `hello world **bold**` (markdown not allow style in codeblock)
+        
+        while true
+            
+            hasExcute = false
+            inCodeBlock = false
+            index = 0
+
+            chars.each do |char|
+                if char.chars.join() == "`"
+                    if char.type == "TagStart"
+                        inCodeBlock = true
+                    elsif char.type == "TagEnd"
+                        inCodeBlock = false
+                    end
+                elsif inCodeBlock
+                    if char.type == "TagStart" or char.type == "TagEnd"
+                        chars.delete_at(index)
+                        hasExcute = true
+                        break
+                    end
+                end
+                
+                index += 1
+            end
+
+            if !hasExcute
+                break
+            end
+        end
+
         chars
     end
 
@@ -141,7 +171,7 @@ class MarkupStyleRender
                 if markup.type == "EM"
                     tag = TagChar.new(2, markup.start, markup.end, "_", "_")
                 elsif markup.type == "CODE"
-                    tag = TagChar.new(3, markup.start, markup.end, "`", "`", true)
+                    tag = TagChar.new(3, markup.start, markup.end, "`", "`")
                 elsif markup.type == "STRONG"
                     tag = TagChar.new(2, markup.start, markup.end, "**", "**")
                 elsif markup.type == "A"
@@ -167,9 +197,6 @@ class MarkupStyleRender
             response = []
             stack = []
 
-            # markdown unsupoort style in code block
-            inCodeBlock = false
-
             chars.each do |index, char|
 
                 if char.chars.join() == "\n"
@@ -189,18 +216,13 @@ class MarkupStyleRender
                 startTags = tags.select { |tag| tag.startIndex == index }.sort_by(&:sort)
                 if !startTags.nil?
                     startTags.each do |tag|
-                        if inCodeBlock == false
-                            response.append(tag.startChars)
-                            stack.append(tag)
-                        end
-                        if tag.isCodeBlock
-                            inCodeBlock = true
-                        end
+                        response.append(tag.startChars)
+                        stack.append(tag)
                     end
                 end
 
                 if char.chars.join() != "\n"
-                    if inCodeBlock
+                    if !stack.select { |tag| tag.startChars.chars.join() == "`" }.nil?
                         # is in code block
                         response.append(char)
                     else
@@ -223,17 +245,9 @@ class MarkupStyleRender
                             # as expected
                             endTags.delete_at(stackTagInEndTagsIndex)
                         else
-                            if inCodeBlock == false or stackTag.isCodeBlock == true
-                                mismatchTags.append(stackTag)
-                            end
+                            mismatchTags.append(stackTag)
                         end
-                        if inCodeBlock == false or stackTag.isCodeBlock == true
-                            response.append(stackTag.endChars)
-                        end
-
-                        if stackTag.isCodeBlock 
-                            inCodeBlock = false
-                        end
+                        response.append(stackTag.endChars)
                     end
 
                     while mismatchTags.length > 0
