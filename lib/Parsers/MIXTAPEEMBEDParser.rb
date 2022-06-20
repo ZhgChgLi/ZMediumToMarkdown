@@ -11,7 +11,7 @@ class MIXTAPEEMBEDParser < Parser
             if !paragraph.mixtapeMetadata.nil? && !paragraph.mixtapeMetadata.href.nil?
                 ogImageURL = Helper.fetchOGImage(paragraph.mixtapeMetadata.href)
                 if !ogImageURL.nil?
-                    "\r\n[![#{paragraph.orgTextWithEscape}](#{ogImageURL} \"#{paragraph.orgTextWithEscape}\")](#{paragraph.mixtapeMetadata.href})\r\n"
+                    "\r\n\r\n[![#{paragraph.orgTextWithEscape}](#{ogImageURL} \"#{paragraph.orgTextWithEscape}\")](#{paragraph.mixtapeMetadata.href})\r\n\r\n"
                 else
                     "\n[#{paragraph.orgTextWithEscape}](#{paragraph.mixtapeMetadata.href})"
                 end

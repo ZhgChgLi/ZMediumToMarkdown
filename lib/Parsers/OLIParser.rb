@@ -4,7 +4,7 @@ require "Parsers/Parser"
 require 'Models/Paragraph'
 
 class OLIParser < Parser
-    attr_accessor :nextParser, :oliIndex
+    attr_accessor :nextParser
 
     def self.isOLI(paragraph)
         if paragraph.nil? 
@@ -16,7 +16,7 @@ class OLIParser < Parser
 
     def parse(paragraph)
         if OLIParser.isOLI(paragraph)
-            "#{oliIndex}. #{paragraph.text}"
+            "#{paragraph.oliIndex}. #{paragraph.text}"
         else
             if !nextParser.nil?
                 nextParser.parse(paragraph)

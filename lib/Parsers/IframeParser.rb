@@ -6,7 +6,7 @@ require "Request"
 require "Parsers/Parser"
 require 'Models/Paragraph'
 require 'nokogiri'
-
+require 'Helper'
 require 'ImageDownloader'
 require 'PathPolicy'
 
@@ -19,11 +19,14 @@ class IframeParser < Parser
 
     def parse(paragraph)
         if paragraph.type == 'IFRAME'
+            
             if !paragraph.iframe.src.nil? && paragraph.iframe.src != ""
                 url = paragraph.iframe.src
             else
                 url = "https://medium.com/media/#{paragraph.iframe.id}"
             end
+
+            result = "[#{paragraph.iframe.title}](#{url})"
 
             if !url[/(www\.youtube\.com)/].nil?
                 # is youtube
@@ -38,12 +41,16 @@ class IframeParser < Parser
                     imagePathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), paragraph.postID)
                     absolutePath = imagePathPolicy.getAbsolutePath(fileName)
                     title = paragraph.iframe.title
+                    if title.nil? or title == ""
+                        title = "Youtube"
+                    end
+
                     if  ImageDownloader.download(absolutePath, imageURL)
                         relativePath = "#{pathPolicy.getRelativePath(nil)}/#{imagePathPolicy.getRelativePath(fileName)}"
                         if isForJekyll
-                            result = "\r\n[![#{title}](/#{relativePath} \"#{title}\")](#{params["url"]})\r\n"
+                            result = "\r\n\r\n[![#{title}](/#{relativePath} \"#{title}\")](#{params["url"]})\r\n\r\n"
                         else
-                            result = "\r\n[![#{title}](#{relativePath} \"#{title}\")](#{params["url"]})\r\n"
+                            result = "\r\n\r\n[![#{title}](#{relativePath} \"#{title}\")](#{params["url"]})\r\n\r\n"
                         end
                     else
                         result = "\r\n[#{title}](#{params["url"]})\r\n"
@@ -71,18 +78,29 @@ class IframeParser < Parser
                         end
                     end
                 else
-                    ogImageURL = Helper.fetchOGImage(url)
+                    ogURL = url
+                    if !url[/(cdn\.embedly\.com)/].nil?
+                        params = URI::decode_www_form(URI(URI.decode(url)).query).to_h
+                        if !params["url"].nil?
+                            ogURL = params["url"]
+                        end
+                    end
+                    ogImageURL = Helper.fetchOGImage(ogURL)
+
+                    title = paragraph.iframe.title
+                    if title.nil? or title == ""
+                        title = Helper.escapeMarkdown(ogURL)
+                    end
+                    
                     if !ogImageURL.nil?
-                        result = "\r\n[![#{paragraph.iframe.title}](#{ogImageURL} \"#{paragraph.iframe.title}\")](#{url})\r\n"
+                        result = "\r\n\r\n[![#{title}](#{ogImageURL} \"#{title}\")](#{ogURL})\r\n\r\n"
+                    else
+                        result = "[#{title}](#{ogURL})"
                     end
                 end
             end
 
-            if result.nil?
-                "[#{paragraph.iframe.title}](#{url})"
-            else
-                result
-            end
+            result
         else
             if !nextParser.nil?
                 nextParser.parse(paragraph)
