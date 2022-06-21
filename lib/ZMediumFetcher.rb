@@ -71,7 +71,7 @@ class ZMediumFetcher
 
     def initialize
         @progress = Progress.new()
-        @linkParser = LinkParser.new(nil, false)
+        @linkParser = LinkParser.new()
         @isForJekyll = false
     end
 
@@ -223,6 +223,8 @@ class ZMediumFetcher
         progress.message = "Converting Post..."
         progress.printLog()
 
+        linkParser.isForJekyll = isForJekyll
+
         postWithDatePath = "#{postInfo.firstPublishedAt.strftime("%Y-%m-%d")}-#{postPath}"
 
         absolutePath = postPathPolicy.getAbsolutePath("#{postWithDatePath}.md")
@@ -248,10 +250,7 @@ class ZMediumFetcher
                     end
 
                     result = startParser.parse(paragraph)
-    
-                    if !linkParser.nil?
-                        result = linkParser.parse(result, paragraph.markupLinks)
-                    end
+                    result = linkParser.parse(result, paragraph.markupLinks)
                     
                     file.puts(result)
     
@@ -295,7 +294,7 @@ class ZMediumFetcher
             nextID = postPageInfo["nextID"]
         end while !nextID.nil?
 
-        @linkParser = LinkParser.new(postURLS, isForJekyll)
+        linkParser.usersPostURLs = postURLS
 
         progress.totalPostsLength = postURLS.length
         progress.currentPostIndex = 0

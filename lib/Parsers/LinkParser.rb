@@ -5,9 +5,9 @@ require 'Models/Paragraph'
 class LinkParser
     attr_accessor :usersPostURLs, :isForJekyll
 
-    def initialize(usersPostURLs, isForJekyll)
-        @usersPostURLs = usersPostURLs
-        @isForJekyll = isForJekyll
+    def initialize()
+        @usersPostURLs = nil
+        @isForJekyll = false
     end
 
     def parse(markdownString, markupLinks)
@@ -17,6 +17,14 @@ class LinkParser
 
                 matchLinks.each do |matchLink|
                     link = matchLink[0]
+                    linkMarkdown = "(#{link})"
+                    newLinkMarkdown = linkMarkdown
+
+                    if isForJekyll
+                        newLinkMarkdown = "(#{link}){:target=\"_blank\"}"
+                        puts newLinkMarkdown
+                    end
+                    
 
                     if !usersPostURLs.nil?
                         # if have provide user's post urls
@@ -30,11 +38,15 @@ class LinkParser
                         
                         if !usersPostURLs.find { |usersPostURL| usersPostURL.split("/").last.split("-").last == postPath.split("-").last }.nil?
                             if isForJekyll
-                                markdownString = markdownString.sub! link, "../#{postPath}"
+                                newLinkMarkdown = "(../#{postPath})"
                             else
-                                markdownString = markdownString.sub! link, "#{postPath}"
+                                newLinkMarkdown = "(#{postPath})"
                             end
                         end
+                    end
+
+                    if linkMarkdown != newLinkMarkdown
+                        markdownString = markdownString.sub! linkMarkdown, newLinkMarkdown
                     end
                 end
             end
