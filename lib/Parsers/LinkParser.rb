@@ -22,7 +22,6 @@ class LinkParser
 
                     if isForJekyll
                         newLinkMarkdown = "(#{link}){:target=\"_blank\"}"
-                        puts newLinkMarkdown
                     end
                     
 
