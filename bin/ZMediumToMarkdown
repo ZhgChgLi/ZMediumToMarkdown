@@ -65,7 +65,6 @@ class Main
 
             opts.on('-v', '--version', 'Print current ZMediumToMarkdown Version & Output Path') do
                 puts "Version:#{Helper.getLocalVersion().to_s}"
-                puts "Output Path:#{outputFilePath.getAbsolutePath(nil)}"
                 
                 Helper.printNewVersionMessageIfExists()
             end
