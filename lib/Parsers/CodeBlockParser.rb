@@ -4,7 +4,11 @@ require "Parsers/Parser"
 require 'Models/Paragraph'
 
 class CodeBlockParser < Parser
-    attr_accessor :nextParser
+    attr_accessor :nextParser, :isForJekyll
+
+    def initialize(isForJekyll)
+        @isForJekyll = isForJekyll
+    end
 
     def self.getTypeString()
         'CODE_BLOCK'
@@ -20,7 +24,17 @@ class CodeBlockParser < Parser
 
     def parse(paragraph)
         if CodeBlockParser.isCodeBlock(paragraph)
-            "```\n#{paragraph.text}\n```"
+            result = "```\n"
+            if isForJekyll
+                result += "{% raw %}\n"
+            end
+            
+            result += paragraph.text
+
+            if isForJekyll
+                result += "\n{% endraw %}"
+            end
+            result += "\n```"
         else
             if !nextParser.nil?
                 nextParser.parse(paragraph)
