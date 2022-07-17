@@ -25,15 +25,9 @@ class CodeBlockParser < Parser
     def parse(paragraph)
         if CodeBlockParser.isCodeBlock(paragraph)
             result = "```\n"
-            if isForJekyll
-                result += "{% raw %}\n"
-            end
             
-            result += paragraph.text
+            result += paragraph.text.chomp
 
-            if isForJekyll
-                result += "\n{% endraw %}"
-            end
             result += "\n```"
         else
             if !nextParser.nil?

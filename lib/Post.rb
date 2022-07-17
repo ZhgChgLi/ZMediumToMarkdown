@@ -9,7 +9,7 @@ require 'date'
 class Post
 
   class PostInfo
-    attr_accessor :title, :tags, :creator, :firstPublishedAt, :latestPublishedAt, :collectionName
+    attr_accessor :title, :tags, :creator, :firstPublishedAt, :latestPublishedAt, :collectionName, :description
   end
 
   def self.getPostIDFromPostURLString(postURLString)
@@ -60,6 +60,7 @@ class Post
 
   def self.parsePostInfoFromPostContent(content, postID)
     postInfo = PostInfo.new()
+    postInfo.description = content&.dig("Post:#{postID}", "previewContent", "subtitle")
     postInfo.title = content&.dig("Post:#{postID}", "title")
     postInfo.tags = content&.dig("Post:#{postID}", "tags").map{ |tag| tag["__ref"].gsub! 'Tag:', '' }
     

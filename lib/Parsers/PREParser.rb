@@ -21,17 +21,12 @@ class PREParser < Parser
     def parse(paragraph)
         if PREParser.isPRE(paragraph)
             result = "```\n"
-            if isForJekyll
-                result += "{% raw %}\n"
-            end
             
             paragraph.text.each_line do |p|
                 result += p
             end
 
-            if isForJekyll
-                result += "\n{% endraw %}"
-            end
+            result = result.chomp
             result += "\n```"
 
             result

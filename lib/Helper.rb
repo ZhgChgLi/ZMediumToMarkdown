@@ -109,6 +109,8 @@ class Helper
         result += "date: #{postInfo.firstPublishedAt.strftime('%Y-%m-%dT%H:%M:%S.%LZ')}\n"
         result += "categories: #{postInfo.collectionName}\n"
         result += "tags: [#{postInfo.tags.join(",")}]\n"
+        result += "description: #{postInfo.description}\n"
+        result += "render_with_liquid: false\n"
         result += "---\n"
         result += "\r\n"
 

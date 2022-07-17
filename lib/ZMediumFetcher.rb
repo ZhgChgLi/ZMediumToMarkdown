@@ -50,9 +50,9 @@ class ZMediumFetcher
                     info += "-"
                 end
                 if !currentPostParagraphIndex.nil? && !totalPostParagraphsLength.nil?
-                    info += "[#{postPath[0..10]}...(#{currentPostParagraphIndex}/#{totalPostParagraphsLength})]"
+                    info += "[#{postPath[0..15]}...(#{currentPostParagraphIndex}/#{totalPostParagraphsLength})]"
                 else
-                    info += "[#{postPath[0..10]}...]"
+                    info += "[#{postPath[0..15]}...]"
                 end
             end
 
@@ -230,7 +230,7 @@ class ZMediumFetcher
         absolutePath = postPathPolicy.getAbsolutePath("#{postWithDatePath}.md")
         
         # if markdown file is exists and last modification time is >= latestPublishedAt(last update post time on medium)
-        if File.file?(absolutePath) && File.mtime(absolutePath) >= postInfo.latestPublishedAt
+        if File.file?(absolutePath) && File.mtime(absolutePath).to_time.to_i >= postInfo.latestPublishedAt.to_i
             # Already downloaded and nothing has changed!, Skip!
             progress.currentPostParagraphIndex = paragraphs.length
             progress.message = "Skip, Post already downloaded and nothing has changed!"
