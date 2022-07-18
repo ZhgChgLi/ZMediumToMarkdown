@@ -98,7 +98,7 @@ class Helper
         end
     end
 
-    def self.createPostInfo(postInfo)
+    def self.createPostInfo(postInfo, isForJekyll)
 
         title = postInfo.title.gsub("[","")
         title = title.gsub("]","")
@@ -110,7 +110,9 @@ class Helper
         result += "categories: #{postInfo.collectionName}\n"
         result += "tags: [#{postInfo.tags.join(",")}]\n"
         result += "description: #{postInfo.description}\n"
-        result += "render_with_liquid: false\n"
+        if isForJekyll
+            result += "render_with_liquid: false\n"
+        end
         result += "---\n"
         result += "\r\n"
 
@@ -184,16 +186,19 @@ class Helper
 
         
     def self.createWatermark(postURL)
-        text = "\r\n\r\n\r\n"
-        text += "+-----------------------------------------------------------------------------------+"
-        text += "\r\n"
-        text += "\r\n"
-        text += "| **[View original post on Medium](#{postURL}) - Converted by [ZhgChgLi](https://zhgchg.li)/[ZMediumToMarkdown](https://github.com/ZhgChgLi/ZMediumToMarkdown)** |"
-        text += "\r\n"
-        text += "\r\n"
-        text += "+-----------------------------------------------------------------------------------+"
-        text += "\r\n"
+        text = ""
+
+        # text += "\r\n\r\n\r\n"
+        # text += "+-----------------------------------------------------------------------------------+"
+        # text += "\r\n"
+        # text += "\r\n"
+        # text += "| **[View original post on Medium](#{postURL}) - Converted by [ZhgChgLi](https://zhgchg.li)/[ZMediumToMarkdown](https://github.com/ZhgChgLi/ZMediumToMarkdown)** |"
+        # text += "\r\n"
+        # text += "\r\n"
+        # text += "+-----------------------------------------------------------------------------------+"
+        # text += "\r\n"
         
+        # no need to show any watermark :)
         text
     end
 end
