@@ -6,16 +6,14 @@ ZMediumToMarkdown lets you download Medium post and convert it to markdown forma
 
 This project can help you to make an auto-sync or auto-backup service from Medium, like auto-sync Medium posts to Jekyll or other static markdown blog engines or auto-backup Medium posts to the Github page.
 
-## TODO
-- [ ] Support parse twitter's tweet to blockquote (~= 2022/07/25)
-- [ ] Add og:image in post meta (~= 2022/07/25)
-
 ## Features
 - [X] Support download post and convert to markdown format
 - [X] Support download all posts and convert to markdown format from any user without login access.
 - [X] Support download paid content
+- [X] Support download all of post's images to local and convert to local path
+- [X] Support parse twitter tweet content to blockquote
+- [X] Support download paid content
 - [X] Support command line interface
-- [X] Download all of post's images to local and convert to local path
 - [X] Convert [Gist](https://gist.github.com/) source code to markdown code block
 - [X] Convert youtube link which embed in post to preview image
 - [X] Adjust post's last modification date from Medium to the local downloaded markdown file
@@ -24,7 +22,7 @@ This project can help you to make an auto-sync or auto-backup service from Mediu
 - [X] Highly optimized markdown format for Medium
 - [X] Native Markdown Style Render Engine
 (Feel free to contribute if you any optimize idea! `MarkupStyleRender.rb`)
-- [X] [jekyll](https://jekyllrb.com/) friendly
+- [X] [jekyll](https://jekyllrb.com/) & social share (og: tag) friendly
 
 ## Result
 - [Original post on Medium](https://medium.com/pinkoi-engineering/%E5%AF%A6%E6%88%B0%E7%B4%80%E9%8C%84-4-%E5%80%8B%E5%A0%B4%E6%99%AF-7-%E5%80%8B-design-patterns-78507a8de6a5)

@@ -99,24 +99,30 @@ class Helper
     end
 
     def self.createPostInfo(postInfo, isForJekyll)
-
-        title = postInfo.title.gsub("[","")
-        title = title.gsub("]","")
-
-        result = "---\n"
-        result += "title: #{title}\n"
-        result += "author: #{postInfo.creator}\n"
-        result += "date: #{postInfo.firstPublishedAt.strftime('%Y-%m-%dT%H:%M:%S.%LZ')}\n"
-        result += "categories: #{postInfo.collectionName}\n"
-        result += "tags: [#{postInfo.tags.join(",")}]\n"
-        result += "description: #{postInfo.description}\n"
         if isForJekyll
-            result += "render_with_liquid: false\n"
-        end
-        result += "---\n"
-        result += "\r\n"
+            title = postInfo.title.gsub("[","")
+            title = title.gsub("]","")
 
-        result
+            result = "---\n"
+            result += "title: #{title}\n"
+            result += "author: #{postInfo.creator}\n"
+            result += "date: #{postInfo.firstPublishedAt.strftime('%Y-%m-%dT%H:%M:%S.%LZ')}\n"
+            result += "categories: #{postInfo.collectionName}\n"
+            result += "tags: [#{postInfo.tags.join(",")}]\n"
+            result += "description: #{postInfo.description}\n"
+            if !postInfo.previewImage.nil?
+                result += "image:\r\n"
+                result += "  path: #{postInfo.previewImage}\r\n"
+            end
+            result += "render_with_liquid: false\n"
+
+            result += "---\n"
+            result += "\r\n"
+
+            result
+        else
+            nil
+        end
     end
 
     def self.printNewVersionMessageIfExists() 
@@ -186,19 +192,10 @@ class Helper
 
         
     def self.createWatermark(postURL)
-        text = ""
+        text = "\r\n\r\n\r\n"
+        text += "_Converted [Medium Post](#{postURL}) by [ZMediumToMarkdown](https://github.com/ZhgChgLi/ZMediumToMarkdown)._"
+        text += "\r\n"
 
-        # text += "\r\n\r\n\r\n"
-        # text += "+-----------------------------------------------------------------------------------+"
-        # text += "\r\n"
-        # text += "\r\n"
-        # text += "| **[View original post on Medium](#{postURL}) - Converted by [ZhgChgLi](https://zhgchg.li)/[ZMediumToMarkdown](https://github.com/ZhgChgLi/ZMediumToMarkdown)** |"
-        # text += "\r\n"
-        # text += "\r\n"
-        # text += "+-----------------------------------------------------------------------------------+"
-        # text += "\r\n"
-        
-        # no need to show any watermark :)
         text
     end
 end

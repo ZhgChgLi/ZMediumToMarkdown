@@ -6,10 +6,12 @@ require 'nokogiri'
 require 'json'
 require 'date'
 
-class Post
+require 'ImageDownloader'
+require 'PathPolicy'
 
+class Post
   class PostInfo
-    attr_accessor :title, :tags, :creator, :firstPublishedAt, :latestPublishedAt, :collectionName, :description
+    attr_accessor :title, :tags, :creator, :firstPublishedAt, :latestPublishedAt, :collectionName, :description, :previewImage
   end
 
   def self.getPostIDFromPostURLString(postURLString)
@@ -58,12 +60,27 @@ class Post
     end
   end
 
-  def self.parsePostInfoFromPostContent(content, postID)
+  def self.parsePostInfoFromPostContent(content, postID, pathPolicy)
     postInfo = PostInfo.new()
     postInfo.description = content&.dig("Post:#{postID}", "previewContent", "subtitle")
     postInfo.title = content&.dig("Post:#{postID}", "title")
     postInfo.tags = content&.dig("Post:#{postID}", "tags").map{ |tag| tag["__ref"].gsub! 'Tag:', '' }
     
+    previewImage = content&.dig("Post:#{postID}", "previewImage", "__ref")
+    if !previewImage.nil?
+      previewImageFIleName = content&.dig(previewImage, "id")
+
+      imagePathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), postID)
+      absolutePath = imagePathPolicy.getAbsolutePath(previewImageFIleName)
+
+      imageURL = "https://miro.medium.com/max/1400/#{previewImageFIleName}"
+
+      if  ImageDownloader.download(absolutePath, imageURL)
+          relativePath = "#{pathPolicy.getRelativePath(nil)}/#{imagePathPolicy.getRelativePath(previewImageFIleName)}"
+          postInfo.previewImage = relativePath
+      end
+    end
+
     creatorRef = content&.dig("Post:#{postID}", "creator", "__ref")
     if !creatorRef.nil?
       postInfo.creator = content&.dig(creatorRef, "name")

@@ -121,6 +121,14 @@ class ZMediumFetcher
             postPath = Post.getPostPathFromPostURLString(postURL)
         end
 
+        if isForJekyll
+            postPathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), "_posts/zmediumtomarkdown")
+            imagePathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), "assets")
+        else
+            postPathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), "zmediumtomarkdown")
+            imagePathPolicy = PathPolicy.new(postPathPolicy.getAbsolutePath(nil), "assets")
+        end
+
         progress.postPath = postPath
         progress.message = "Downloading Post..."
         progress.printLog()
@@ -132,7 +140,7 @@ class ZMediumFetcher
             raise "Error: Content is empty! PostURL: #{postURL}"
         end
         
-        postInfo = Post.parsePostInfoFromPostContent(postContent, postID)
+        postInfo = Post.parsePostInfoFromPostContent(postContent, postID, imagePathPolicy)
 
         sourceParagraphs = Post.fetchPostParagraphs(postID)
         if sourceParagraphs.nil?
@@ -207,14 +215,6 @@ class ZMediumFetcher
             paragraphs.append(paragraph)
             previousParagraph = paragraph
         end
-
-        if isForJekyll
-            postPathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), "_posts/zmediumtomarkdown")
-            imagePathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), "assets")
-        else
-            postPathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), "zmediumtomarkdown")
-            imagePathPolicy = PathPolicy.new(postPathPolicy.getAbsolutePath(nil), "assets")
-        end
         
         startParser = buildParser(imagePathPolicy)
 
@@ -239,7 +239,10 @@ class ZMediumFetcher
             Helper.createDirIfNotExist(postPathPolicy.getAbsolutePath(nil))
             File.open(absolutePath, "w+") do |file|
                 # write postInfo into top
-                file.puts(Helper.createPostInfo(postInfo, isForJekyll))
+                postMetaInfo = Helper.createPostInfo(postInfo, isForJekyll)
+                if !postMetaInfo.nil?
+                    file.puts(postMetaInfo)
+                end
                 
                 index = 0
                 paragraphs.each do |paragraph|
@@ -260,7 +263,10 @@ class ZMediumFetcher
                     progress.printLog()
                 end
     
-                file.puts(Helper.createWatermark(postURL))
+                postWatermark = Helper.createWatermark(postURL)
+                if !postWatermark.nil?
+                    file.puts(postWatermark)
+                end
             end
             FileUtils.touch absolutePath, :mtime => postInfo.latestPublishedAt
 
