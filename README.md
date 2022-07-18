@@ -6,6 +6,10 @@ ZMediumToMarkdown lets you download Medium post and convert it to markdown forma
 
 This project can help you to make an auto-sync or auto-backup service from Medium, like auto-sync Medium posts to Jekyll or other static markdown blog engines or auto-backup Medium posts to the Github page.
 
+## TODO
+- [] Support parse twitter's tweet to blockquote (~= 2022/07/25)
+- [] Add og:image in post meta (~= 2022/07/25)
+
 ## Features
 - [X] Support download post and convert to markdown format
 - [X] Support download all posts and convert to markdown format from any user without login access.

@@ -239,7 +239,7 @@ class ZMediumFetcher
             Helper.createDirIfNotExist(postPathPolicy.getAbsolutePath(nil))
             File.open(absolutePath, "w+") do |file|
                 # write postInfo into top
-                file.puts(Helper.createPostInfo(postInfo))
+                file.puts(Helper.createPostInfo(postInfo, isForJekyll))
                 
                 index = 0
                 paragraphs.each do |paragraph|
