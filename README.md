@@ -25,7 +25,7 @@ This project can help you to make an auto-sync or auto-backup service from Mediu
 - [X] [jekyll](https://jekyllrb.com/) & social share (og: tag) friendly
 
 ## Result
-- [Original post on Medium](https://medium.com/pinkoi-engineering/%E5%AF%A6%E6%88%B0%E7%B4%80%E9%8C%84-4-%E5%80%8B%E5%A0%B4%E6%99%AF-7-%E5%80%8B-design-patterns-78507a8de6a5)
+- [Original post on Medium](https://medium.com/zrealm-ios-dev/avplayer-%E5%AF%A6%E8%B8%90%E6%9C%AC%E5%9C%B0-cache-%E5%8A%9F%E8%83%BD%E5%A4%A7%E5%85%A8-6ce488898003)
 - [Downloaded & Converted Output Result](example/2021-01-31-avplayer-實踐本地-cache-功能大全-6ce488898003.md)
 ![Harry's Idea Draw](https://user-images.githubusercontent.com/33706588/171560402-40b23bec-a836-4468-9f07-68350ce82d4a.jpg)
 
