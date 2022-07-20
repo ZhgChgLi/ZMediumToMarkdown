@@ -39,7 +39,7 @@ class IframeParser < Parser
                     fileName = "#{paragraph.name}_#{URI(params["image"]).path.split("/").last}" #21de_default.jpg
 
                     imageURL = params["image"]
-                    imagePathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), paragraph.postID)
+                    imagePathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(paragraph.postID), pathPolicy.getRelativePath(paragraph.postID))
                     absolutePath = imagePathPolicy.getAbsolutePath(fileName)
                     title = paragraph.iframe.title
                     if title.nil? or title == ""
@@ -47,7 +47,7 @@ class IframeParser < Parser
                     end
 
                     if  ImageDownloader.download(absolutePath, imageURL)
-                        relativePath = "#{pathPolicy.getRelativePath(nil)}/#{imagePathPolicy.getRelativePath(fileName)}"
+                        relativePath = imagePathPolicy.getRelativePath(fileName)
                         if isForJekyll
                             result = "\r\n\r\n[![#{title}](/#{relativePath} \"#{title}\")](#{params["url"]})\r\n\r\n"
                         else

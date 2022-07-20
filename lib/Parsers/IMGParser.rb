@@ -20,24 +20,21 @@ class IMGParser < Parser
 
             imageURL = "https://miro.medium.com/max/1400/#{fileName}"
 
-            imagePathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), paragraph.postID)
+            imagePathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(paragraph.postID), pathPolicy.getRelativePath(paragraph.postID))
             absolutePath = imagePathPolicy.getAbsolutePath(fileName)
             
             result = ""
             alt = ""
-            if paragraph.orgTextWithEscape != "" 
-                alt = " \"#{paragraph.orgTextWithEscape}\""
-            end
 
             if  ImageDownloader.download(absolutePath, imageURL)
-                relativePath = "#{pathPolicy.getRelativePath(nil)}/#{imagePathPolicy.getRelativePath(fileName)}"
+                relativePath = imagePathPolicy.getRelativePath(fileName)
                 if isForJekyll
-                    result = "\r\n\r\n![#{paragraph.orgTextWithEscape}](/#{relativePath}#{alt})\r\n\r\n"
+                    result = "\r\n\r\n![#{paragraph.text}](/#{relativePath}#{alt})\r\n\r\n"
                 else
-                    result = "\r\n\r\n![#{paragraph.orgTextWithEscape}](#{relativePath}#{alt})\r\n\r\n"
+                    result = "\r\n\r\n![#{paragraph.text}](#{relativePath}#{alt})\r\n\r\n"
                 end
             else
-                result = "\r\n\r\n![#{paragraph.orgTextWithEscape}](#{imageURL}#{alt})\r\n\r\n"
+                result = "\r\n\r\n![#{paragraph.text}](#{imageURL}#{alt})\r\n\r\n"
             end
 
             if paragraph.text != ""

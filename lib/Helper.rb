@@ -12,10 +12,6 @@ require 'nokogiri'
 
 class Helper
 
-    def self.escapeMarkdown(text)
-        text.gsub(/(\*|_|`|\||\\|\{|\}|\[|\]|\(|\)|#|\+|\-|\.|\!)/){ |x| "\\#{x}" }
-    end
-
     def self.fetchOGImage(url)
         html = Request.html(Request.URL(url))
         content = html.search("meta[property='og:image']").attribute('content')
@@ -99,30 +95,28 @@ class Helper
     end
 
     def self.createPostInfo(postInfo, isForJekyll)
-        if isForJekyll
-            title = postInfo.title.gsub("[","")
-            title = title.gsub("]","")
+        title = postInfo.title.gsub("[","")
+        title = title.gsub("]","")
 
-            result = "---\n"
-            result += "title: #{title}\n"
-            result += "author: #{postInfo.creator}\n"
-            result += "date: #{postInfo.firstPublishedAt.strftime('%Y-%m-%dT%H:%M:%S.%LZ')}\n"
-            result += "categories: #{postInfo.collectionName}\n"
-            result += "tags: [#{postInfo.tags.join(",")}]\n"
-            result += "description: #{postInfo.description}\n"
-            if !postInfo.previewImage.nil?
-                result += "image:\r\n"
-                result += "  path: #{postInfo.previewImage}\r\n"
-            end
-            result += "render_with_liquid: false\n"
-
-            result += "---\n"
-            result += "\r\n"
-
-            result
-        else
-            nil
+        result = "---\n"
+        result += "title: #{title}\n"
+        result += "author: #{postInfo.creator}\n"
+        result += "date: #{postInfo.firstPublishedAt.strftime('%Y-%m-%dT%H:%M:%S.%LZ')}\n"
+        result += "last_modified_at: #{postInfo.latestPublishedAt.strftime('%Y-%m-%dT%H:%M:%S.%LZ')}\n"
+        result += "categories: #{postInfo.collectionName}\n"
+        result += "tags: [#{postInfo.tags.join(",")}]\n"
+        result += "description: #{postInfo.description}\n"
+        if !postInfo.previewImage.nil?
+            result += "image:\r\n"
+            result += "  path: #{postInfo.previewImage}\r\n"
         end
+        if isForJekyll
+            result += "render_with_liquid: false\n"
+        end
+        result += "---\n"
+        result += "\r\n"
+
+        result
     end
 
     def self.printNewVersionMessageIfExists() 

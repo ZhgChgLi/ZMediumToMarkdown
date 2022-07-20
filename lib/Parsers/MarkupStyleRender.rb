@@ -174,6 +174,8 @@ class MarkupStyleRender
                     tag = TagChar.new(3, markup.start, markup.end, "`", "`")
                 elsif markup.type == "STRONG"
                     tag = TagChar.new(2, markup.start, markup.end, "**", "**")
+                elsif markup.type == "ESCAPE"
+                    tag = TagChar.new(2, markup.start, markup.end, "\\", "**")
                 elsif markup.type == "A"
                     url = markup.href
                     if markup.anchorType == "LINK"

@@ -5,7 +5,7 @@ require 'Parsers/PParser'
 require 'securerandom'
 
 class Paragraph
-    attr_accessor :postID, :name, :orgText, :orgTextWithEscape, :text, :type, :href, :metadata, :mixtapeMetadata, :iframe, :oliIndex, :markups, :markupLinks
+    attr_accessor :postID, :name, :orgText, :text, :type, :href, :metadata, :mixtapeMetadata, :iframe, :oliIndex, :markups, :markupLinks
 
     class Iframe
         attr_accessor :id, :title, :type, :src
@@ -66,9 +66,6 @@ class Paragraph
         @href = json['href']
         @postID = postID
 
-        orgTextWithEscape = Helper.escapeMarkdown(json['text'])
-        @orgTextWithEscape = orgTextWithEscape
-
         if json['metadata'].nil?
             @metadata = nil
         else
@@ -87,19 +84,28 @@ class Paragraph
             @iframe = Iframe.new(json['iframe']['mediaResource'])
         end
         
+        markups = []
         if !json['markups'].nil? && json['markups'].length > 0
-            markups = []
             json['markups'].each do |markup|
                 markups.append(Markup.new(markup))
             end
-            @markups = markups
-
+            
             links = json['markups'].select{ |markup| markup["type"] == "A" }
             if !links.nil? && links.length > 0
                 @markupLinks = links.map{ |link| link["href"] }
             end
-        else
-            @markups = nil
         end
+
+        i = 0
+        while i = orgText.index(/(\*|_|`|\||\\|\{|\}|\[|\]|\(|\)|#|\+|\-|\.|\!)/, i + 1)
+            escapeMarkup = {
+                "type" => 'ESCAPE',
+                "start" => i,
+                "end" => i + 1
+            }
+            markups.append(Markup.new(escapeMarkup))
+        end
+
+        @markups = markups
     end
 end

@@ -8,18 +8,29 @@ class PathPolicy
     end
 
     def getRelativePath(lastPath)
-        if lastPath.nil?
-            "#{path}"
-        else
-            "#{path}/#{lastPath}"
+        result = path
+
+        if result != ""
+            result += "/"
         end
+
+        if !lastPath.nil?
+            result += lastPath
+        end
+
+        result
     end
 
     def getAbsolutePath(lastPath)
-        if lastPath.nil?
-            "#{rootPath}/#{path}"
-        else
-            "#{rootPath}/#{path}/#{lastPath}"
+        result = rootPath        
+
+        if !lastPath.nil?
+            if result != ""
+                result += "/"
+            end
+            result += "#{lastPath}"
         end
+
+        result
     end
 end

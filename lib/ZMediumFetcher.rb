@@ -122,11 +122,11 @@ class ZMediumFetcher
         end
 
         if isForJekyll
-            postPathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), "_posts/zmediumtomarkdown")
-            imagePathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), "assets")
+            postPathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath("_posts/zmediumtomarkdown"), pathPolicy.getRelativePath("_posts/zmediumtomarkdown"))
+            imagePathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath("assets"), "assets")
         else
-            postPathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), "zmediumtomarkdown")
-            imagePathPolicy = PathPolicy.new(postPathPolicy.getAbsolutePath(nil), "assets")
+            postPathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath("zmediumtomarkdown"), pathPolicy.getRelativePath("zmediumtomarkdown"))
+            imagePathPolicy = PathPolicy.new(postPathPolicy.getAbsolutePath("assets"), "assets")
         end
 
         progress.postPath = postPath
@@ -229,8 +229,19 @@ class ZMediumFetcher
 
         absolutePath = postPathPolicy.getAbsolutePath("#{postWithDatePath}.md")
         
-        # if markdown file is exists and last modification time is >= latestPublishedAt(last update post time on medium)
-        if File.file?(absolutePath) && File.mtime(absolutePath).to_time.to_i >= postInfo.latestPublishedAt.to_i
+        fileLatestPublishedAt = nil
+
+        if File.file?(absolutePath)
+            lines = File.foreach(absolutePath).first(15)
+            if lines.first.start_with?("---")
+                dateLine = lines.select { |line| line.start_with?("last_modified_at:") }.first
+                if !dateLine.nil?
+                    fileLatestPublishedAt = Time.parse(dateLine[/^(last_modified_at:)\s+(\S*)/, 2]).to_i
+                end
+            end
+        end
+
+        if !fileLatestPublishedAt.nil? && fileLatestPublishedAt >= postInfo.latestPublishedAt.to_i
             # Already downloaded and nothing has changed!, Skip!
             progress.currentPostParagraphIndex = paragraphs.length
             progress.message = "Skip, Post already downloaded and nothing has changed!"
@@ -310,7 +321,7 @@ class ZMediumFetcher
         if isForJekyll
             downloadPathPolicy = pathPolicy
         else
-            downloadPathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), "users/#{username}")
+            downloadPathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath("users/#{username}"), pathPolicy.getRelativePath("users/#{username}"))
         end
        
         index = 0

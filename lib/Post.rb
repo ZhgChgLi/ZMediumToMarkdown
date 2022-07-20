@@ -70,13 +70,14 @@ class Post
     if !previewImage.nil?
       previewImageFIleName = content&.dig(previewImage, "id")
 
-      imagePathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(nil), postID)
+      imagePathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(postID), pathPolicy.getRelativePath(postID))
+      
       absolutePath = imagePathPolicy.getAbsolutePath(previewImageFIleName)
 
       imageURL = "https://miro.medium.com/max/1400/#{previewImageFIleName}"
 
       if  ImageDownloader.download(absolutePath, imageURL)
-          relativePath = "#{pathPolicy.getRelativePath(nil)}/#{imagePathPolicy.getRelativePath(previewImageFIleName)}"
+          relativePath = imagePathPolicy.getRelativePath(previewImageFIleName)
           postInfo.previewImage = relativePath
       end
     end
