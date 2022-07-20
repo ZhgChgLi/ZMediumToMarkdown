@@ -19,7 +19,6 @@ require "Parsers/MarkupParser"
 require "Parsers/OLIParser"
 require "Parsers/MIXTAPEEMBEDParser"
 require "Parsers/PQParser"
-require "Parsers/LinkParser"
 require "Parsers/CodeBlockParser"
 
 require "PathPolicy"
@@ -30,7 +29,7 @@ require 'date'
 
 class ZMediumFetcher
 
-    attr_accessor :progress, :linkParser, :isForJekyll
+    attr_accessor :progress, :usersPostURLs, :isForJekyll
 
     class Progress
         attr_accessor :username, :postPath, :currentPostIndex, :totalPostsLength, :currentPostParagraphIndex, :totalPostParagraphsLength, :message
@@ -71,7 +70,7 @@ class ZMediumFetcher
 
     def initialize
         @progress = Progress.new()
-        @linkParser = LinkParser.new()
+        @usersPostURLs = nil
         @isForJekyll = false
     end
 
@@ -89,7 +88,7 @@ class ZMediumFetcher
             ppParser.setNext(uliParser)
         oliParser = OLIParser.new()
             uliParser.setNext(oliParser)
-        mixtapeembedParser = MIXTAPEEMBEDParser.new()
+        mixtapeembedParser = MIXTAPEEMBEDParser.new(isForJekyll)
             oliParser.setNext(mixtapeembedParser)
         pqParser = PQParser.new()
             mixtapeembedParser.setNext(pqParser)
@@ -223,8 +222,6 @@ class ZMediumFetcher
         progress.message = "Converting Post..."
         progress.printLog()
 
-        linkParser.isForJekyll = isForJekyll
-
         postWithDatePath = "#{postInfo.firstPublishedAt.strftime("%Y-%m-%d")}-#{postPath}"
 
         absolutePath = postPathPolicy.getAbsolutePath("#{postWithDatePath}.md")
@@ -260,12 +257,12 @@ class ZMediumFetcher
 
                     if !(CodeBlockParser.isCodeBlock(paragraph) || PREParser.isPRE(paragraph))
                         markupParser = MarkupParser.new(paragraph, isForJekyll)
+                        markupParser.usersPostURLs = usersPostURLs
                         paragraph.text = markupParser.parse()
                     end
 
                     result = startParser.parse(paragraph)
-                    result = linkParser.parse(result)
-                    
+
                     file.puts(result)
     
                     index += 1
@@ -311,7 +308,7 @@ class ZMediumFetcher
             nextID = postPageInfo["nextID"]
         end while !nextID.nil?
 
-        linkParser.usersPostURLs = postURLS
+        usersPostURLs = postURLS
 
         progress.totalPostsLength = postURLS.length
         progress.currentPostIndex = 0

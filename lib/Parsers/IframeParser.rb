@@ -19,6 +19,12 @@ class IframeParser < Parser
     end
 
     def parse(paragraph)
+
+        jekyllOpen = ""
+        if isForJekyll
+            jekyllOpen = "{:target=\"_blank\"}"
+        end
+
         if paragraph.type == 'IFRAME'
             
             if !paragraph.iframe.src.nil? && paragraph.iframe.src != ""
@@ -27,7 +33,7 @@ class IframeParser < Parser
                 url = "https://medium.com/media/#{paragraph.iframe.id}"
             end
 
-            result = "[#{paragraph.iframe.title}](#{url})"
+            result = "[#{paragraph.iframe.title}](#{url})#{jekyllOpen}"
 
             if !url[/(www\.youtube\.com)/].nil?
                 # is youtube
@@ -49,12 +55,12 @@ class IframeParser < Parser
                     if  ImageDownloader.download(absolutePath, imageURL)
                         relativePath = imagePathPolicy.getRelativePath(fileName)
                         if isForJekyll
-                            result = "\r\n\r\n[![#{title}](/#{relativePath} \"#{title}\")](#{params["url"]})\r\n\r\n"
+                            result = "\r\n\r\n[![#{title}](/#{relativePath} \"#{title}\")](#{params["url"]})#{jekyllOpen}\r\n\r\n"
                         else
-                            result = "\r\n\r\n[![#{title}](#{relativePath} \"#{title}\")](#{params["url"]})\r\n\r\n"
+                            result = "\r\n\r\n[![#{title}](#{relativePath} \"#{title}\")](#{params["url"]})#{jekyllOpen}\r\n\r\n"
                         end
                     else
-                        result = "\r\n[#{title}](#{params["url"]})\r\n"
+                        result = "\r\n[#{title}](#{params["url"]})#{jekyllOpen}\r\n"
                     end
                 end
             else
@@ -118,9 +124,9 @@ class IframeParser < Parser
                             createdAt = Time.parse(twitterObj["created_at"]).strftime('%Y-%m-%d %H:%M:%S')
                             result = "\n\n"
                             result += "■■■■■■■■■■■■■■ \n"
-                            result += "> **[#{twitterObj["user"]["name"]}](https://twitter.com/#{twitterObj["user"]["screen_name"]}) @ Twitter Says:** \n\n"
+                            result += "> **[#{twitterObj["user"]["name"]}](https://twitter.com/#{twitterObj["user"]["screen_name"]})#{jekyllOpen} @ Twitter Says:** \n\n"
                             result += "> > #{fullText} \n\n"
-                            result += "> **Tweeted at [#{createdAt}](#{ogURL}).** \n\n"
+                            result += "> **Tweeted at [#{createdAt}](#{ogURL})#{jekyllOpen}.** \n\n"
                             result += "■■■■■■■■■■■■■■ \n\n"
                         end
                     else
@@ -132,9 +138,9 @@ class IframeParser < Parser
                         end
                         
                         if !ogImageURL.nil?
-                            result = "\r\n\r\n[![#{title}](#{ogImageURL} \"#{title}\")](#{ogURL})\r\n\r\n"
+                            result = "\r\n\r\n[![#{title}](#{ogImageURL} \"#{title}\")](#{ogURL})#{jekyllOpen}\r\n\r\n"
                         else
-                            result = "[#{title}](#{ogURL})"
+                            result = "[#{title}](#{ogURL})#{jekyllOpen}"
                         end
                     end
                 end

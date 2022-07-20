@@ -19,6 +19,10 @@ class Helper
         content
     end
 
+    def self.escapeMarkdown(text)
+        text.gsub(/(\*|_|`|\||\\|\{|\}|\[|\]|\(|\)|#|\+|\-|\.|\!)/){ |x| "\\#{x}" }
+    end
+
     def self.escapeHTML(text)
         if text == "<"
             "&lt;"
@@ -101,8 +105,8 @@ class Helper
         result = "---\n"
         result += "title: #{title}\n"
         result += "author: #{postInfo.creator}\n"
-        result += "date: #{postInfo.firstPublishedAt.strftime('%Y-%m-%dT%H:%M:%S.%LZ')}\n"
-        result += "last_modified_at: #{postInfo.latestPublishedAt.strftime('%Y-%m-%dT%H:%M:%S.%LZ')}\n"
+        result += "date: #{postInfo.firstPublishedAt.strftime('%Y-%m-%dT%H:%M:%S.%L%z')}\n"
+        result += "last_modified_at: #{postInfo.latestPublishedAt.strftime('%Y-%m-%dT%H:%M:%S.%L%z')}\n"
         result += "categories: #{postInfo.collectionName}\n"
         result += "tags: [#{postInfo.tags.join(",")}]\n"
         result += "description: #{postInfo.description}\n"

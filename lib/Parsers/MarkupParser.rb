@@ -7,7 +7,7 @@ require 'securerandom'
 require 'User'
 
 class MarkupParser
-    attr_accessor :body, :paragraph, :isForJekyll
+    attr_accessor :body, :paragraph, :isForJekyll, :usersPostURLs
     
     def initialize(paragraph, isForJekyll)
         @paragraph = paragraph
@@ -18,7 +18,7 @@ class MarkupParser
         result = paragraph.text
         if !paragraph.markups.nil? && paragraph.markups.length > 0
             markupRender = MarkupStyleRender.new(paragraph, isForJekyll)
-
+            markupRender.usersPostURLs = usersPostURLs
             begin
                 result = markupRender.parse()
             rescue => e

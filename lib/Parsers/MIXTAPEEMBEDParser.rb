@@ -5,15 +5,24 @@ require "Parsers/Parser"
 require 'Models/Paragraph'
 
 class MIXTAPEEMBEDParser < Parser
-    attr_accessor :nextParser
+    attr_accessor :nextParser, :isForJekyll
+    
+    def initialize(isForJekyll)
+        @isForJekyll = isForJekyll
+    end
+
     def parse(paragraph)
         if paragraph.type == 'MIXTAPE_EMBED'
             if !paragraph.mixtapeMetadata.nil? && !paragraph.mixtapeMetadata.href.nil?
                 ogImageURL = Helper.fetchOGImage(paragraph.mixtapeMetadata.href)
                 if !ogImageURL.nil?
-                    "\r\n\r\n[![#{paragraph.text}](#{ogImageURL} \"#{paragraph.text}\")](#{paragraph.mixtapeMetadata.href})\r\n\r\n"
+                    jekyllOpen = ""
+                    if isForJekyll
+                        jekyllOpen = "{:target=\"_blank\"}"
+                    end
+                    "\r\n\r\n[![](#{ogImageURL})](#{paragraph.mixtapeMetadata.href})#{jekyllOpen}\r\n\r\n"
                 else
-                    "\n[#{paragraph.text}](#{paragraph.mixtapeMetadata.href})"
+                    "\n#{paragraph.text}"
                 end
             else
                 "\n#{paragraph.text}"

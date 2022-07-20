@@ -16,7 +16,7 @@ class BQParser < Parser
 
     def parse(paragraph)
         if BQParser.isBQ(paragraph)
-            result = "> #{paragraph.text}"
+            result = "> #{paragraph.text} \n\n"
             result
         else
             if !nextParser.nil?

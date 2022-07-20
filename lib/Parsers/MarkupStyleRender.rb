@@ -5,7 +5,7 @@ require 'Models/Paragraph'
 require 'Helper'
 
 class MarkupStyleRender 
-    attr_accessor :paragraph, :chars, :encodeType, :isForJekyll
+    attr_accessor :paragraph, :chars, :encodeType, :isForJekyll, :usersPostURLs
 
     class TextChar
         attr_accessor :chars, :type
@@ -188,7 +188,27 @@ class MarkupStyleRender
                         url = "https://medium.com/u/#{markup.userId}"
                     end
                     
-                    tag = TagChar.new(1, markup.start, markup.end, "[", "](#{url})")
+                    lastPath = url.split("/").last
+                    lastQuery = nil
+                    if !lastPath.nil?
+                        lastQuery = lastPath.split("-").last
+                    end
+                    
+                    if !usersPostURLs.nil? && !usersPostURLs.find { |usersPostURL| usersPostURL.split("/").last.split("-").last == lastQuery }.nil?
+                        if isForJekyll
+                            url = "(../#{lastQuery}/)"
+                        else
+                            url = "(#{lastPath})"
+                        end
+                    else
+                        if isForJekyll
+                            url = "(#{url}){:target=\"_blank\"}"
+                        else
+                            url = "(#{url})"
+                        end
+                    end
+
+                    tag = TagChar.new(1, markup.start, markup.end, "[", "]#{url}")
                 else
                     Helper.makeWarningText("Undefined Markup Type: #{markup.type}.")
                 end
@@ -204,6 +224,15 @@ class MarkupStyleRender
             stack = []
 
             chars.each do |index, char|
+
+                # is in code block
+                if !stack.last.nil? && stack.last.endChars.chars.join() == "`"
+                    containEndTag = tags.select { |tag| tag.endIndex == index && tag.endChars.chars.join() == "`" }.length > 0
+                    if !containEndTag 
+                        response.append(char)
+                        next
+                    end
+                end
 
                 if char.chars.join() == "\n"
                     brStack = stack.dup
@@ -228,21 +257,16 @@ class MarkupStyleRender
                 end
 
                 if char.chars.join() != "\n"
-                    if !stack.select { |tag| tag.startChars.chars.join() == "`" }.nil?
-                        # is in code block
-                        response.append(char)
-                    else
-                        resultChar = Helper.escapeMarkdown(char.chars.join())
-                        if isForJekyll 
-                            resultChar = Helper.escapeHTML(resultChar)
-                        end
-    
-                        response.append(TextChar.new(resultChar.chars, "Text"))
+                    resultChar = char.chars.join()
+                    if isForJekyll 
+                        resultChar = Helper.escapeHTML(resultChar)
                     end
+
+                    response.append(TextChar.new(resultChar.chars, "Text"))
                 end
 
                 endTags = tags.select { |tag| tag.endIndex == index }
-                if !endTags.nil? && endTags.length > 0
+                if endTags.length > 0
                     mismatchTags = []
                     while endTags.length > 0
                         stackTag = stack.pop
@@ -268,14 +292,14 @@ class MarkupStyleRender
                 tag = stack.pop
                 response.push(tag.endChars)
             end
-            
+
             response = optimize(response)
             result = response.map{ |response| response.chars }.join()
 
         else
             response = []
             chars.each do |index, char|
-                resultChar = escapeMarkdown(char)
+                resultChar = char
                 if isForJekyll 
                     resultChar = escapeHTML(char)
                 end

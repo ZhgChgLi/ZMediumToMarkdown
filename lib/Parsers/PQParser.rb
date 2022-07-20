@@ -9,7 +9,7 @@ class PQParser < Parser
         if paragraph.type == 'PQ'
             result = "\r\n\r\n"
             paragraph.text.each_line do |p|
-                result += "> #{p}"
+                result += "> #{p} \n\n"
             end
             result += "\r\n\r\n"
 
