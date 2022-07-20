@@ -264,7 +264,7 @@ class ZMediumFetcher
                     end
 
                     result = startParser.parse(paragraph)
-                    result = linkParser.parse(result, paragraph.markupLinks)
+                    result = linkParser.parse(result)
                     
                     file.puts(result)
     

@@ -10,43 +10,41 @@ class LinkParser
         @isForJekyll = false
     end
 
-    def parse(markdownString, markupLinks)
-        if !markupLinks.nil?
-            matchLinks = markdownString.scan(/\[[^\]]*\]\(([^\)]*)\)/)
-            if !matchLinks.nil?
+    def parse(markdownString)
+        matchLinks = markdownString.scan(/\[[^\]]*\]\(([^\)]*)\)/m)
+        if !matchLinks.nil?
 
-                matchLinks.each do |matchLink|
-                    link = matchLink[0]
-                    linkMarkdown = "(#{link})"
-                    newLinkMarkdown = linkMarkdown
+            matchLinks.each do |matchLink|
+                link = matchLink[0]
+                linkMarkdown = "(#{link})"
+                newLinkMarkdown = linkMarkdown
+
+                if isForJekyll
+                    newLinkMarkdown = "(#{link}){:target=\"_blank\"}"
+                end
+                
+
+                if !usersPostURLs.nil?
+                    # if have provide user's post urls
+                    # find & replace medium url to local post url if matched
 
                     if isForJekyll
-                        newLinkMarkdown = "(#{link}){:target=\"_blank\"}"
+                        postPath = link.split("/").last.split("-").last
+                    else
+                        postPath = link.split("/").last
                     end
                     
-
-                    if !usersPostURLs.nil?
-                        # if have provide user's post urls
-                        # find & replace medium url to local post url if matched
-
+                    if !usersPostURLs.find { |usersPostURL| usersPostURL.split("/").last.split("-").last == postPath.split("-").last }.nil?
                         if isForJekyll
-                            postPath = link.split("/").last.split("-").last
+                            newLinkMarkdown = "(../#{postPath})"
                         else
-                            postPath = link.split("/").last
-                        end
-                        
-                        if !usersPostURLs.find { |usersPostURL| usersPostURL.split("/").last.split("-").last == postPath.split("-").last }.nil?
-                            if isForJekyll
-                                newLinkMarkdown = "(../#{postPath})"
-                            else
-                                newLinkMarkdown = "(#{postPath})"
-                            end
+                            newLinkMarkdown = "(#{postPath})"
                         end
                     end
+                end
 
-                    if linkMarkdown != newLinkMarkdown
-                        markdownString = markdownString.sub! linkMarkdown, newLinkMarkdown
-                    end
+                if linkMarkdown != newLinkMarkdown
+                    markdownString = markdownString.sub! linkMarkdown, newLinkMarkdown
                 end
             end
         end
