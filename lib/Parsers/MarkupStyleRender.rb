@@ -171,11 +171,11 @@ class MarkupStyleRender
                 if markup.type == "EM"
                     tag = TagChar.new(2, markup.start, markup.end, "_", "_")
                 elsif markup.type == "CODE"
-                    tag = TagChar.new(3, markup.start, markup.end, "`", "`")
+                    tag = TagChar.new(0, markup.start, markup.end, "`", "`")
                 elsif markup.type == "STRONG"
                     tag = TagChar.new(2, markup.start, markup.end, "**", "**")
                 elsif markup.type == "ESCAPE"
-                    escapeTagChar = TagChar.new(0,markup.start, markup.end,'','')
+                    escapeTagChar = TagChar.new(999,markup.start, markup.end,'','')
                     escapeTagChar.startChars = TextChar.new('\\'.chars,'Text')
                     escapeTagChar.endChars = TextChar.new([],'Text')
 
