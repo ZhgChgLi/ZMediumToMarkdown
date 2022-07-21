@@ -271,7 +271,7 @@ class ZMediumFetcher
                     progress.printLog()
                 end
     
-                postWatermark = Helper.createWatermark(postURL)
+                postWatermark = Helper.createWatermark(postURL, isForJekyll)
                 if !postWatermark.nil?
                     file.puts(postWatermark)
                 end
@@ -308,7 +308,7 @@ class ZMediumFetcher
             nextID = postPageInfo["nextID"]
         end while !nextID.nil?
 
-        usersPostURLs = postURLS
+        @usersPostURLs = postURLS
 
         progress.totalPostsLength = postURLS.length
         progress.currentPostIndex = 0

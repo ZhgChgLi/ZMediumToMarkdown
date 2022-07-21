@@ -189,9 +189,14 @@ class Helper
     end
 
         
-    def self.createWatermark(postURL)
+    def self.createWatermark(postURL, isForJekyll)
+        jekyllOpen = ""
+        if isForJekyll
+            jekyllOpen = "{:target=\"_blank\"}"
+        end
+
         text = "\r\n\r\n\r\n"
-        text += "_Converted [Medium Post](#{postURL}) by [ZMediumToMarkdown](https://github.com/ZhgChgLi/ZMediumToMarkdown)._"
+        text += "_Converted [Medium Post](#{postURL})#{jekyllOpen} by [ZMediumToMarkdown](https://github.com/ZhgChgLi/ZMediumToMarkdown)#{jekyllOpen}._"
         text += "\r\n"
 
         text

@@ -96,14 +96,23 @@ class Paragraph
             end
         end
 
-        i = 0
-        while i = orgText.index(/(\*|_|`|\||\\|\{|\}|\[|\]|\(|\)|#|\+|\-|\.|\!)/, i + 1)
-            escapeMarkup = {
-                "type" => 'ESCAPE',
-                "start" => i,
-                "end" => i + 1
-            }
-            markups.append(Markup.new(escapeMarkup))
+        index = 0
+        orgText.each_char do |char|
+            
+            if char.chars.join()  =~ /(\*|_|`|\||\\|\{|\}|\[|\]|\(|\)|#|\+|\-|\.|\!)/
+                escapeMarkup = {
+                    "type" => 'ESCAPE',
+                    "start" => index,
+                    "end" => index + 1
+                }
+                markups.append(Markup.new(escapeMarkup))
+            end
+            
+            index += 1
+            if char.bytes.length >= 4
+                # some emoji need more space (in Medium)
+                index += 1
+            end
         end
 
         @markups = markups
