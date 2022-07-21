@@ -250,9 +250,17 @@ class MarkupStyleRender
 
                 startTags = tags.select { |tag| tag.startIndex == index }.sort_by(&:sort)
                 if !startTags.nil?
+                    hasCodeBlockTag = false
                     startTags.each do |tag|
-                        response.append(tag.startChars)
+                        if !hasCodeBlockTag 
+                            response.append(tag.startChars)
+                        end
+                        
                         stack.append(tag)
+
+                        if tag.startChars.chars.join() == "`"
+                            hasCodeBlockTag = true
+                        end
                     end
                 end
 
