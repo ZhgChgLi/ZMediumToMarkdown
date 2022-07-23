@@ -48,6 +48,51 @@ class MarkupStyleRender
     end
 
     def optimize(chars) 
+
+        # remove style in codeblock e.g. `hello world **bold**` (markdown not allow style in codeblock)
+
+        while true
+    
+            hasExcute = false
+            inCodeBlock = false
+            index = 0
+
+            chars.each do |char|
+                if char.chars.join() == "`"
+                    if char.type == "TagStart"
+                        inCodeBlock = true
+                    elsif char.type == "TagEnd"
+                        inCodeBlock = false
+                    end
+                elsif inCodeBlock
+                    if char.type == "TagStart" or char.type == "TagEnd"
+                        chars.delete_at(index)
+                        hasExcute = true
+                        break
+                    end
+                end
+                
+                index += 1
+            end
+
+            if !hasExcute
+                break
+            end
+        end
+
+        # treat escape tag as normal text
+        index = 0
+        chars.each do |char|
+            if char.type == "TagEnd" && char.chars.join() == ""
+                chars.delete_at(index)
+            elsif char.type == "TagStart" && char.chars.join() == "\\"
+                chars[index] = TextChar.new("\\".chars, "Text")
+            end
+
+            index += 1
+        end
+
+        # append space between tag and text
         while true
             hasExcute = false
             
@@ -126,37 +171,6 @@ class MarkupStyleRender
             end
         end
 
-        # remove style in codeblock e.g. `hello world **bold**` (markdown not allow style in codeblock)
-        
-        while true
-            
-            hasExcute = false
-            inCodeBlock = false
-            index = 0
-
-            chars.each do |char|
-                if char.chars.join() == "`"
-                    if char.type == "TagStart"
-                        inCodeBlock = true
-                    elsif char.type == "TagEnd"
-                        inCodeBlock = false
-                    end
-                elsif inCodeBlock
-                    if char.type == "TagStart" or char.type == "TagEnd"
-                        chars.delete_at(index)
-                        hasExcute = true
-                        break
-                    end
-                end
-                
-                index += 1
-            end
-
-            if !hasExcute
-                break
-            end
-        end
-
         chars
     end
 
@@ -175,11 +189,7 @@ class MarkupStyleRender
                 elsif markup.type == "STRONG"
                     tag = TagChar.new(2, markup.start, markup.end, "**", "**")
                 elsif markup.type == "ESCAPE"
-                    escapeTagChar = TagChar.new(999,markup.start, markup.end,'','')
-                    escapeTagChar.startChars = TextChar.new('\\'.chars,'Text')
-                    escapeTagChar.endChars = TextChar.new([],'Text')
-
-                    tag = escapeTagChar
+                    tag = TagChar.new(999, markup.start, markup.end, "\\", "")
                 elsif markup.type == "A"
                     url = markup.href
                     if markup.anchorType == "LINK"
@@ -224,16 +234,6 @@ class MarkupStyleRender
             stack = []
 
             chars.each do |index, char|
-
-                # is in code block
-                if !stack.last.nil? && stack.last.endChars.chars.join() == "`"
-                    containEndTag = tags.select { |tag| tag.endIndex == index && tag.endChars.chars.join() == "`" }.length > 0
-                    if !containEndTag 
-                        response.append(char)
-                        next
-                    end
-                end
-
                 if char.chars.join() == "\n"
                     brStack = stack.dup
                     while brStack.length > 0
@@ -265,12 +265,17 @@ class MarkupStyleRender
                 end
 
                 if char.chars.join() != "\n"
-                    resultChar = char.chars.join()
-                    if isForJekyll 
-                        resultChar = Helper.escapeHTML(resultChar)
+                    if !stack.select { |tag| tag.startChars.chars.join() == "`" }.nil?
+                        # is in code block
+                        response.append(char)
+                    else
+                        resultChar = Helper.escapeMarkdown(char.chars.join())
+                        if isForJekyll 
+                            resultChar = Helper.escapeHTML(resultChar)
+                        end
+    
+                        response.append(TextChar.new(resultChar.chars, "Text"))
                     end
-
-                    response.append(TextChar.new(resultChar.chars, "Text"))
                 end
 
                 endTags = tags.select { |tag| tag.endIndex == index }
