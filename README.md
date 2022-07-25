@@ -168,7 +168,6 @@ jobs:
 - [Ruby](https://www.ruby-lang.org/zh_tw/)
 - [net-http](https://github.com/ruby/net-http)
 - [nokogiri](https://github.com/sparklemotion/nokogiri)
-- [reverse_markdown](https://github.com/xijo/reverse_markdown)
 
 ## Made In Taiwan 🇹🇼🇹🇼🇹🇼
 - [ZhgChgLi's Medium (CH)](https://blog.zhgchg.li/)
