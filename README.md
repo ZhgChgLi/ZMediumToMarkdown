@@ -165,7 +165,7 @@ jobs:
 [exmaple repo](https://github.com/ZhgChgLi/ZMediumToMarkdown-github-action)
 
 ## More Tools
-- [ZMediumToMarkdown](https://github.com/ZhgChgLi/ZMediumToMarkdown) lets you download Medium post and convert it to markdown format easily.
+- [ZReviewTender](https://github.com/ZhgChgLi/ZReviewTender) uses brand new App Store & Google Play API to resend App reviews to your Slack channel automatically.
 
 ## Made In Taiwan 🇹🇼🇹🇼🇹🇼
 - [ZhgChg.Li (CH)](https://zhgchg.li/)
