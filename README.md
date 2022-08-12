@@ -6,6 +6,8 @@ ZMediumToMarkdown lets you download Medium post and convert it to markdown forma
 
 This project can help you to make an auto-sync or auto-backup service from Medium, like auto-sync Medium posts to Jekyll or other static markdown blog engines or auto-backup Medium posts to the Github page.
 
+[![ZMediumToMarkdown](https://ruby-gem-downloads-badge.herokuapp.com/ZMediumToMarkdown?color=green&type=total&total_label=Total-downloads&label=ZMediumToMarkdown@RubyGem)](https://rubygems.org/gems/ZMediumToMarkdown)
+
 ## Features
 - [X] Support download post and convert to markdown format
 - [X] Support download all posts and convert to markdown format from any user without login access.
