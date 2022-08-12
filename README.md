@@ -1,6 +1,6 @@
 # ZMediumToMarkdown
 
-![Harry's Idea Draw](https://user-images.githubusercontent.com/33706588/170814437-98c067f1-bee1-47ad-941a-d943352a9cec.jpg)
+![ZMediumToMarkdown](https://user-images.githubusercontent.com/33706588/184416147-c2ec74d4-7107-484e-8ad2-302340cf6c1f.png)
 
 ZMediumToMarkdown lets you download Medium post and convert it to markdown format easily.
 
