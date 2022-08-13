@@ -25,7 +25,7 @@ This project can help you to make an auto-sync or auto-backup service from Mediu
 - [X] Native Markdown Style Render Engine
 (Feel free to contribute if you any optimize idea! `MarkupStyleRender.rb`)
 - [X] [jekyll](https://jekyllrb.com/) & social share (og: tag) friendly
-- [X] 100% Ruby @ RubyGem
+- [X] 100% Ruby @ [RubyGem](https://rubygems.org/gems/ZMediumToMarkdown)
 
 ## Result
 - [Original post on Medium](https://medium.com/zrealm-ios-dev/avplayer-%E5%AF%A6%E8%B8%90%E6%9C%AC%E5%9C%B0-cache-%E5%8A%9F%E8%83%BD%E5%A4%A7%E5%85%A8-6ce488898003)
