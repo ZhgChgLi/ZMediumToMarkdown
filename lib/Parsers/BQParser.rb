@@ -16,7 +16,11 @@ class BQParser < Parser
 
     def parse(paragraph)
         if BQParser.isBQ(paragraph)
-            result = "> #{paragraph.text} \n\n"
+            result = "\r\n\r\n"
+            paragraph.text.each_line do |p|
+                result += "> #{p} \n\n"
+            end
+            result += "\r\n\r\n"
             result
         else
             if !nextParser.nil?
