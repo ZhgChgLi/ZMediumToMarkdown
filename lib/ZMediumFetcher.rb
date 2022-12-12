@@ -26,6 +26,14 @@ require "Request"
 require "Post"
 require "User"
 require 'date'
+require "uri"
+
+module URI
+  def self.decode url
+    url ? URI.decode_www_form_component(url).gsub(" ", "%20") : ""
+  end
+end
+    
 
 class ZMediumFetcher
 
