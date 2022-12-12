@@ -26,7 +26,7 @@ class IframeParser < Parser
         end
 
         if paragraph.type == 'IFRAME'
-            
+            return unless paragraph.iframe
             if !paragraph.iframe.src.nil? && paragraph.iframe.src != ""
                 url = paragraph.iframe.src
             else
@@ -65,9 +65,11 @@ class IframeParser < Parser
                 end
             else
                 html = Request.html(Request.URL(url))
-                src = html.search('script').first.attribute('src')
+                return "" unless html
+                src = html.search('script').first
+                srce = src.attribute('src') if src
                 result = nil
-                if !src.to_s[/^(https\:\/\/gist\.github\.com)/].nil?
+                if !srce.to_s[/^(https\:\/\/gist\.github\.com)/].nil?
                     # is gist
                     gist = Request.body(Request.URL(src)).scan(/(document\.write\('){1}(.*)(\)){1}/)[1][1]
                     gist.gsub! '\n', ''
