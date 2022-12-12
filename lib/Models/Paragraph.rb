@@ -78,7 +78,7 @@ class Paragraph
             @mixtapeMetadata = MixtapeMetadata.new(json['mixtapeMetadata'])
         end
 
-        if json['iframe'].nil?
+        if json['iframe'].nil? || !json['iframe'] || !json['iframe']['mediaResource']
             @iframe = nil
         else
             @iframe = Iframe.new(json['iframe']['mediaResource'])
