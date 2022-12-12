@@ -9,8 +9,8 @@ class ImageDownloader
         Helper.createDirIfNotExist(dir.join("/"))
         
         begin
-            imageResponse = open(url)
-            File.write(path, imageResponse.read, {mode: 'wb'})
+            imageResponse = URI.open(url)
+            File.write(path, imageResponse.read)
             true
         rescue
             false
