@@ -22,34 +22,40 @@ class Request
             end
         end
 
-        response = https.request(request)
-        
-        # 3XX Redirect
-        if response.code.to_i >= 300 && response.code.to_i <= 399 && !response['location'].nil? && response['location'] != ''
-            if retryCount >= 10
-                raise "Error: Retry limit reached. path: #{url}"
-            else
-                location = response['location']
-                if !location.match? /^(http)/
-                    location = "#{uri.scheme}://#{uri.host}#{location}"
-                end
-                response = self.URL(location, method, data)
-            end
+        begin
+          response = https.request(request)
+          # 3XX Redirect
+          if response.code.to_i >= 300 && response.code.to_i <= 399 && !response['location'].nil? && response['location'] != ''
+              if retryCount >= 10
+                  raise "Error: Retry limit reached. path: #{url}"
+              else
+                  location = response['location']
+                  if !location.match? /^(http)/
+                      location = "#{uri.scheme}://#{uri.host}#{location}"
+                  end
+                  response = self.URL(location, method, data)
+              end
+          end
+        rescue
+          
         end
+
         response
     end
 
     def self.html(response)
-        if response.code.to_i != 200 
-            nil
-        end
+      if response.nil? || (response && response.code.to_i != 200)
+        nil
+      else
         Nokogiri::HTML(response.read_body)
+      end
     end
 
     def self.body(response)
-        if response.code.to_i != 200 
-            nil
-        end
+      if response.nil? || (response && response.code.to_i != 200)
+        nil
+      else
         response.read_body
+      end
     end
 end
