@@ -231,8 +231,7 @@ class ZMediumFetcher
         progress.printLog()
 
         postWithDatePath = "#{postInfo.firstPublishedAt.strftime("%Y-%m-%d")}-#{postPath}"
-
-        absolutePath = postPathPolicy.getAbsolutePath("#{postWithDatePath}.md")
+        absolutePath = URI.decode(postPathPolicy.getAbsolutePath("#{postWithDatePath}")) + ".md"
         
         fileLatestPublishedAt = nil
 
