@@ -23,13 +23,12 @@ class Post
 
   def self.getPostPathFromPostURLString(postURLString)
     uri = URI.parse(postURLString)
-    postPath = uri.path.split('/').last
-    
-    URI.decode(postPath)
+    uri.path.split('/').last
   end
 
   def self.parsePostContentFromHTML(html)
     json = nil
+    return "" unless html
     html.search('script').each do |script|
         match = script.to_s[/(<script>window\.__APOLLO_STATE__ \= ){1}(.*)(<\/script>){1}/,2]
         if !match.nil? && match != ""

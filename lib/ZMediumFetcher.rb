@@ -26,6 +26,14 @@ require "Request"
 require "Post"
 require "User"
 require 'date'
+require "uri"
+
+module URI
+  def self.decode url
+    url ? URI.decode_www_form_component(url).gsub(" ", "%20") : ""
+  end
+end
+    
 
 class ZMediumFetcher
 
@@ -128,7 +136,7 @@ class ZMediumFetcher
             imagePathPolicy = PathPolicy.new(postPathPolicy.getAbsolutePath("assets"), "assets")
         end
 
-        progress.postPath = postPath
+        progress.postPath = URI.decode(postPath)
         progress.message = "Downloading Post..."
         progress.printLog()
 
@@ -154,6 +162,7 @@ class ZMediumFetcher
         previousParagraph = nil
         preTypeParagraphs = []
         sourceParagraphs.each do |sourcParagraph|
+          return if (!sourcParagraph || !postID)
             paragraph = Paragraph.new(sourcParagraph, postID)
             if OLIParser.isOLI(paragraph)
                 oliIndex += 1
@@ -223,8 +232,7 @@ class ZMediumFetcher
         progress.printLog()
 
         postWithDatePath = "#{postInfo.firstPublishedAt.strftime("%Y-%m-%d")}-#{postPath}"
-
-        absolutePath = postPathPolicy.getAbsolutePath("#{postWithDatePath}.md")
+        absolutePath = URI.decode(postPathPolicy.getAbsolutePath("#{postWithDatePath}")) + ".md"
         
         fileLatestPublishedAt = nil
 
@@ -287,16 +295,13 @@ class ZMediumFetcher
     
     def downloadPostsByUsername(username, pathPolicy)
         progress.username = username
-        progress.message = "Fetching infromation..."
+        progress.message = "Fetching posts..."
         progress.printLog()
 
         userID = User.convertToUserIDFromUsername(username)
         if userID.nil?
             raise "Medium's Username:#{username} not found!"
         end
-
-        progress.message = "Fetching posts..."
-        progress.printLog()
 
         postURLS = []
         nextID = nil
@@ -321,14 +326,21 @@ class ZMediumFetcher
             downloadPathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath("users/#{username}"), pathPolicy.getRelativePath("users/#{username}"))
         end
        
-        index = 0
+        index = 1
         postURLS.each do |postURL|
-            downloadPost(postURL, downloadPathPolicy)
+          begin
+            # todo: unless File.exists? Post.getPostPathFromPostURLString(postURL) +".md"
+            downloadPost(postURL, downloadPathPolicy) 
+          rescue => e
+            puts e
+            require "byebug"
+            byebug
+          end
 
-            index += 1
-            progress.currentPostIndex = index
-            progress.message = "Downloading posts..."
-            progress.printLog()
+          index += 1
+          progress.currentPostIndex = index
+          progress.message = "Downloading posts..."
+          progress.printLog()
         end
 
         progress.message = "All posts has been downloaded!, Total posts: #{postURLS.length}"

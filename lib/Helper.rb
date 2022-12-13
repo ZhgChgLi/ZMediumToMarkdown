@@ -14,9 +14,9 @@ class Helper
 
     def self.fetchOGImage(url)
         html = Request.html(Request.URL(url))
-        content = html.search("meta[property='og:image']").attribute('content')
-        
-        content
+        return "" unless html
+        image = html.search("meta[property='og:image']")
+        image.attribute('content') || ""
     end
 
     def self.escapeMarkdown(text)
