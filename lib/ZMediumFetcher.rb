@@ -333,8 +333,6 @@ class ZMediumFetcher
             downloadPost(postURL, downloadPathPolicy) 
           rescue => e
             puts e
-            require "byebug"
-            byebug
           end
 
           index += 1
