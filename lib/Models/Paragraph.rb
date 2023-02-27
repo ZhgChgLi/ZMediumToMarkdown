@@ -5,7 +5,7 @@ require 'Parsers/PParser'
 require 'securerandom'
 
 class Paragraph
-    attr_accessor :postID, :name, :orgText, :text, :type, :href, :metadata, :mixtapeMetadata, :iframe, :oliIndex, :markups, :markupLinks
+    attr_accessor :postID, :name, :orgText, :text, :type, :href, :metadata, :mixtapeMetadata, :iframe, :oliIndex, :markups, :markupLinks, :codeBlockMetadata
 
     class Iframe
         attr_accessor :id, :title, :type, :src
@@ -49,6 +49,13 @@ class Paragraph
         end
     end
 
+    class CodeBlockMetadata
+        attr_accessor :lang
+        def initialize(json)
+            @lang = json['lang']
+        end
+    end
+
     def self.makeBlankParagraph(postID)
         json = {
             "name" => "fakeBlankParagraph_#{SecureRandom.uuid}",
@@ -70,6 +77,12 @@ class Paragraph
             @metadata = nil
         else
             @metadata = MetaData.new(json['metadata'])
+        end
+
+        if json['codeBlockMetadata'].nil?
+            @codeBlockMetadata = nil
+        else
+            @codeBlockMetadata = CodeBlockMetadata.new(json['codeBlockMetadata'])
         end
 
         if json['mixtapeMetadata'].nil?
