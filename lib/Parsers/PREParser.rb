@@ -20,7 +20,13 @@ class PREParser < Parser
 
     def parse(paragraph)
         if PREParser.isPRE(paragraph)
-            result = "```\n"
+            
+            lang = ""
+            if !paragraph.codeBlockMetadata.nil?
+                lang = paragraph.codeBlockMetadata.lang
+            end
+
+            result = "```#{lang}\n"
             
             paragraph.text.each_line do |p|
                 result += p
