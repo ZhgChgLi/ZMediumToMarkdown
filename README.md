@@ -2,30 +2,29 @@
 
 ![ZMediumToMarkdown](https://user-images.githubusercontent.com/33706588/184416147-c2ec74d4-7107-484e-8ad2-302340cf6c1f.png)
 
-ZMediumToMarkdown lets you download Medium post and convert it to markdown format easily.
+ZMediumToMarkdown lets you download Medium posts and convert them to markdown format easily.
 
-This project can help you to make an auto-sync or auto-backup service from Medium, like auto-sync Medium posts to Jekyll or other static markdown blog engines or auto-backup Medium posts to the Github page.
+This project can help you create an auto-sync or auto-backup service from Medium, such as automatically syncing Medium posts to Jekyll or other static markdown blog engines, or backing up Medium posts to Github pages.
 
 [![ZMediumToMarkdown](https://badge.fury.io/rb/ZMediumToMarkdown.svg)](https://rubygems.org/gems/ZMediumToMarkdown)
 
 ## Features
-- [X] Support download post and convert to markdown format
-- [X] Support download all posts and convert to markdown format from any user without login access.
-- [X] Support download paid content
-- [X] Support download all of post's images to local and convert to local path
-- [X] Support parse twitter tweet content to blockquote
-- [X] Support download paid content
-- [X] Support command line interface
-- [X] Convert [Gist](https://gist.github.com/) source code to markdown code block
-- [X] Convert youtube link which embed in post to preview image
-- [X] Adjust post's last modification date from Medium to the local downloaded markdown file
-- [X] Auto skip when post has been downloaded and last modification date from Medium doesn't changed (convenient for auto-sync or auto-backup service, to save server's bandwidth and execution time)
-- [X] [Support using Github Action as auto sync/backup service](https://github.com/ZhgChgLi/ZMediumToMarkdown/tree/main#using-github-action-as-your-free-auto-syncbackup-service)
-- [X] Highly optimized markdown format for Medium
-- [X] Native Markdown Style Render Engine
-(Feel free to contribute if you any optimize idea! `MarkupStyleRender.rb`)
-- [X] [jekyll](https://jekyllrb.com/) & social share (og: tag) friendly
-- [X] 100% Ruby @ [RubyGem](https://rubygems.org/gems/ZMediumToMarkdown)
+- [x] Supports downloading posts and converting them to markdown format
+- [x] Supports downloading all posts and converting them to markdown format from any user without requiring login access
+- [x] Supports downloading paid content
+- [x] Supports downloading all of a post's images to the local drive and converting them to local paths
+- [x] Supports parsing Twitter tweet content to blockquotes
+- [x] Supports a command line interface
+- [x] Converts Gist source code to markdown code blocks
+- [x] Converts YouTube links embedded in a post to preview images
+- [x] Adjusts a post's last modification date from Medium to the locally downloaded markdown file
+- [x] Auto-skips posts that have already been downloaded and whose last modification date from Medium hasn't changed (convenient for auto-sync or auto-backup services, to save server bandwidth and execution time)
+- [x] Supports using Github Action as an auto-sync/backup service
+- [x] Highly optimized markdown format for Medium
+- [x] Native Markdown-style Render Engine
+(Feel free to contribute if you have any optimization ideas! MarkupStyleRender.rb)
+- [x] Jekyll and social share (og: tag) friendly
+- [x] 100% Ruby @ RubyGem
 
 ## Result
 - [Original post on Medium](https://medium.com/zrealm-ios-dev/avplayer-%E5%AF%A6%E8%B8%90%E6%9C%AC%E5%9C%B0-cache-%E5%8A%9F%E8%83%BD%E5%A4%A7%E5%85%A8-6ce488898003)
