@@ -2,11 +2,13 @@
 
 ![ZMediumToMarkdown](https://user-images.githubusercontent.com/33706588/184416147-c2ec74d4-7107-484e-8ad2-302340cf6c1f.png)
 
-ZMediumToMarkdown lets you download Medium posts and convert them to markdown format easily.
+ZMediumToMarkdown is a powerful tool that allows you to effortlessly download and convert your Medium posts to Markdown format. 
 
 This project can help you create an auto-sync or auto-backup service from Medium, such as automatically syncing Medium posts to Jekyll or other static markdown blog engines, or backing up Medium posts to Github pages.
 
 [![ZMediumToMarkdown](https://badge.fury.io/rb/ZMediumToMarkdown.svg)](https://rubygems.org/gems/ZMediumToMarkdown)
+
+- [中文](https://medium.com/zrealm-ios-dev/converting-medium-posts-to-markdown-ddd88a84e177)
 
 ## Features
 - [x] Supports downloading posts and converting them to markdown format
@@ -166,13 +168,16 @@ jobs:
 ```
 [exmaple repo](https://github.com/ZhgChgLi/ZMediumToMarkdown-github-action)
 
-## More Tools
-- [ZReviewTender](https://github.com/ZhgChgLi/ZReviewTender) uses brand new App Store & Google Play API to resend App reviews to your Slack channel automatically.
+## About
+- [ZhgChg.Li](https://zhgchg.li/)
+- [ZhgChgLi's Medium](https://blog.zhgchg.li/)
 
-## Made In Taiwan 🇹🇼🇹🇼🇹🇼
-- [ZhgChg.Li (CH)](https://zhgchg.li/)
-- [ZhgChgLi's Medium (CH)](https://blog.zhgchg.li/)
+## Other works
+- [ZMarkupParser](https://github.com/ZhgChgLi/ZMarkupParser) is a pure-Swift library that helps you convert HTML strings into NSAttributedString with customized styles and tags.
+- [ZReviewTender](https://github.com/ZhgChgLi/ZReviewTender) is a tool for fetching app reviews from the App Store and Google Play Console and integrating them into your workflow.
+- [ZMediumToMarkdown](https://github.com/ZhgChgLi/ZMediumToMarkdown) is a powerful tool that allows you to effortlessly download and convert your Medium posts to Markdown format. 
 
+# Donate
 [![Buy Me A Coffe](https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20beer!&emoji=%F0%9F%8D%BA&slug=zhgchgli&button_colour=FFDD00&font_colour=000000&font_family=Bree&outline_colour=000000&coffee_colour=ffffff)](https://www.buymeacoffee.com/zhgchgli)
 
 If you find this library helpful, please consider starring the repo or recommending it to your friends.
