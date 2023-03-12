@@ -196,7 +196,7 @@ class Helper
         end
 
         text = "\r\n\r\n\r\n"
-        text += "_Converted [Medium Post](#{postURL})#{jekyllOpen} by [ZMediumToMarkdown](https://github.com/ZhgChgLi/ZMediumToMarkdown)#{jekyllOpen}._"
+        text += "_[Post](#{postURL})#{jekyllOpen} converted from Medium by [ZMediumToMarkdown](https://github.com/ZhgChgLi/ZMediumToMarkdown)#{jekyllOpen}._"
         text += "\r\n"
 
         text

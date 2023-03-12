@@ -71,7 +71,7 @@ class IframeParser < Parser
                 result = nil
                 if !srce.to_s[/^(https\:\/\/gist\.github\.com)/].nil?
                     # is gist
-                    gist = Request.body(Request.URL(src)).scan(/(document\.write\('){1}(.*)(\)){1}/)[1][1]
+                    gist = Request.body(Request.URL(srce)).scan(/(document\.write\('){1}(.*)(\)){1}/)[1][1]
                     gist.gsub! '\n', ''
                     gist.gsub! '\"', '"'
                     gist.gsub! '<\/', '</'
