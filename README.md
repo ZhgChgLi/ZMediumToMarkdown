@@ -2,7 +2,7 @@
 
 ![ZMediumToMarkdown](https://user-images.githubusercontent.com/33706588/184416147-c2ec74d4-7107-484e-8ad2-302340cf6c1f.png)
 
-ZMediumToMarkdown lets you download Medium posts and convert them to markdown format easily.
+ZMediumToMarkdown is a powerful tool that allows you to effortlessly download and convert your Medium posts to Markdown format. 
 
 This project can help you create an auto-sync or auto-backup service from Medium, such as automatically syncing Medium posts to Jekyll or other static markdown blog engines, or backing up Medium posts to Github pages.
 
