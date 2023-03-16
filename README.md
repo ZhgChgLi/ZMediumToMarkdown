@@ -148,11 +148,14 @@ The default path of the downloaded post will be in the `./Output` directory.
 - Post's images：`[POST_PATH_NAME]/images/[POST_ID]/[IMAGE_PATH_NAME]`
 
 ## Disclaimer
-This repository is for research purposes only, the use of this code is your responsibility.
 
-- Code authors take NO responsibility and/or liability for how you choose to use any of the source code available here.
-- By using any of the files available in this repository, you understand that you are AGREEING TO USE AT YOUR OWN RISK.
-- ALL files available here are for EDUCATION and/or RESEARCH purposes ONLY.
+All content downloaded using ZMediumToMarkdown, including but not limited to articles, images, and videos, are subject to copyright laws and belong to their respective owners. ZMediumToMarkdown does not claim ownership of any content downloaded using this tool.
+
+Downloading and using copyrighted content without the owner's permission may be illegal and may result in legal action. ZMediumToMarkdown does not condone or support copyright infringement and will not be held responsible for any misuse of this tool.
+
+Users of ZMediumToMarkdown are solely responsible for ensuring that they have the necessary permissions and rights to download and use any content obtained using this tool. ZMediumToMarkdown is not responsible for any legal issues that may arise from the misuse of this tool.
+
+By using ZMediumToMarkdown, users acknowledge and agree to comply with all applicable copyright laws and regulations.
 
 ## Using Github Action as your [free](https://docs.github.com/en/actions/learn-github-actions/usage-limits-billing-and-administration) auto sync/backup service
 ```yml
