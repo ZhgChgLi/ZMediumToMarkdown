@@ -37,6 +37,10 @@ and I use this tool to convert from Meidum to [jekyllrb](https://zhgchg.li/)
 
 ## Setup
 
+### 2023/07/17 Update 🎉
+
+I have just created a brand new GitHub repository template that allows you to move your Medium blog to your own Jekyll blog with just one click. Check it out: [ZMediumToJekyll](https://github.com/ZhgChgLi/ZMediumToJekyll).
+
 ### I'M NOT GEEK, PLEASE SHOW ME HOW TO USE WITHOUT CODING
 - Please follow this post, step by step to creat your auto backup service without any coding:
 
@@ -144,11 +148,14 @@ The default path of the downloaded post will be in the `./Output` directory.
 - Post's images：`[POST_PATH_NAME]/images/[POST_ID]/[IMAGE_PATH_NAME]`
 
 ## Disclaimer
-This repository is for research purposes only, the use of this code is your responsibility.
 
-- Code authors take NO responsibility and/or liability for how you choose to use any of the source code available here.
-- By using any of the files available in this repository, you understand that you are AGREEING TO USE AT YOUR OWN RISK.
-- ALL files available here are for EDUCATION and/or RESEARCH purposes ONLY.
+All content downloaded using ZMediumToMarkdown, including but not limited to articles, images, and videos, are subject to copyright laws and belong to their respective owners. ZMediumToMarkdown does not claim ownership of any content downloaded using this tool.
+
+Downloading and using copyrighted content without the owner's permission may be illegal and may result in legal action. ZMediumToMarkdown does not condone or support copyright infringement and will not be held responsible for any misuse of this tool.
+
+Users of ZMediumToMarkdown are solely responsible for ensuring that they have the necessary permissions and rights to download and use any content obtained using this tool. ZMediumToMarkdown is not responsible for any legal issues that may arise from the misuse of this tool.
+
+By using ZMediumToMarkdown, users acknowledge and agree to comply with all applicable copyright laws and regulations.
 
 ## Using Github Action as your [free](https://docs.github.com/en/actions/learn-github-actions/usage-limits-billing-and-administration) auto sync/backup service
 ```yml
@@ -173,9 +180,14 @@ jobs:
 - [ZhgChgLi's Medium](https://blog.zhgchg.li/)
 
 ## Other works
-- [ZMarkupParser](https://github.com/ZhgChgLi/ZMarkupParser) is a pure-Swift library that helps you convert HTML strings into NSAttributedString with customized styles and tags.
+### Swift Libraries
+- [ZMarkupParser](https://github.com/ZhgChgLi/ZMarkupParser) is a pure-Swift library that helps you to convert HTML strings to NSAttributedString with customized style and tags.
+- [ZPlayerCacher](https://github.com/ZhgChgLi/ZPlayerCacher) is a lightweight implementation of the AVAssetResourceLoaderDelegate protocol that enables AVPlayerItem to support caching streaming files.
+- [ZNSTextAttachment](https://github.com/ZhgChgLi/ZNSTextAttachment) enables NSTextAttachment to download images from remote URLs, support both UITextView and UILabel.
+
+### Integration Tools
 - [ZReviewTender](https://github.com/ZhgChgLi/ZReviewTender) is a tool for fetching app reviews from the App Store and Google Play Console and integrating them into your workflow.
-- [ZMediumToMarkdown](https://github.com/ZhgChgLi/ZMediumToMarkdown) is a powerful tool that allows you to effortlessly download and convert your Medium posts to Markdown format. 
+- [ZMediumToMarkdown](https://github.com/ZhgChgLi/ZMediumToMarkdown) is a powerful tool that allows you to effortlessly download and convert your Medium posts to Markdown format.
 
 # Donate
 [![Buy Me A Coffe](https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20beer!&emoji=%F0%9F%8D%BA&slug=zhgchgli&button_colour=FFDD00&font_colour=000000&font_family=Bree&outline_colour=000000&coffee_colour=ffffff)](https://www.buymeacoffee.com/zhgchgli)
