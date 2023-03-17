@@ -102,14 +102,19 @@ class Helper
         title = postInfo.title.gsub("[","")
         title = title.gsub("]","")
 
+        tags = ""
+        if !postInfo.tags.nil? && postInfo.tags.length > 0
+            tags = "\"#{postInfo.tags.map { |tag| tag.gsub("\"", "\\\"") }.join("\",\"")}\""
+        end
+
         result = "---\n"
-        result += "title: #{title}\n"
-        result += "author: #{postInfo.creator}\n"
+        result += "title: \"#{title.gsub("\"", "\\\"")}\"\n"
+        result += "author: \"#{postInfo.creator.gsub("\"", "\\\"")}\"\n"
         result += "date: #{postInfo.firstPublishedAt.strftime('%Y-%m-%dT%H:%M:%S.%L%z')}\n"
         result += "last_modified_at: #{postInfo.latestPublishedAt.strftime('%Y-%m-%dT%H:%M:%S.%L%z')}\n"
-        result += "categories: #{postInfo.collectionName}\n"
-        result += "tags: [#{postInfo.tags.join(",")}]\n"
-        result += "description: #{postInfo.description}\n"
+        result += "categories: \"#{postInfo.collectionName.gsub("\"", "\\\"")}\"\n"
+        result += "tags: [#{tags}]\n"
+        result += "description: \"#{postInfo.description.gsub("\"", "\\\"")}\"\n"
         if !postInfo.previewImage.nil?
             result += "image:\r\n"
             result += "  path: #{postInfo.previewImage}\r\n"

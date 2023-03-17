@@ -15,7 +15,7 @@ class MIXTAPEEMBEDParser < Parser
         if paragraph.type == 'MIXTAPE_EMBED'
             if !paragraph.mixtapeMetadata.nil? && !paragraph.mixtapeMetadata.href.nil?
                 ogImageURL = Helper.fetchOGImage(paragraph.mixtapeMetadata.href)
-                if !ogImageURL.nil?
+                if !ogImageURL.nil? && ogImageURL != ""
                     jekyllOpen = ""
                     if isForJekyll
                         jekyllOpen = "{:target=\"_blank\"}"
