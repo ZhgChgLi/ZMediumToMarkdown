@@ -238,7 +238,7 @@ class ZMediumFetcher
 
         if File.file?(absolutePath)
             lines = File.foreach(absolutePath).first(15)
-            if lines.first.start_with?("---")
+            if lines.first&.start_with?("---")
                 dateLine = lines.select { |line| line.start_with?("last_modified_at:") }.first
                 if !dateLine.nil?
                     fileLatestPublishedAt = Time.parse(dateLine[/^(last_modified_at:)\s+(\S*)/, 2]).to_i
