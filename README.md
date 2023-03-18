@@ -157,8 +157,6 @@ Users of ZMediumToMarkdown are solely responsible for ensuring that they have th
 
 By using ZMediumToMarkdown, users acknowledge and agree to comply with all applicable copyright laws and regulations.
 
-- Also, if you would like to remove the ZMediumToMarkdown watermark located at the bottom of the page, you may do so. I don't mind.
-
 ## Using Github Action as your [free](https://docs.github.com/en/actions/learn-github-actions/usage-limits-billing-and-administration) auto sync/backup service
 ```yml
 name: ZMediumToMarkdown
@@ -176,6 +174,10 @@ jobs:
         command: '[USAGE Command]' # e.g. -u zhgchgli
 ```
 [exmaple repo](https://github.com/ZhgChgLi/ZMediumToMarkdown-github-action)
+
+## Things to know
+- If you would like to remove the ZMediumToMarkdown watermark located at the bottom of the page, you may do so. I don't mind.
+- Since ZMediumToMarkdown is not an official tool and Medium does not provide a public API for this, I cannot guarantee that the parser content will not be changed. However, I have tried to test for as many cases as possible. If you encounter any rendering errors, please feel free to create an issue and I will fix them as soon as possible.
 
 ## About
 - [ZhgChg.Li](https://zhgchg.li/)
