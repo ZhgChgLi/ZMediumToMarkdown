@@ -157,6 +157,8 @@ Users of ZMediumToMarkdown are solely responsible for ensuring that they have th
 
 By using ZMediumToMarkdown, users acknowledge and agree to comply with all applicable copyright laws and regulations.
 
+- Also, if you would like to remove the ZMediumToMarkdown watermark located at the bottom of the page, you may do so. I don't mind.
+
 ## Using Github Action as your [free](https://docs.github.com/en/actions/learn-github-actions/usage-limits-billing-and-administration) auto sync/backup service
 ```yml
 name: ZMediumToMarkdown
