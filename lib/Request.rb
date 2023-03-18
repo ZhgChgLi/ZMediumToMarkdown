@@ -33,7 +33,8 @@ class Request
                   if !location.match? /^(http)/
                       location = "#{uri.scheme}://#{uri.host}#{location}"
                   end
-                  response = self.URL(location, method, data)
+                  
+                  response = self.URL(location, method, data, retryCount)
               end
           end
         rescue
