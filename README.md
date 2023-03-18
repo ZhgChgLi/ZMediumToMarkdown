@@ -177,7 +177,7 @@ jobs:
 
 ## Things to know
 - If you would like to remove the ZMediumToMarkdown watermark located at the bottom of the page, you may do so. I don't mind.
-- Since ZMediumToMarkdown is not an official tool and Medium does not provide a public API for this, I cannot guarantee that the parser content will not be changed. However, I have tried to test for as many cases as possible. If you encounter any rendering errors, please feel free to create an issue and I will fix them as soon as possible.
+- Since ZMediumToMarkdown is not an official tool and Medium does not provide a public API for it, I cannot guarantee that the parser target will not change in the future. However, I have tried to test it for as many cases as possible. If you encounter any rendering errors, please feel free to create an issue and I will fix them as soon as possible.
 
 ## About
 - [ZhgChg.Li](https://zhgchg.li/)
