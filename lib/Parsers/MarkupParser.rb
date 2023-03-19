@@ -26,6 +26,10 @@ class MarkupParser
                 Helper.makeWarningText("Error occurred during render markup text, please help to open an issue on github.")
             end
         end
+        
+        if isForJekyll
+            result = Helper.escapeHTML(result)
+        end
 
         result
     end

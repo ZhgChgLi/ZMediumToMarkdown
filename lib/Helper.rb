@@ -24,13 +24,9 @@ class Helper
     end
 
     def self.escapeHTML(text)
-        if text == "<"
-            "&lt;"
-        elsif text == ">"
-            "&gt;"
-        else
-            text
-        end
+        text = text.gsub(/(<)/, '&lt;')
+        text = text.gsub(/(>)/, '&gt;')
+        text
     end
 
     def self.createDirIfNotExist(dirPath)

@@ -272,10 +272,6 @@ class MarkupStyleRender
                         response.append(char)
                     else
                         resultChar = Helper.escapeMarkdown(char.chars.join())
-                        if isForJekyll 
-                            resultChar = Helper.escapeHTML(resultChar)
-                        end
-    
                         response.append(TextChar.new(resultChar.chars, "Text"))
                     end
                 end
@@ -315,10 +311,6 @@ class MarkupStyleRender
             response = []
             chars.each do |index, char|
                 resultChar = char
-                if isForJekyll 
-                    resultChar = escapeHTML(char)
-                end
-
                 response.append(resultChar)
             end
 
