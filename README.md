@@ -48,7 +48,7 @@ I have just created a brand new GitHub repository template that allows you to mo
 
 ### Using Gem
 #### If you are familiar with ruby:
-1. make sure you have Ruby in your environment (I use `2.6.5p114`)
+1. make sure you have Ruby in your environment (I use `2.7.5`)
 2. make sure you have Bundle in your environment (I use `2.3.13`)
 3. type `gem install ZMediumToMarkdown` in terminal
 
