@@ -10,7 +10,7 @@ Gem::Specification.new do |gem|
   
     gem.license       = "MIT"
   
-    gem.add_dependency 'nokogiri', '~> 1.13.1'
+    gem.add_dependency 'nokogiri', '>= 1.13.1', '< 1.16.0'
     gem.add_dependency 'net-http', '~> 0.1.0'
     gem.add_dependency 'rubyzip', '~> 2.3.2'
 end
