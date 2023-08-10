@@ -117,6 +117,7 @@ class Helper
         end
         if !postInfo.pinnedByCreatorAt.nil? && pinnedByCreatorAt > 0
             result += "pin: true\r\n"
+            result += "pinned_at: #{postInfo.pinnedByCreatorAt.strftime('%Y-%m-%dT%H:%M:%S.%L%z')}\n"
         end
 
         if isForJekyll

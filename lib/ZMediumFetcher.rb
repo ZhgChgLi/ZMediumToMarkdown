@@ -235,18 +235,23 @@ class ZMediumFetcher
         absolutePath = URI.decode(postPathPolicy.getAbsolutePath("#{postWithDatePath}")) + ".md"
         
         fileLatestPublishedAt = nil
-
+        filePinnedByCreatorAt = nil
         if File.file?(absolutePath)
             lines = File.foreach(absolutePath).first(15)
             if lines.first&.start_with?("---")
-                dateLine = lines.select { |line| line.start_with?("last_modified_at:") }.first
+                latestPublishedAtLine = lines.select { |line| line.start_with?("last_modified_at:") }.first
+                if !latestPublishedAtLine.nil?
+                    fileLatestPublishedAt = Time.parse(latestPublishedAtLine[/^(last_modified_at:)\s+(\S*)/, 2]).to_i
+                end
+
+                pinnedByCreatorAtLine = lines.select { |line| line.start_with?("pinned_at:") }.first
                 if !dateLine.nil?
-                    fileLatestPublishedAt = Time.parse(dateLine[/^(last_modified_at:)\s+(\S*)/, 2]).to_i
+                    filePinnedByCreatorAt = Time.parse(pinnedByCreatorAtLine[/^(pinned_at:)\s+(\S*)/, 2]).to_i
                 end
             end
         end
 
-        if !fileLatestPublishedAt.nil? && fileLatestPublishedAt >= postInfo.latestPublishedAt.to_i
+        if (!fileLatestPublishedAt.nil? && fileLatestPublishedAt >= postInfo.latestPublishedAt.to_i) && filePinnedByCreatorAt == postInfo.pinnedByCreatorAt.to_i
             # Already downloaded and nothing has changed!, Skip!
             progress.currentPostParagraphIndex = paragraphs.length
             progress.message = "Skip, Post already downloaded and nothing has changed!"
