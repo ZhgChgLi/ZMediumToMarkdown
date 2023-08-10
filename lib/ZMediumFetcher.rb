@@ -235,7 +235,7 @@ class ZMediumFetcher
         absolutePath = URI.decode(postPathPolicy.getAbsolutePath("#{postWithDatePath}")) + ".md"
         
         fileLatestPublishedAt = nil
-        filePinnedByCreatorAt = nil
+        filePinnedByCreatorAt = 0
         if File.file?(absolutePath)
             lines = File.foreach(absolutePath).first(15)
             if lines.first&.start_with?("---")
@@ -245,7 +245,7 @@ class ZMediumFetcher
                 end
 
                 pinnedByCreatorAtLine = lines.select { |line| line.start_with?("pinned_at:") }.first
-                if !dateLine.nil?
+                if !pinnedByCreatorAtLine.nil?
                     filePinnedByCreatorAt = Time.parse(pinnedByCreatorAtLine[/^(pinned_at:)\s+(\S*)/, 2]).to_i
                 end
             end
