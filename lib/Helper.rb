@@ -115,6 +115,10 @@ class Helper
             result += "image:\r\n"
             result += "  path: /#{postInfo.previewImage}\r\n"
         end
+        if !postInfo.pinnedByCreatorAt.nil? && pinnedByCreatorAt > 0
+            result += "pin: true\r\n"
+        end
+
         if isForJekyll
             result += "render_with_liquid: false\n"
         end

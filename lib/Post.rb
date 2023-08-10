@@ -11,7 +11,7 @@ require 'PathPolicy'
 
 class Post
   class PostInfo
-    attr_accessor :title, :tags, :creator, :firstPublishedAt, :latestPublishedAt, :collectionName, :description, :previewImage
+    attr_accessor :title, :tags, :creator, :firstPublishedAt, :latestPublishedAt, :pinnedByCreatorAt, :collectionName, :description, :previewImage
   end
 
   def self.getPostIDFromPostURLString(postURLString)
@@ -101,6 +101,11 @@ class Post
     latestPublishedAt = content&.dig("Post:#{postID}", "latestPublishedAt")
     if !latestPublishedAt.nil?
       postInfo.latestPublishedAt = Time.at(0, latestPublishedAt, :millisecond)
+    end
+
+    pinnedByCreatorAt = content&.dig("Post:#{postID}", "pinnedByCreatorAt")
+    if !pinnedByCreatorAt.nil?
+      postInfo.pinnedByCreatorAt = Time.at(0, pinnedByCreatorAt, :millisecond)
     end
 
     postInfo
