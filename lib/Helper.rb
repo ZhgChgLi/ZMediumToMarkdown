@@ -94,7 +94,7 @@ class Helper
         end
     end
 
-    def self.createPostInfo(postInfo, isForJekyll)
+    def self.createPostInfo(postInfo, isPin, isForJekyll)
         title = postInfo.title&.gsub("[","")
         title = title&.gsub("]","")
 
@@ -115,9 +115,8 @@ class Helper
             result += "image:\r\n"
             result += "  path: /#{postInfo.previewImage}\r\n"
         end
-        if !postInfo.pinnedByCreatorAt.nil? && pinnedByCreatorAt > 0
+        if !isPin.nil? && isPin == true
             result += "pin: true\r\n"
-            result += "pinned_at: #{postInfo.pinnedByCreatorAt.strftime('%Y-%m-%dT%H:%M:%S.%L%z')}\n"
         end
 
         if isForJekyll

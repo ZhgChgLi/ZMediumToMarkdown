@@ -119,7 +119,7 @@ class ZMediumFetcher
         h1Parser
     end
 
-    def downloadPost(postURL, pathPolicy)
+    def downloadPost(postURL, pathPolicy, isPin)
         postID = Post.getPostIDFromPostURLString(postURL)
 
         if isForJekyll
@@ -235,7 +235,7 @@ class ZMediumFetcher
         absolutePath = URI.decode(postPathPolicy.getAbsolutePath("#{postWithDatePath}")) + ".md"
         
         fileLatestPublishedAt = nil
-        filePinnedByCreatorAt = 0
+        filePin = false
         if File.file?(absolutePath)
             lines = File.foreach(absolutePath).first(15)
             if lines.first&.start_with?("---")
@@ -244,14 +244,14 @@ class ZMediumFetcher
                     fileLatestPublishedAt = Time.parse(latestPublishedAtLine[/^(last_modified_at:)\s+(\S*)/, 2]).to_i
                 end
 
-                pinnedByCreatorAtLine = lines.select { |line| line.start_with?("pinned_at:") }.first
-                if !pinnedByCreatorAtLine.nil?
-                    filePinnedByCreatorAt = Time.parse(pinnedByCreatorAtLine[/^(pinned_at:)\s+(\S*)/, 2]).to_i
+                pinLine = lines.select { |line| line.start_with?("pin:") }.first
+                if !pinLine.nil?
+                    filePin = pinLine[/^(pin:)\s+(\S*)/, 2].downcase == "true"
                 end
             end
         end
 
-        if (!fileLatestPublishedAt.nil? && fileLatestPublishedAt >= postInfo.latestPublishedAt.to_i) && filePinnedByCreatorAt == postInfo.pinnedByCreatorAt.to_i
+        if (!fileLatestPublishedAt.nil? && fileLatestPublishedAt >= postInfo.latestPublishedAt.to_i) && (!isPin.nil? && isPin == filePin)
             # Already downloaded and nothing has changed!, Skip!
             progress.currentPostParagraphIndex = paragraphs.length
             progress.message = "Skip, Post already downloaded and nothing has changed!"
@@ -260,7 +260,7 @@ class ZMediumFetcher
             Helper.createDirIfNotExist(postPathPolicy.getAbsolutePath(nil))
             File.open(absolutePath, "w+") do |file|
                 # write postInfo into top
-                postMetaInfo = Helper.createPostInfo(postInfo, isForJekyll)
+                postMetaInfo = Helper.createPostInfo(postInfo, isPin, isForJekyll)
                 if !postMetaInfo.nil?
                     file.puts(postMetaInfo)
                 end
@@ -318,7 +318,7 @@ class ZMediumFetcher
             nextID = postPageInfo["nextID"]
         end while !nextID.nil?
 
-        @usersPostURLs = postURLS
+        @usersPostURLs = postURLS.map{ |post| post["url"] }
 
         progress.totalPostsLength = postURLS.length
         progress.currentPostIndex = 0
@@ -335,7 +335,7 @@ class ZMediumFetcher
         postURLS.each do |postURL|
           begin
             # todo: unless File.exists? Post.getPostPathFromPostURLString(postURL) +".md"
-            downloadPost(postURL, downloadPathPolicy) 
+            downloadPost(postURL["url"], downloadPathPolicy, postURL["pin"]) 
           rescue => e
             puts e
           end

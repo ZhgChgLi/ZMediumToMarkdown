@@ -49,7 +49,7 @@ class User
     end
 
     if !postsInfo.nil?
-      postURLs = postsInfo.map { |post| post["mediumUrl"] }
+      postURLs = postsInfo.map { |post| {"url" => post["mediumUrl"], "pin" => post["pinnedByCreatorAt"].to_i > 0} }
     end
 
     {
