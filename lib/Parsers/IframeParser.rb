@@ -131,6 +131,9 @@ class IframeParser < Parser
                             result += "> **Tweeted at [#{createdAt}](#{ogURL})#{jekyllOpen}.** \n\n"
                             result += "■■■■■■■■■■■■■■ \n\n"
                         end
+                    elsif ![/^(https\:\/\/app\.widgetic\.com)/].nil?
+                        #Skip widgetic
+                        result = nil
                     else
                         ogImageURL = Helper.fetchOGImage(ogURL)
 

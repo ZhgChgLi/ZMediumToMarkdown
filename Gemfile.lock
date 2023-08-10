@@ -1,11 +1,15 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    mini_portile2 (2.8.4)
     net-http (0.1.1)
       net-protocol
       uri
     net-protocol (0.1.3)
       timeout
+    nokogiri (1.14.3)
+      mini_portile2 (~> 2.8.0)
+      racc (~> 1.4)
     nokogiri (1.14.3-x86_64-darwin)
       racc (~> 1.4)
     nokogiri (1.14.3-x86_64-linux)
