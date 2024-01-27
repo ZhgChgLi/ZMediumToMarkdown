@@ -57,6 +57,7 @@ class Main
             end
 
             opts.on('-c', '--clean', 'Remove all downloaded posts data') do
+                outputFilePath = PathPolicy.new(filePath, "")
                 FileUtils.rm_rf(Dir[outputFilePath.getAbsolutePath(nil)])
                 puts "All downloaded posts data has been removed."
 

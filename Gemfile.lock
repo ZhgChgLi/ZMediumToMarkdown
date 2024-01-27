@@ -20,6 +20,7 @@ GEM
     uri (0.12.2)
 
 PLATFORMS
+  ruby
   x86_64-darwin-21
   x86_64-linux
 
