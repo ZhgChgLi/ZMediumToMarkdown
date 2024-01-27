@@ -46,6 +46,17 @@ I have just created a brand new GitHub repository template that allows you to mo
 
 [How to use Github Action as your free & no code Medium Posts backup service](https://github.com/ZhgChgLi/ZMediumToMarkdown/wiki/How-to-use-Github-Action-as-your-free-&-no-code-Medium-Posts-backup-service)
 
+### 2024/01/27 Update: Docker 🎉
+1. make sure has [Docker](https://www.docker.com/products/docker-desktop/) on your system.
+2. git clone this repo `git clone https://github.com/ZhgChgLi/ZMediumToMarkdown`
+3. `cd /ZMediumToMarkdown`
+4. build docker image `docker build -t zmediumtomarkdown:latest --build-arg CRON_SETTING="0 8 * * *" --build-arg ZMEDIUMTOMARKDOWN_COMMAND="-u [YOUR_MEDIUM_USERNAME]" .`
+   - ZMEDIUMTOMARKDOWN_COMMAND = ZMediumToMarkdown Command (Refer to the configuration block down below.)
+6. Refer to the configuration block down below and finish the configuration.
+7. run docker `docker run -v ./:/usr/src/app zmediumtomarkdown`
+8. have fun!
+
+
 ### Using Gem
 #### If you are familiar with ruby:
 1. make sure you have Ruby in your environment (I use `2.7.5`)
