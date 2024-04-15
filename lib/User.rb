@@ -39,8 +39,6 @@ class User
     body = Request.body(Request.URL("https://medium.com/_/graphql", "POST", query))
     json = JSON.parse(body)
 
-    puts body
-
     nextInfo = json&.dig(0, "data", "userResult", "homepagePostsConnection", "pagingInfo", "next")
     postsInfo = json&.dig(0, "data", "userResult", "homepagePostsConnection", "posts")
 
