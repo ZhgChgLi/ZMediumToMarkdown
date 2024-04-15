@@ -6,11 +6,11 @@ Gem::Specification.new do |gem|
     gem.files         = Dir['lib/**/*.*']
     gem.executables   = ['ZMediumToMarkdown']
     gem.name          = 'ZMediumToMarkdown'
-    gem.version       = '2.3.4'
+    gem.version       = '2.3.5'
   
     gem.license       = "MIT"
   
-    gem.add_dependency 'nokogiri', '>= 1.14.3', '< 1.16.0'
+    gem.add_dependency 'nokogiri', '~> 1.15.6'
     gem.add_dependency 'net-http', '~> 0.1.0'
     gem.add_dependency 'rubyzip', '~> 2.3.2'
 end
