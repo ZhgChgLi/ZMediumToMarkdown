@@ -8,6 +8,10 @@ class ImageDownloader
         dir.pop()
         Helper.createDirIfNotExist(dir.join("/"))
         
+        if File.exist?(path)
+            return true
+        end
+
         begin
             imageResponse = URI.open(url)
             File.write(path, imageResponse.read)
