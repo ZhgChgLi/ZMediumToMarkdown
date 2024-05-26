@@ -267,11 +267,13 @@ class MarkupStyleRender
                 end
 
                 if char.chars.join() != "\n"
-                    if !stack.select { |tag| tag.startChars.chars.join() == "`" }.nil?
+                    if stack.select { |tag| tag.startChars.chars.join() == "`" }.length > 0
                         # is in code block
                         response.append(char)
                     else
-                        resultChar = Helper.escapeMarkdown(char.chars.join())
+                        resultChar = char.chars.join()
+                        resultChar = Helper.escapeHTML(resultChar, isForJekyll)
+                        
                         response.append(TextChar.new(resultChar.chars, "Text"))
                     end
                 end

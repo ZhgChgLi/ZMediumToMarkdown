@@ -23,9 +23,14 @@ class Helper
         text.gsub(/(\*|_|`|\||\\|\{|\}|\[|\]|\(|\)|#|\+|\-|\.|\!)/){ |x| "\\#{x}" }
     end
 
-    def self.escapeHTML(text)
-        text = text.gsub(/(<)/, '&lt;')
-        text = text.gsub(/(>)/, '&gt;')
+    def self.escapeHTML(text, toHTMLEntity = true)
+        if toHTMLEntity
+            text = text.gsub(/(<)/, '&lt;')
+            text = text.gsub(/(>)/, '&gt;')
+        else
+            text = text.gsub(/(<)/, '\<')
+            text = text.gsub(/(>)/, '\>')
+        end
         text
     end
 
