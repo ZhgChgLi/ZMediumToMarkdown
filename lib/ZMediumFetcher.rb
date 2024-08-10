@@ -148,8 +148,21 @@ class ZMediumFetcher
         end
         
         postInfo = Post.parsePostInfoFromPostContent(postContent, postID, imagePathPolicy)
+        contentInfo = Post.fetchPostParagraphs(postID)
+        
+        if contentInfo.nil?
+            raise "Error: Paragraph Content not found! PostURL: #{postURL}"
+        end 
 
-        sourceParagraphs = Post.fetchPostParagraphs(postID)
+        isLockedPreviewOnly = contentInfo&.dig("isLockedPreviewOnly")
+
+        if isLockedPreviewOnly
+            puts "Skip: This post is listed in Medium's paywall. You need to provide Medium Member vaild logged-in cookies to access it (refer to Readme.md). PostURL: #{postURL}"
+            return
+        end
+
+        sourceParagraphs = contentInfo&.dig("bodyModel", "paragraphs")
+
         if sourceParagraphs.nil?
             raise "Error: Paragraph not found! PostURL: #{postURL}"
         end 

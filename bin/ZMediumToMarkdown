@@ -8,6 +8,9 @@ require "ZMediumFetcher"
 require "Helper"
 require "optparse"
 
+$cookie_sid = nil
+$cookie_uid = nil
+
 class Main
     def initialize
         fetcher = ZMediumFetcher.new
@@ -17,22 +20,31 @@ class Main
 
         OptionParser.new do |opts|
             opts.banner = "Usage: ZMediumFetcher [options]"
-        
-            opts.on('-uUSERNAME', '--username=USERNAME', 'Downloading all posts from user') do |username|
+
+            opts.on('-s', '--cookie_sid COOKIESID', 'Your logged-in Medium cookie sid value') do |cookie_sid|
+                $cookie_sid = cookie_sid
+                puts $cookie_sid
+            end
+
+            opts.on('-d', '--cookie_uid COOKIEUID', 'Your logged-in Medium cookie uid value') do |cookie_uid|
+                $cookie_uid = cookie_uid
+            end
+
+            opts.on('-u', '--username USERNAME', 'Downloading all posts from user') do |username|
                 outputFilePath = PathPolicy.new("#{filePath}/Output", "Output")
                 fetcher.downloadPostsByUsername(username, outputFilePath)
 
                 Helper.printNewVersionMessageIfExists()
             end
         
-            opts.on('-pPOST_URL', '--postURL=POST_URL', 'Downloading single post') do |postURL|
+            opts.on('-p', '--postURL POST_URL', 'Downloading single post') do |postURL|
                 outputFilePath = PathPolicy.new("#{filePath}/Output", "Output")
                 fetcher.downloadPost(postURL, outputFilePath, nil)
 
                 Helper.printNewVersionMessageIfExists()
             end
 
-            opts.on('-jUSERNAME', '--jekyllUsername=USERNAME', 'Downloading all posts from user with Jekyll friendly') do |username|
+            opts.on('-j', '--jekyllUsername USERNAME', 'Downloading all posts from user with Jekyll friendly') do |username|
                 outputFilePath = PathPolicy.new(filePath, "")
                 fetcher.isForJekyll = true
                 fetcher.downloadPostsByUsername(username, outputFilePath)
@@ -40,7 +52,7 @@ class Main
                 Helper.printNewVersionMessageIfExists()
             end
         
-            opts.on('-kPOST_URL', '--jekyllPostURL=POST_URL', 'Downloading single post with Jekyll friendly') do |postURL|
+            opts.on('-k', '--jekyllPostURL POST_URL', 'Downloading single post with Jekyll friendly') do |postURL|
                 outputFilePath = PathPolicy.new(filePath, "")
                 fetcher.isForJekyll = true
                 fetcher.downloadPost(postURL, outputFilePath, nil)

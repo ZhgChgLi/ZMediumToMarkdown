@@ -1,6 +1,7 @@
 $lib = File.expand_path('../lib', File.dirname(__FILE__))
 
 require "Request"
+require "net/http"
 require 'uri'
 require 'nokogiri'
 require 'json'
@@ -50,10 +51,22 @@ class Post
       }
     ]
 
-    body = Request.body(Request.URL("https://medium.com/_/graphql", "POST", query))
+    uri = URI("https://medium.com/_/graphql")
+    https = Net::HTTP.new(uri.host, uri.port)
+    https.use_ssl = true
+    request = Net::HTTP::Post.new(uri)
+    request['Content-Type'] = 'application/json'
+    if !$cookie_sid.nil? && !$cookie_uid.nil?
+      request['Cookie'] = "sid=#{$cookie_sid}; uid=#{$cookie_uid}"
+    end
+    request.body = JSON.dump(query)
+    response = https.request(request)
+
+
+    body = Request.body(response)
     if !body.nil?
       json = JSON.parse(body)
-      json&.dig(0, "data", "post", "viewerEdge", "fullContent", "bodyModel", "paragraphs")
+      json&.dig(0, "data", "post", "viewerEdge", "fullContent")
     else
       nil
     end
