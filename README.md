@@ -101,6 +101,7 @@ ZMediumToMarkdown -v
 ```
 
 **Provide valid Medium Member cookies to access paywall posts**
+ZMediumToMarkdown requires uid and sid cookies to access paywalled posts on Medium.
 
 If you don’t provide valid Medium Member cookies, you will receive this warning message while downloading a Medium post if the post is behind a paywall:
 > This post is behind Medium's paywall. You must provide valid Medium Member login cookies to download the full post.
