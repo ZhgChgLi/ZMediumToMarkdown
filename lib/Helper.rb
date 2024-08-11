@@ -99,7 +99,7 @@ class Helper
         end
     end
 
-    def self.createPostInfo(postInfo, isPin, isForJekyll)
+    def self.createPostInfo(postInfo, isPin, isLockedPreviewOnly, isForJekyll)
         title = postInfo.title&.gsub("[","")
         title = title&.gsub("]","")
 
@@ -122,6 +122,9 @@ class Helper
         end
         if !isPin.nil? && isPin == true
             result += "pin: true\r\n"
+        end
+        if !isLockedPreviewOnly.nil? && isLockedPreviewOnly == true
+            result += "lockedPreviewOnly: true\r\n"
         end
 
         if isForJekyll
@@ -207,6 +210,19 @@ class Helper
 
         text = "\r\n\r\n\r\n"
         text += "_[Post](#{postURL})#{jekyllOpen} converted from Medium by [ZMediumToMarkdown](https://github.com/ZhgChgLi/ZMediumToMarkdown)#{jekyllOpen}._"
+        text += "\r\n"
+
+        text
+    end
+
+    def self.createViewFullPost(postURL, isForJekyll)
+        jekyllOpen = ""
+        if isForJekyll
+            jekyllOpen = "{:target=\"_blank\"}"
+        end
+
+        text = "\r\n\r\n\r\n"
+        text += "**This [post](#{postURL})#{jekyllOpen} is behind Medium's paywall, View the full [post](#{postURL})#{jekyllOpen} on Medium, converted by [ZMediumToMarkdown](https://github.com/ZhgChgLi/ZMediumToMarkdown)#{jekyllOpen}.**"
         text += "\r\n"
 
         text

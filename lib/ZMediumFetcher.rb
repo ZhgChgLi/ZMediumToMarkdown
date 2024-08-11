@@ -156,11 +156,6 @@ class ZMediumFetcher
 
         isLockedPreviewOnly = contentInfo&.dig("isLockedPreviewOnly")
 
-        if isLockedPreviewOnly
-            puts "Skip: This post is listed in Medium's paywall. You need to provide Medium Member vaild logged-in cookies to access it (refer to Readme.md). PostURL: #{postURL}"
-            return
-        end
-
         sourceParagraphs = contentInfo&.dig("bodyModel", "paragraphs")
 
         if sourceParagraphs.nil?
@@ -249,6 +244,7 @@ class ZMediumFetcher
         
         fileLatestPublishedAt = nil
         filePin = false
+        fileLockedPreviewOnly = false
         if File.file?(absolutePath)
             lines = File.foreach(absolutePath).first(15)
             if lines.first&.start_with?("---")
@@ -261,10 +257,15 @@ class ZMediumFetcher
                 if !pinLine.nil?
                     filePin = pinLine[/^(pin:)\s+(\S*)/, 2].downcase == "true"
                 end
+
+                lockedPreviewOnlyLine = lines.select { |line| line.start_with?("lockedPreviewOnly:") }.first
+                if !lockedPreviewOnlyLine.nil?
+                    fileLockedPreviewOnly = lockedPreviewOnlyLine[/^(lockedPreviewOnly:)\s+(\S*)/, 2].downcase == "true"
+                end
             end
         end
 
-        if (!fileLatestPublishedAt.nil? && fileLatestPublishedAt >= postInfo.latestPublishedAt.to_i) && (!isPin.nil? && isPin == filePin)
+        if (!fileLatestPublishedAt.nil? && fileLatestPublishedAt >= postInfo.latestPublishedAt.to_i) && (!isPin.nil? && isPin == filePin) && (!isLockedPreviewOnly.nil? && isLockedPreviewOnly == fileLockedPreviewOnly)
             # Already downloaded and nothing has changed!, Skip!
             progress.currentPostParagraphIndex = paragraphs.length
             progress.message = "Skip, Post already downloaded and nothing has changed!"
@@ -273,7 +274,7 @@ class ZMediumFetcher
             Helper.createDirIfNotExist(postPathPolicy.getAbsolutePath(nil))
             File.open(absolutePath, "w+") do |file|
                 # write postInfo into top
-                postMetaInfo = Helper.createPostInfo(postInfo, isPin, isForJekyll)
+                postMetaInfo = Helper.createPostInfo(postInfo, isPin, isLockedPreviewOnly, isForJekyll)
                 if !postMetaInfo.nil?
                     file.puts(postMetaInfo)
                 end
@@ -296,15 +297,29 @@ class ZMediumFetcher
                     progress.message = "Converting Post..."
                     progress.printLog()
                 end
-    
-                postWatermark = Helper.createWatermark(postURL, isForJekyll)
-                if !postWatermark.nil?
-                    file.puts(postWatermark)
+
+                if isLockedPreviewOnly
+                    viewFullPost = Helper.createViewFullPost(postURL, isForJekyll)
+                    if !viewFullPost.nil?
+                        file.puts(viewFullPost)
+                    end
+                else
+                    postWatermark = Helper.createWatermark(postURL, isForJekyll)
+                    if !postWatermark.nil?
+                        file.puts(postWatermark)
+                    end
                 end
+    
+
             end
             FileUtils.touch absolutePath, :mtime => postInfo.latestPublishedAt
 
-            progress.message = "Post Successfully Downloaded!"
+            if isLockedPreviewOnly
+                progress.message =  "This post is behind Medium's paywall. You need to provide valid Medium Member login cookies to download the full post."
+            else
+                progress.message = "Post Successfully Downloaded!"
+            end
+
             progress.printLog()
         end
         

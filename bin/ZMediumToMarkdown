@@ -16,14 +16,14 @@ class Main
         fetcher = ZMediumFetcher.new
         ARGV << '-h' if ARGV.empty?
 
+        options = {}
         filePath = ENV['PWD'] || ::Dir.pwd
-
+        
         OptionParser.new do |opts|
             opts.banner = "Usage: ZMediumFetcher [options]"
-
+            
             opts.on('-s', '--cookie_sid COOKIESID', 'Your logged-in Medium cookie sid value') do |cookie_sid|
                 $cookie_sid = cookie_sid
-                puts $cookie_sid
             end
 
             opts.on('-d', '--cookie_uid COOKIEUID', 'Your logged-in Medium cookie uid value') do |cookie_uid|
@@ -31,58 +31,83 @@ class Main
             end
 
             opts.on('-u', '--username USERNAME', 'Downloading all posts from user') do |username|
-                outputFilePath = PathPolicy.new("#{filePath}/Output", "Output")
-                fetcher.downloadPostsByUsername(username, outputFilePath)
-
-                Helper.printNewVersionMessageIfExists()
+                options[:u] = username
             end
         
             opts.on('-p', '--postURL POST_URL', 'Downloading single post') do |postURL|
-                outputFilePath = PathPolicy.new("#{filePath}/Output", "Output")
-                fetcher.downloadPost(postURL, outputFilePath, nil)
-
-                Helper.printNewVersionMessageIfExists()
+                options[:p] = postURL
             end
 
             opts.on('-j', '--jekyllUsername USERNAME', 'Downloading all posts from user with Jekyll friendly') do |username|
-                outputFilePath = PathPolicy.new(filePath, "")
-                fetcher.isForJekyll = true
-                fetcher.downloadPostsByUsername(username, outputFilePath)
-
-                Helper.printNewVersionMessageIfExists()
+                options[:j] = username
             end
         
             opts.on('-k', '--jekyllPostURL POST_URL', 'Downloading single post with Jekyll friendly') do |postURL|
-                outputFilePath = PathPolicy.new(filePath, "")
-                fetcher.isForJekyll = true
-                fetcher.downloadPost(postURL, outputFilePath, nil)
-
-                Helper.printNewVersionMessageIfExists()
+                options[:k] = postURL
             end
 
             opts.on('-n', '--new', 'Update to latest version') do
-                if Helper.getRemoteVersionFromGithub() > Helper.getLocalVersion()
-                    Helper.downloadLatestVersion()
-                else
-                    puts "You're using the latest version :)"
-                end
+                options[:n] = true
             end
 
             opts.on('-c', '--clean', 'Remove all downloaded posts data') do
-                outputFilePath = PathPolicy.new(filePath, "")
-                FileUtils.rm_rf(Dir[outputFilePath.getAbsolutePath(nil)])
-                puts "All downloaded posts data has been removed."
-
-                Helper.printNewVersionMessageIfExists()
+                options[:c] = true
             end
 
             opts.on('-v', '--version', 'Print current ZMediumToMarkdown Version & Output Path') do
-                puts "Version:#{Helper.getLocalVersion().to_s}"
-                
-                Helper.printNewVersionMessageIfExists()
+                options[:v] = true
             end
-            
         end.parse!
+
+        #
+        if !options[:v].nil? && options[:v] == true
+            puts "Version:#{Helper.getLocalVersion().to_s}"
+
+            Helper.printNewVersionMessageIfExists()
+        elsif !options[:c].nil? && options[:c] == true
+            outputFilePath = PathPolicy.new(filePath, "")
+            FileUtils.rm_rf(Dir[outputFilePath.getAbsolutePath(nil)])
+            puts "All downloaded posts data has been removed."
+
+            Helper.printNewVersionMessageIfExists()
+        elsif !options[:n].nil? && options[:n] == true
+            if Helper.getRemoteVersionFromGithub() > Helper.getLocalVersion()
+                Helper.downloadLatestVersion()
+            else
+                puts "You're using the latest version :)"
+            end
+        elsif !options[:k].nil?
+            postURL = options[:k]
+
+            outputFilePath = PathPolicy.new(filePath, "")
+            fetcher.isForJekyll = true
+            fetcher.downloadPost(postURL, outputFilePath, nil)
+
+            Helper.printNewVersionMessageIfExists()
+        elsif !options[:j].nil?
+            username = options[:j]
+
+            outputFilePath = PathPolicy.new(filePath, "")
+            fetcher.isForJekyll = true
+            fetcher.downloadPostsByUsername(username, outputFilePath)
+
+            Helper.printNewVersionMessageIfExists()
+        elsif !options[:p].nil?
+            postURL = options[:p]
+
+            outputFilePath = PathPolicy.new("#{filePath}/Output", "Output")
+            fetcher.downloadPost(postURL, outputFilePath, nil)
+
+            Helper.printNewVersionMessageIfExists()
+        elsif !options[:u].nil?
+            username = options[:u]
+
+            outputFilePath = PathPolicy.new("#{filePath}/Output", "Output")
+            fetcher.downloadPostsByUsername(username, outputFilePath)
+
+            Helper.printNewVersionMessageIfExists()
+        end
+
     end
 end
 
