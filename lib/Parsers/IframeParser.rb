@@ -76,20 +76,28 @@ class IframeParser < Parser
                     gist.gsub! '\"', '"'
                     gist.gsub! '<\/', '</'
                     gistHTML = Nokogiri::HTML(gist)
-                    lang = gistHTML.search('table').first['data-tagsearch-lang'].downcase
-                    if isForJekyll and lang == "objective-c"
-                        lang = "objectivec"
-                    end
-                    gistHTML.search('a').each do |a|
-                        if a.text == 'view raw'
-                            gistRAW = Request.body(Request.URL(a['href']))
+                    
+                    lang = gistHTML.search('table').first['data-tagsearch-lang']
 
-                            result = "```#{lang}\n"
-
-                            result += gistRAW.chomp
-                            
-                            result += "\n```"
+                    if !lang.nil?
+                        lang = lang.downcase
+                        if isForJekyll and lang == "objective-c"
+                            lang = "objectivec"
                         end
+                        gistHTML.search('a').each do |a|
+                            if a.text == 'view raw'
+                                gistRAW = Request.body(Request.URL(a['href']))
+
+                                result = "```#{lang}\n"
+
+                                result += gistRAW.chomp
+                                
+                                result += "\n```"
+                            end
+                        end
+                    else
+                        clean_url = srce.to_s.gsub(/\.js$/, '')
+                        result = "[#{clean_url}](#{clean_url})#{jekyllOpen}"
                     end
                 else
                     ogURL = url
