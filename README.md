@@ -25,6 +25,7 @@ This project can help you create an auto-sync or auto-backup service from Medium
 - [x] Highly optimized markdown format for Medium
 - [x] Native Markdown-style Render Engine
 (Feel free to contribute if you have any optimization ideas! MarkupStyleRender.rb)
+- [x] **Supports paywall posts.** (Requires providing valid Medium Member cookies)
 - [x] Jekyll and social share (og: tag) friendly
 - [x] 100% Ruby @ RubyGem
 
@@ -98,6 +99,26 @@ ZMediumToMarkdown -c
 ```
 ZMediumToMarkdown -v
 ```
+
+**Provide valid Medium Member cookies to access paywall posts**
+ZMediumToMarkdown requires uid and sid cookies to access paywalled posts on Medium.
+
+If you don’t provide valid Medium Member cookies, you will receive this warning message while downloading a Medium post if the post is behind a paywall:
+> This post is behind Medium's paywall. You must provide valid Medium Member login cookies to download the full post.
+
+```
+ZMediumToMarkdown --cookie_uid uid --cookie_sid sid
+```
+
+You can obtain `cookie_uid` and `cookie_sid` from Medium by following these steps:
+1. Log in to a valid Medium Member account.
+2. Right-click anywhere on the Medium webpage.
+3. Select "Inspect" to open the Developer Tools.
+4. Navigate to the "Application" tab and locate the `sid` and `uid` values under "Cookies."
+
+![ZhgChgLi-2024-08-11_22-30-03](https://github.com/user-attachments/assets/35229d1d-501a-4ecf-8f3e-592a02416bb1)
+
+
 
 #### For Jeklly Dir Friendly
 
