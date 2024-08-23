@@ -103,8 +103,8 @@ class IframeParser < Parser
                                 result = "\n"
 
                                 result += gistRAW.chomp
-                                
-                                result += "\n"
+
+                                result += "\n\n"
                             else
                                 result = "```#{lang}\n"
 
