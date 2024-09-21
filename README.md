@@ -10,6 +10,9 @@ This project can help you create an auto-sync or auto-backup service from Medium
 
 - [中文](https://medium.com/zrealm-ios-dev/converting-medium-posts-to-markdown-ddd88a84e177)
 
+[![Follow My Medium ZhgChgLi](https://github.com/user-attachments/assets/b64fb10f-23ae-481b-ac12-867ee7cde3f9)](https://medium.com/@zhgchgli)
+
+
 ## Features
 - [x] Supports downloading posts and converting them to markdown format
 - [x] Supports downloading all posts and converting them to markdown format from any user without requiring login access
