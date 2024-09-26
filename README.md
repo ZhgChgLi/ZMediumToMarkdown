@@ -10,8 +10,6 @@ This project can help you create an auto-sync or auto-backup service from Medium
 
 - [中文](https://medium.com/zrealm-ios-dev/converting-medium-posts-to-markdown-ddd88a84e177)
 
-[![Follow My Medium ZhgChgLi](https://github.com/user-attachments/assets/b64fb10f-23ae-481b-ac12-867ee7cde3f9)](https://medium.com/@zhgchgli)
-
 
 ## Features
 - [x] Supports downloading posts and converting them to markdown format
@@ -31,6 +29,12 @@ This project can help you create an auto-sync or auto-backup service from Medium
 - [x] **Supports paywall posts.** (Requires providing valid Medium Member cookies)
 - [x] Jekyll and social share (og: tag) friendly
 - [x] 100% Ruby @ RubyGem
+
+# Buy me coffee ❤️❤️❤️
+
+<a href="https://www.buymeacoffee.com/zhgchgli" target="_blank"><img width="545" alt="bmc-button" src="https://github.com/user-attachments/assets/5983bfc9-27fd-49e0-a7f4-eb07657c6e31"></a>
+
+[**If this project has helped you, feel free to sponsor me a cup of coffee, thank you.**](https://www.buymeacoffee.com/zhgchgli)
 
 ## Result
 - [Original post on Medium](https://medium.com/zrealm-ios-dev/avplayer-%E5%AF%A6%E8%B8%90%E6%9C%AC%E5%9C%B0-cache-%E5%8A%9F%E8%83%BD%E5%A4%A7%E5%85%A8-6ce488898003)
