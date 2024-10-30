@@ -85,6 +85,8 @@ class IframeParser < Parser
                                 lang = lang.downcase
                                 if isForJekyll and lang == "objective-c"
                                     lang = "objectivec"
+                                elsif lang == "protocol buffer"
+                                    lang = "protobuf"
                                 end
                             else
                                 viewRawURL = a['href']
