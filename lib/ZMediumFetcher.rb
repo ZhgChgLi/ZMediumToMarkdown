@@ -21,6 +21,7 @@ require "Parsers/MIXTAPEEMBEDParser"
 require "Parsers/PQParser"
 require "Parsers/CodeBlockParser"
 
+require "OpenAITranslator"
 require "PathPolicy"
 require "Request"
 require "Post"
@@ -169,9 +170,19 @@ class ZMediumFetcher
         oliIndex = 0
         previousParagraph = nil
         preTypeParagraphs = []
+        
+        translator = nil
+        if !$open_ai_translator_token.nil? && $open_ai_translator_token != "" && !$open_ai_translator_model.nil? && $open_ai_translator_model != "" && File.exist?("./openAITranslatorPrompt.md")
+            prompt = File.read("./openAITranslatorPrompt.md")
+            if !prompt.nil? && prompt != ""
+                translator = OpenAITranslator.new($open_ai_translator_model, $open_ai_translator_token, prompt)
+            end
+        end
+        
         sourceParagraphs.each do |sourcParagraph|
           return if (!sourcParagraph || !postID)
             paragraph = Paragraph.new(sourcParagraph, postID)
+
             if OLIParser.isOLI(paragraph)
                 oliIndex += 1
                 paragraph.oliIndex = oliIndex
@@ -289,6 +300,16 @@ class ZMediumFetcher
                     end
 
                     result = startParser.parse(paragraph)
+
+                    if !translator.nil? && !paragraph.is_a?(IMGParser) && !result.nil? && result != ""
+                        begin
+                            result = translator.translate(result)
+                            progress.message = "Translation Post..."
+                            progress.printLog()
+                        rescue => e
+                            puts "Translator Error: #{e.message}"
+                        end
+                    end
 
                     file.puts(result)
     

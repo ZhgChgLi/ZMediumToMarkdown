@@ -10,6 +10,8 @@ require "optparse"
 
 $cookie_sid = nil
 $cookie_uid = nil
+$open_ai_translator_model = nil
+$open_ai_translator_token = nil
 
 class Main
     def initialize
@@ -56,6 +58,14 @@ class Main
 
             opts.on('-v', '--version', 'Print current ZMediumToMarkdown Version & Output Path') do
                 options[:v] = true
+            end
+
+            opts.on('-m', '--open_ai_translator_model MODEL', 'Open AI Model e.g. gpt-4o') do |model|
+                $open_ai_translator_model = model
+            end
+
+            opts.on('-t', '--open_ai_translator_token TOKEN', 'Open AI API Token') do |token|
+                $open_ai_translator_token = token
             end
         end.parse!
 

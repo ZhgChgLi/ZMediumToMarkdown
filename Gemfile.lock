@@ -1,7 +1,17 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    base64 (0.2.0)
+    event_stream_parser (1.0.0)
+    faraday (2.8.1)
+      base64
+      faraday-net_http (>= 2.0, < 3.1)
+      ruby2_keywords (>= 0.0.4)
+    faraday-multipart (1.1.0)
+      multipart-post (~> 2.0)
+    faraday-net_http (3.0.2)
     mini_portile2 (2.8.6)
+    multipart-post (2.4.1)
     net-http (0.1.1)
       net-protocol
       uri
@@ -15,6 +25,11 @@ GEM
     nokogiri (1.15.6-x86_64-linux)
       racc (~> 1.4)
     racc (1.7.3)
+    ruby-openai (7.3.1)
+      event_stream_parser (>= 0.3.0, < 2.0.0)
+      faraday (>= 1)
+      faraday-multipart (>= 1)
+    ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
     timeout (0.4.1)
     uri (0.13.0)
@@ -27,6 +42,7 @@ PLATFORMS
 DEPENDENCIES
   net-http (~> 0.1.0)
   nokogiri (~> 1.15.6)
+  ruby-openai (~> 7.3, >= 7.3.1)
   rubyzip (~> 2.3.2)
 
 BUNDLED WITH
