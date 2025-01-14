@@ -113,7 +113,7 @@ class Helper
         result += "author: \"#{postInfo.creator&.gsub("\"", "\\\"")}\"\n"
         result += "date: #{postInfo.firstPublishedAt.strftime('%Y-%m-%dT%H:%M:%S.%L%z')}\n"
         result += "last_modified_at: #{postInfo.latestPublishedAt.strftime('%Y-%m-%dT%H:%M:%S.%L%z')}\n"
-        result += "categories: \"#{postInfo.collectionName&.gsub("\"", "\\\"")}\"\n"
+        result += "categories: [\"#{postInfo.collectionName&.gsub("\"", "\\\"")}\"]\n"
         result += "tags: [#{tags}]\n"
         result += "description: \"#{postInfo.description&.gsub("\"", "\\\"")}\"\n"
         if !postInfo.previewImage.nil?
