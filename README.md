@@ -47,7 +47,7 @@ and I use this tool to convert from Meidum to [jekyllrb](https://zhgchg.li/)
 
 ### 2023/07/17 Update 🎉
 
-I have just created a brand new GitHub repository template that allows you to move your Medium blog to your own Jekyll blog with just one click. Check it out: [ZMediumToJekyll](https://github.com/ZhgChgLi/ZMediumToJekyll).
+I have just created a brand new GitHub repository template that allows you to move your Medium blog to your own Jekyll blog with just one click. Check it out: [medium-to-jekyll-starter](https://github.com/ZhgChgLi/medium-to-jekyll-starter.github.io).
 
 ### I'M NOT GEEK, PLEASE SHOW ME HOW TO USE WITHOUT CODING
 - Please follow this post, step by step to creat your auto backup service without any coding:
