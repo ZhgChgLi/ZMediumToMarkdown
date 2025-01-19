@@ -22,18 +22,38 @@ class Request
             end
         end
 
-        if !$cookie_sid.nil? && !$cookie_uid.nil?
-          request['Cookie'] = "sid=#{$cookie_sid}; uid=#{$cookie_uid}";
+        cookiesString = $cookies.reject { |_, value| value.nil? }
+        .map { |key, value| "#{key}=#{value}" }
+        .join("; ");
+
+        if !cookiesString.nil? && cookiesString != ""
+          request['Cookie'] = cookiesString;
         end
 
         response = https.request(request);
-        
+          
+        setCookieString = response.get_fields('set-cookie');
+        if !setCookieString.nil? && setCookieString != ""
+          setCookies = setCookieString.map { |cookie| cookie.split('; ').first }.each_with_object({}) do |cookie, hash|
+            key, value = cookie.split('=', 2) # Split by '=' into key and value
+            hash[key] = value
+          end;
+
+          setCookies.each do |key, value|
+            $cookies[key] = value
+          end
+        end
+
         # 3XX Redirect
         if response.code.to_i == 429
-          raise "Error: Too Manay Reqeust, blocked by Medium.\n####################\n### Please try again later.\n### Ref: https://zhgchg.li/posts/en-medium-to-jekyll/#paywall-posts-require-a-medium-account-with-access-permissions-and-cookies-author-or-medium-member \n####################\n### ERROR URL: #{url}"
+          if retryCount >= 10
+            raise "Error: Too Manay Reqeust, blocked by Medium. URL: #{url}";
+          else
+            response = self.URL(url, method, data, retryCount);
+          end
         elsif response.code.to_i >= 300 && response.code.to_i <= 399 && !response['location'].nil? && response['location'] != ''
             if retryCount >= 10
-                raise "Error: Retry limit reached. path: #{url}"
+                raise "Error: Retry limit reached. URL: #{url}"
             else
                 location = response['location']
                 if !location.match? /^(http)/

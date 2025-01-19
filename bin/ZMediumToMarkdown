@@ -8,8 +8,7 @@ require "ZMediumFetcher"
 require "Helper"
 require "optparse"
 
-$cookie_sid = nil
-$cookie_uid = nil
+$cookies = {}
 
 class Main
     def initialize
@@ -23,11 +22,11 @@ class Main
             opts.banner = "Usage: ZMediumFetcher [options]"
             
             opts.on('-s', '--cookie_sid COOKIESID', 'Your logged-in Medium cookie sid value') do |cookie_sid|
-                $cookie_sid = cookie_sid
+                $cookies['sid'] = cookie_sid
             end
 
             opts.on('-d', '--cookie_uid COOKIEUID', 'Your logged-in Medium cookie uid value') do |cookie_uid|
-                $cookie_uid = cookie_uid
+                $cookies['uid'] = cookie_uid
             end
 
             opts.on('-u', '--username USERNAME', 'Downloading all posts from user') do |username|
