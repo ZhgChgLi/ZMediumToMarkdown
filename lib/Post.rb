@@ -51,19 +51,7 @@ class Post
       }
     ]
 
-    uri = URI("https://medium.com/_/graphql")
-    https = Net::HTTP.new(uri.host, uri.port)
-    https.use_ssl = true
-    request = Net::HTTP::Post.new(uri)
-    request['Content-Type'] = 'application/json'
-    if !$cookie_sid.nil? && !$cookie_uid.nil?
-      request['Cookie'] = "sid=#{$cookie_sid}; uid=#{$cookie_uid}"
-    end
-    request.body = JSON.dump(query)
-    response = https.request(request)
-
-
-    body = Request.body(response)
+    body = Request.body(Request.URL("https://medium.com/_/graphql", method = 'POST', data = query));
     if !body.nil?
       json = JSON.parse(body)
       json&.dig(0, "data", "post", "viewerEdge", "fullContent")

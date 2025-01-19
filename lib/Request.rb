@@ -22,23 +22,40 @@ class Request
             end
         end
 
-        begin
-          response = https.request(request)
-          # 3XX Redirect
-          if response.code.to_i >= 300 && response.code.to_i <= 399 && !response['location'].nil? && response['location'] != ''
-              if retryCount >= 10
-                  raise "Error: Retry limit reached. path: #{url}"
-              else
-                  location = response['location']
-                  if !location.match? /^(http)/
-                      location = "#{uri.scheme}://#{uri.host}#{location}"
-                  end
-                  
-                  response = self.URL(location, method, data, retryCount)
-              end
-          end
-        rescue
+        if !$cookie_sid.nil? && !$cookie_uid.nil?
+          request['Cookie'] = "sid=#{$cookie_sid}; uid=#{$cookie_uid}";
+        end
+
+        response = https.request(request);
           
+        cookies = response.get_fields('set-cookie').map { |cookie| cookie.split('; ').first }.each_with_object({}) do |cookie, hash|
+          key, value = cookie.split('=', 2) # Split by '=' into key and value
+          hash[key] = value
+        end;
+
+        if !cookies['uid'].nil?
+          $cookie_uid = cookies['uid'];
+        end
+
+        if !cookies['sid'].nil?
+          $cookie_sid = cookies['sid'];
+        end
+
+        puts response
+        # 3XX Redirect
+        if response.code.to_i == 429
+          raise "Error: Too Manay Reqeust, blocked by Medium.\n####################\n### Please try again later.\n### Ref: https://zhgchg.li/posts/en-medium-to-jekyll/#paywall-posts-require-a-medium-account-with-access-permissions-and-cookies-author-or-medium-member \n####################\n### ERROR URL: #{url}"
+        elsif response.code.to_i >= 300 && response.code.to_i <= 399 && !response['location'].nil? && response['location'] != ''
+            if retryCount >= 10
+                raise "Error: Retry limit reached. path: #{url}"
+            else
+                location = response['location']
+                if !location.match? /^(http)/
+                    location = "#{uri.scheme}://#{uri.host}#{location}"
+                end
+                
+                response = self.URL(location, method, data, retryCount)
+            end
         end
 
         response
