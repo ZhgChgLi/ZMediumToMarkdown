@@ -43,18 +43,21 @@ This project can help you create an auto-sync or auto-backup service from Medium
 
 and I use this tool to convert from Meidum to [jekyllrb](https://zhgchg.li/)
 
-## Setup
-
-### 2023/07/17 Update 🎉
+## medium-to-jekyll-starter
 
 I have just created a brand new GitHub repository template that allows you to move your Medium blog to your own Jekyll blog with just one click. Check it out: [medium-to-jekyll-starter](https://github.com/ZhgChgLi/medium-to-jekyll-starter.github.io).
 
 ### I'M NOT GEEK, PLEASE SHOW ME HOW TO USE WITHOUT CODING
+
 - Please follow this post, step by step to creat your auto backup service without any coding:
 
 [How to use Github Action as your free & no code Medium Posts backup service](https://github.com/ZhgChgLi/ZMediumToMarkdown/wiki/How-to-use-Github-Action-as-your-free-&-no-code-Medium-Posts-backup-service)
 
-### 2024/01/27 Update: Docker 🎉
+---
+
+## Setup
+
+### Docker
 1. make sure has [Docker](https://www.docker.com/products/docker-desktop/) on your system.
 2. git clone this repo `git clone https://github.com/ZhgChgLi/ZMediumToMarkdown`
 3. `cd /ZMediumToMarkdown`
