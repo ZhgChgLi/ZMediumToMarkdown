@@ -1,23 +1,19 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    mini_portile2 (2.8.6)
+    mini_portile2 (2.8.8)
     net-http (0.1.1)
       net-protocol
       uri
     net-protocol (0.2.2)
       timeout
-    nokogiri (1.15.6)
+    nokogiri (1.18.5)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
-    nokogiri (1.15.6-x86_64-darwin)
-      racc (~> 1.4)
-    nokogiri (1.15.6-x86_64-linux)
-      racc (~> 1.4)
-    racc (1.7.3)
+    racc (1.8.1)
     rubyzip (2.3.2)
-    timeout (0.4.1)
-    uri (0.13.0)
+    timeout (0.4.3)
+    uri (1.0.3)
 
 PLATFORMS
   ruby
@@ -26,8 +22,9 @@ PLATFORMS
 
 DEPENDENCIES
   net-http (~> 0.1.0)
-  nokogiri (~> 1.15.6)
+  nokogiri (>= 1.18.4)
   rubyzip (~> 2.3.2)
+  uri (>= 0.13.2)
 
 BUNDLED WITH
    2.3.13
