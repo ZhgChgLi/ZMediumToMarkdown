@@ -362,7 +362,7 @@ class ZMediumFetcher
         index = 1
         postURLS.each do |postURL|
           begin
-            # todo: unless File.exists? Post.getPostPathFromPostURLString(postURL) +".md"
+            # todo: unless File.exist? Post.getPostPathFromPostURLString(postURL) +".md"
             downloadPost(postURL["url"], downloadPathPolicy, postURL["pin"]) 
           rescue => e
             puts e
