@@ -40,27 +40,35 @@ class IframeParser < Parser
                 youtubeURL = URI(URI.decode(url)).query
                 params = URI::decode_www_form(youtubeURL).to_h
                 
-                if !params["image"].nil? && !params["url"].nil?
+                if !params["url"].nil?
+                    if isForJekyll
+                        vid = URI.decode_www_form(URI.parse(params["url"]).query || "").to_h
+                        vid = vid["v"]
 
-                    fileName = "#{paragraph.name}_#{URI(params["image"]).path.split("/").last}" #21de_default.jpg
-
-                    imageURL = params["image"]
-                    imagePathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(paragraph.postID), pathPolicy.getRelativePath(paragraph.postID))
-                    absolutePath = imagePathPolicy.getAbsolutePath(fileName)
-                    title = paragraph.iframe.title
-                    if title.nil? or title == ""
-                        title = "Youtube"
-                    end
-
-                    if  ImageDownloader.download(absolutePath, imageURL)
-                        relativePath = imagePathPolicy.getRelativePath(fileName)
-                        if isForJekyll
-                            result = "\r\n\r\n[![#{title}](/#{relativePath} \"#{title}\")](#{params["url"]})#{jekyllOpen}\r\n\r\n"
-                        else
-                            result = "\r\n\r\n[![#{title}](#{relativePath} \"#{title}\")](#{params["url"]})#{jekyllOpen}\r\n\r\n"
-                        end
+                        result = "<iframe class=\"embed-video\" loading=\"lazy\" src=\"https://www.youtube.com/embed/#{vid}\" title=\"#{paragraph.iframe.title}\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen ></iframe>"
                     else
-                        result = "\r\n[#{title}](#{params["url"]})#{jekyllOpen}\r\n"
+                        if !params["image"].nil?
+                            fileName = "#{paragraph.name}_#{URI(params["image"]).path.split("/").last}" #21de_default.jpg
+
+                            imageURL = params["image"]
+                            imagePathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(paragraph.postID), pathPolicy.getRelativePath(paragraph.postID))
+                            absolutePath = imagePathPolicy.getAbsolutePath(fileName)
+                            title = paragraph.iframe.title
+                            if title.nil? or title == ""
+                                title = "Youtube"
+                            end
+
+                            if  ImageDownloader.download(absolutePath, imageURL)
+                                relativePath = imagePathPolicy.getRelativePath(fileName)
+                                if isForJekyll
+                                    result = "\r\n\r\n[![#{title}](/#{relativePath} \"#{title}\")](#{params["url"]})#{jekyllOpen}\r\n\r\n"
+                                else
+                                    result = "\r\n\r\n[![#{title}](#{relativePath} \"#{title}\")](#{params["url"]})#{jekyllOpen}\r\n\r\n"
+                                end
+                            else
+                                result = "\r\n[#{title}](#{params["url"]})#{jekyllOpen}\r\n"
+                            end
+                        end
                     end
                 end
             else
