@@ -13,7 +13,7 @@ class Request
 
         if method.upcase == "GET"
             request = Net::HTTP::Get.new(uri)
-            request['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.17.375.766 Safari/537.36';
+            request['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0';
         else
             request = Net::HTTP::Post.new(uri)
             request['Content-Type'] = 'application/json'
