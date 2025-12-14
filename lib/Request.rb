@@ -11,6 +11,33 @@ class Request
         https = Net::HTTP.new(uri.host, uri.port)
         https.use_ssl = true
 
+        # --- TLS / Certificate verification setup ---
+        # Some OpenSSL builds/configs enable CRL checking, which can fail with:
+        # "certificate verify failed (unable to get certificate CRL)".
+        # Net::HTTP/OpenSSL does not automatically fetch CRLs, so we use a default
+        # cert store and clear CRL-related flags to avoid hard failures while still
+        # verifying the peer certificate.
+        https.verify_mode = OpenSSL::SSL::VERIFY_PEER
+
+        store = OpenSSL::X509::Store.new
+        store.set_default_paths
+        # Ensure no CRL-check flags are enabled by default
+        store.flags = 0
+        https.cert_store = store
+
+        # Allow overriding CA bundle paths via environment variables if needed.
+        if ENV['SSL_CERT_FILE'] && !ENV['SSL_CERT_FILE'].empty?
+          https.ca_file = ENV['SSL_CERT_FILE']
+        end
+        if ENV['SSL_CERT_DIR'] && !ENV['SSL_CERT_DIR'].empty?
+          https.ca_path = ENV['SSL_CERT_DIR']
+        end
+
+        # (Optional) timeouts to avoid hanging on network issues
+        https.open_timeout = 10
+        https.read_timeout = 30
+        # --- end TLS setup ---
+
         if method.upcase == "GET"
             request = Net::HTTP::Get.new(uri)
             request['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0';
@@ -64,6 +91,8 @@ class Request
             end
         end
 
+        puts response.read_body
+        
         response
     end
 
