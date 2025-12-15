@@ -40,7 +40,6 @@ class Request
 
         if method.upcase == "GET"
             request = Net::HTTP::Get.new(uri)
-            request['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0';
         else
             request = Net::HTTP::Post.new(uri)
             request['Content-Type'] = 'application/json'
@@ -49,6 +48,8 @@ class Request
             end
         end
 
+        request['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0';
+        
         cookiesString = $cookies.reject { |_, value| value.nil? }
         .map { |key, value| "#{key}=#{value}" }
         .join("; ");
@@ -90,8 +91,6 @@ class Request
                 response = self.URL(location, method, data, retryCount)
             end
         end
-
-        puts response.read_body
         
         response
     end

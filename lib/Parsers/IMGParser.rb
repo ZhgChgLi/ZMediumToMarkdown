@@ -18,7 +18,8 @@ class IMGParser < Parser
 
             fileName = paragraph.metadata.id #d*fsafwfe.jpg
 
-            imageURL = "https://miro.medium.com/max/1400/#{fileName}"
+            miro_host = ENV.fetch('MIRO_MEDIUM_HOST', 'https://miro.medium.com')
+            imageURL = "#{miro_host}/#{fileName}"
 
             imagePathPolicy = PathPolicy.new(pathPolicy.getAbsolutePath(paragraph.postID), pathPolicy.getRelativePath(paragraph.postID))
             absolutePath = imagePathPolicy.getAbsolutePath(fileName)
