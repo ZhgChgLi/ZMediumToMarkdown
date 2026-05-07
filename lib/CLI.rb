@@ -1,5 +1,6 @@
 require 'optparse'
 require 'fileutils'
+require 'timeout'
 
 require 'ZMediumFetcher'
 require 'Helper'
@@ -10,6 +11,13 @@ require 'Request'
 # of bin/ so it can be exercised by unit tests without spawning processes.
 module CLI
     COOKIE_SETUP_URL = 'https://zhgchg.li/posts/zrealm-dev/medium-api-%E7%88%AC%E5%8F%96%E8%B3%87%E6%96%99%E8%88%87%E7%AA%81%E7%A0%B4-cloudflare-%E9%98%B2%E8%AD%B7-%E5%AE%8C%E6%95%B4-graphql-%E6%93%8D%E4%BD%9C%E6%95%99%E5%AD%B8-88f0fb935120/'.freeze
+
+    # How long we'll wait for the user to paste each cookie before giving
+    # up and continuing without them. The timeout matters because users
+    # commonly walk away to Chrome to grab cookies and might never come
+    # back (closed window, switched apps, lost focus) — without a
+    # timeout the CLI would block on $stdin.gets forever.
+    INTERACTIVE_PROMPT_TIMEOUT_SECONDS = 120
 
     COOKIE_WARNING_BANNER = <<~BANNER.strip.freeze
       ──────────────────────────────────────────────────────────────────────
@@ -35,13 +43,14 @@ module CLI
 
     module_function
 
-    def main(argv, output: $stdout, errput: $stderr, cwd: ENV['PWD'] || ::Dir.pwd)
+    def main(argv, output: $stdout, errput: $stderr, input: $stdin, cwd: ENV['PWD'] || ::Dir.pwd)
         argv = argv.dup
         argv << '-h' if argv.empty?
 
         options = parseArgs(argv, errput: errput)
         loadCookiesFromEnv!
         warnIfNoCookies(options, errput: errput)
+        promptForCookiesIfTTY(options, input: input, errput: errput)
         run(options, cwd, output: output)
     end
 
@@ -127,6 +136,53 @@ module CLI
 
     def willHitMedium?(options)
         !options[:postURL].nil? || !options[:username].nil?
+    end
+
+    # Offer an inline paste flow for sid / uid right after the warning
+    # banner, but ONLY when stdin is a real terminal — never when running
+    # under Docker, GitHub Actions, cron, or any other piped invocation.
+    #
+    # Each line read is wrapped in Timeout so the CLI doesn't deadlock
+    # when the user (very commonly) tabs away to Chrome to copy cookies
+    # and then closes the browser / their terminal / loses focus before
+    # coming back. EOF (Ctrl-D), empty input, and timeout all fall
+    # through to the existing "no cookies, fail loudly later" behaviour.
+    def promptForCookiesIfTTY(options, input: $stdin, errput: $stderr, timeout: INTERACTIVE_PROMPT_TIMEOUT_SECONDS, interactive: nil)
+        return if cookiesPresent?
+        return unless willHitMedium?(options)
+
+        effective_interactive = interactive.nil? ? input.respond_to?(:tty?) && input.tty? : interactive
+        return unless effective_interactive
+
+        errput.puts ""
+        errput.puts "You can paste cookies now (or press Enter / Ctrl-D to skip — we'll continue without them):"
+
+        sid = readCookieLine(input, errput: errput, prompt: "  sid: ", timeout: timeout)
+        $cookies['sid'] = sid unless sid.nil?
+
+        uid = readCookieLine(input, errput: errput, prompt: "  uid: ", timeout: timeout)
+        $cookies['uid'] = uid unless uid.nil?
+    end
+
+    # Returns the trimmed line, or nil for empty / EOF / timeout.
+    # Re-raises Interrupt so Ctrl-C aborts the whole program cleanly.
+    def readCookieLine(input, errput:, prompt:, timeout:)
+        errput.print prompt
+        errput.flush if errput.respond_to?(:flush)
+
+        line = Timeout.timeout(timeout) { input.gets }
+        return nil if line.nil? # EOF (Ctrl-D)
+
+        trimmed = line.strip
+        trimmed.empty? ? nil : trimmed
+    rescue Timeout::Error
+        errput.puts ""
+        errput.puts "[timeout after #{timeout}s] Continuing without cookies."
+        nil
+    rescue Interrupt
+        errput.puts ""
+        errput.puts "Aborted."
+        raise
     end
 
     def run(options, cwd, output: $stdout)
